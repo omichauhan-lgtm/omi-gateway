@@ -1,0 +1,33 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ "master", "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Lint check
+        run: python -c "import main; print('✅ Syntax OK')"
+
+  # Uncomment when you connect Render
+  # deploy:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Trigger Render Deploy
+  #       uses: sws2apps/render-deploy-action@v1
+  #       with:
+  #         serviceId: ${{ secrets.RENDER_SERVICE_ID }}
+  #         apiKey: ${{ secrets.RENDER_API_KEY }}

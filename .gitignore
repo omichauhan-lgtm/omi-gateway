@@ -1,7 +1,36 @@
+# Secrets - NEVER commit
 .env
+
+# Python
 __pycache__/
 *.pyc
-.DS_Store
+*.pyo
+*.pyd
+.Python
+*.so
+.eggs/
+*.egg-info/
+*.egg
+
+# Virtual Environments
 venv/
+.venv/
+env/
+
+# IDE
 .idea/
 .vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Distribution
+dist/
+build/
