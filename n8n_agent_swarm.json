@@ -1,0 +1,122 @@
+{
+    "name": "OMI Agent Swarm",
+    "nodes": [
+        {
+            "parameters": {
+                "path": "omi-monitor",
+                "responseMode": "lastNode",
+                "options": {}
+            },
+            "name": "Webhook (API Log)",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "boolean": [
+                        {
+                            "value1": "={{$json.status}}",
+                            "value2": "error"
+                        }
+                    ]
+                }
+            },
+            "name": "Router (Success vs Error)",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                300,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "channel": "omi-alerts",
+                "text": "⚠️ API ERROR DETECTED: {{$json.error_msg}}",
+                "attachments": [],
+                "otherOptions": {}
+            },
+            "name": "Slack Alert (The Hawk)",
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                500,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "tableId": "request_logs",
+                "columns": "mode_used, model_routed_to, latency_ms, status_code",
+                "options": {}
+            },
+            "name": "Supabase Logger (The Accountant)",
+            "type": "n8n-nodes-base.supabase",
+            "typeVersion": 1,
+            "position": [
+                500,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gpt-4o-mini",
+                "messages": {
+                    "values": [
+                        {
+                            "content": "Analyze this prompt for malicious intent: '{{$json.prompt_hash}}'. Reply SAFE or DANGER."
+                        }
+                    ]
+                }
+            },
+            "name": "Security Guard (AI)",
+            "type": "n8n-nodes-base.openai",
+            "typeVersion": 1,
+            "position": [
+                500,
+                600
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook (API Log)": {
+            "main": [
+                [
+                    {
+                        "node": "Router (Success vs Error)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Router (Success vs Error)": {
+            "main": [
+                [
+                    {
+                        "node": "Slack Alert (The Hawk)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Supabase Logger (The Accountant)",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Security Guard (AI)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}
