@@ -25,6 +25,7 @@ HOUSE_KEYS = {
 
 # Monitoring Hook (The Agent Swarm)
 N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL", "")
+N8N_SECRET = os.getenv("N8N_SECRET", "omi-internal-secret-v1")
 
 # 2. DATA MODELS
 class UserRequest(BaseModel):
@@ -82,10 +83,12 @@ async def get_clients(
 
 # 5. AGENT MONITORING HOOK (Fire & Forget)
 def notify_agents(log_data: dict) -> None:
-    """Sends transaction data to n8n agent swarm."""
+    """Sends transaction data to n8n agent swarm with authentication."""
     if N8N_WEBHOOK_URL:
         try:
-            requests.post(N8N_WEBHOOK_URL, json=log_data, timeout=1)
+            # We send a secret header so n8n knows this comes from the real API
+            headers = {"x-omi-internal-secret": N8N_SECRET}
+            requests.post(N8N_WEBHOOK_URL, json=log_data, headers=headers, timeout=1)
         except Exception:
             pass
 
