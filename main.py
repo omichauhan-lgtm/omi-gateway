@@ -1,9 +1,12 @@
 import os
 import requests
-from fastapi import FastAPI, HTTPException, Header, Depends, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Header, Depends, BackgroundTasks, Request
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from datetime import datetime
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 # Client Libraries
 from openai import OpenAI
@@ -13,6 +16,9 @@ import google.generativeai as genai
 # 1. SETUP
 load_dotenv()
 app = FastAPI(title="OMI Universal Gateway", version="2025.1.0")
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Load House Keys
 HOUSE_KEYS = {
@@ -106,9 +112,11 @@ def sanitize_output(text: str) -> str:
 
 # 7. THE ENDPOINT
 @app.post("/generate")
+@limiter.limit("100/minute")
 async def generate_response(
     request: UserRequest,
     background_tasks: BackgroundTasks,
+    request_item: Request, # Hook for slowapi
     clients: dict = Depends(get_clients),
     x_openai_key: str = Header(None)
 ) -> dict:
@@ -131,7 +139,8 @@ async def generate_response(
         if target == "deepseek":
             resp = clients["deepseek"].chat.completions.create(
                 model="deepseek-chat", 
-                messages=[{"role": "user", "content": optimized_prompt}]
+                messages=[{"role": "user", "content": optimized_prompt}],
+                max_tokens=4096
             )
             final_answer = resp.choices[0].message.content
 
@@ -146,7 +155,8 @@ async def generate_response(
         elif target == "openai":
             resp = clients["openai"].chat.completions.create(
                 model="gpt-4o", 
-                messages=[{"role": "user", "content": optimized_prompt}]
+                messages=[{"role": "user", "content": optimized_prompt}],
+                max_tokens=4096
             )
             final_answer = resp.choices[0].message.content
 

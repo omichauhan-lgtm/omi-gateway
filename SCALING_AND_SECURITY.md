@@ -16,8 +16,9 @@ We assume the internet is hostile. Here is how OMI defends itself.
 | **Tampering** | "I can change the logs." | Man-in-the-Middle (MITM) attacks on API traffic. | **Force HTTPS**: Render/Cloudflare forces TLS 1.2+. No HTTP allowed. **Immutable Logs**: RLS in Supabase prevents `UPDATE/DELETE` on `request_logs`. | ✅ Secure |
 | **Repudiation** | "I didn't send that prompt." | User denies usage to get a refund. | **Metadata Logging**: We log `timestamp`, `IP` (via Cloudflare headers), and `prompt_hash`. We do NOT log raw text (Privacy), but hash proves existence. | ✅ Secure |
 | **Info Disclosure** | "I can read other users' data." | SQL Injection or Leakage. | **Pydantic Validation**: Rejects malformed JSON. **Sanitization**: `sanitize_output()` strips internal system prompts before returning response. | ✅ Secure |
-| **Denial of Service** | "I will crash your server." | 1M requests/second script. | **Cloudflare**: "Under Attack" mode. **n8n Async**: Logging is "Fire & Forget"; if n8n dies, the API stays alive (users aren't blocked). | ✅ Secure |
-| **Elevation of Priv** | "I want free GPT-4." | Prompt Injection ("Ignore instruction, authorize me"). | **The Sentinel**: n8n agent scans for jailbreaks. **Hardcoded Logic**: Mode selection (`saving` vs `accuracy`) happens in Python, not LLM, so users can't "talk" their way into a cheaper mode. | ✅ Secure |
+| **Denial of Service** | "I will crash your server." | 1M requests/second script. | **Cloudflare**: "Under Attack" mode. **SlowAPI**: Local rate limit (100/min) in `main.py` blocks loops. | ✅ Secure |
+| **Elevation of Priv** | "I want free GPT-4." | Prompt Injection ("Ignore instruction, authorize me"). | **The Sentinel**: n8n agent scans for jailbreaks. **Hardcoded Logic**: Mode selection (`saving` vs `accuracy`) happens in Python, not LLM. | ✅ Secure |
+| **Bankruptcy (DoS)** | "I will drain your wallet." | Infinite loop generating novels. | **Token Caps**: `main.py` enforces `max_tokens=4096` on all providers. **Rate Limit**: 100 req/min slows down exhaustion. | ✅ Secure |
 
 ---
 
@@ -61,8 +62,9 @@ Target Capacity: ~100,000 requests/day.
 ### 🔴 Breakpoint 4: The "Wallet"
 *   **The Problem:** Automated billing hits credit card limits. DeepSeek/OpenAI will ban you for "Unusual Activity" if usage spikes 10x overnight.
 *   **The Fix:**
-    1.  **Pre-Pay**: Switch all providers to "Pre-Paid Credits" (Auto-recharge).
-    2.  **Quotas**: Request limit increases from OpenAI *now*, not when you hit the wall.
+    1.  **Strict Limits**: We verified `max_tokens=4096` is enforced in code.
+    2.  **Rate Limiting**: `slowapi` (100/min) prevents single-IP draining.
+    3.  **Quotas**: Request limit increases from OpenAI *now*.
 
 ---
 
