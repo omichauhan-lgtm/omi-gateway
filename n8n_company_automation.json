@@ -1,0 +1,401 @@
+{
+    "name": "OMI Solo Founder Stack",
+    "nodes": [
+        {
+            "parameters": {
+                "content": "## 1. REVENUE GUARDRAILS\nStandardizes Lemon Squeezy events.",
+                "height": 260,
+                "width": 540
+            },
+            "name": "Revenue Layer",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                0,
+                0
+            ]
+        },
+        {
+            "parameters": {
+                "path": "ls-webhook",
+                "responseMode": "lastNode",
+                "options": {}
+            },
+            "name": "Lemon Squeezy Trigger",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                60,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "channel": "omi-revenue",
+                "text": "💰 **New Sale!**\nUser: {{$json.body.data.attributes.user_email}}\nAmount: ${{$json.body.data.attributes.total_formatted}}",
+                "attachments": [],
+                "otherOptions": {}
+            },
+            "name": "Slack (Sales)",
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                300,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "content": "## 2. HEALTH & ABUSE\nMonitors API logs from `notify_agents`.",
+                "height": 260,
+                "width": 540
+            },
+            "name": "Health Layer",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                0,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "path": "omi-monitor",
+                "responseMode": "lastNode",
+                "options": {}
+            },
+            "name": "API Log Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                60,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "boolean": [
+                        {
+                            "value1": "={{$json.headers['x-omi-internal-secret']}}",
+                            "value2": "={{$env.N8N_SECRET}}"
+                        }
+                    ]
+                }
+            },
+            "name": "Verify Secret",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                240,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "number": [
+                        {
+                            "value1": "={{$json.body.response_len}}",
+                            "operation": "larger",
+                            "value2": 4000
+                        }
+                    ],
+                    "string": [
+                        {
+                            "value1": "={{$json.body.mode}}",
+                            "value2": "error"
+                        }
+                    ]
+                },
+                "combineOperation": "any"
+            },
+            "name": "Anomaly Detector",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 1,
+            "position": [
+                440,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "channel": "omi-alerts",
+                "text": "🚨 **System Anomaly**\nToken Usage: {{$json.body.tokens_used}}\nError: {{$json.body.error}}",
+                "attachments": [],
+                "otherOptions": {}
+            },
+            "name": "Slack (Alerts)",
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                640,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "tableId": "request_logs",
+                "columns": "mode, tokens_input, tokens_output, latency_ms",
+                "options": {}
+            },
+            "name": "Supabase (Logger)",
+            "type": "n8n-nodes-base.supabase",
+            "typeVersion": 1,
+            "position": [
+                640,
+                600
+            ]
+        },
+        {
+            "parameters": {
+                "content": "## 3. INFRASTRUCTURE\nChecks API health every 5 mins.",
+                "height": 260,
+                "width": 540
+            },
+            "name": "Infra Layer",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                0,
+                800
+            ]
+        },
+        {
+            "parameters": {
+                "triggerTimes": {
+                    "item": [
+                        {
+                            "mode": "everyX",
+                            "value": 5,
+                            "unit": "minutes"
+                        }
+                    ]
+                }
+            },
+            "name": "Cron (5m)",
+            "type": "n8n-nodes-base.cron",
+            "typeVersion": 1,
+            "position": [
+                60,
+                900
+            ]
+        },
+        {
+            "parameters": {
+                "url": "https://your-app.onrender.com/health",
+                "options": {}
+            },
+            "name": "Health Check",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 1,
+            "position": [
+                240,
+                900
+            ]
+        },
+        {
+            "parameters": {
+                "channel": "omi-status",
+                "text": "✅ System Healthy",
+                "attachments": [],
+                "otherOptions": {}
+            },
+            "name": "Slack (Heartbeat - Debug)",
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                440,
+                900
+            ],
+            "disabled": true
+        },
+        {
+            "parameters": {
+                "content": "## 4. FOUNDER MEMORY\nWeekly summaries and rotation reminders.",
+                "height": 260,
+                "width": 540
+            },
+            "name": "Memory Layer",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                0,
+                1200
+            ]
+        },
+        {
+            "parameters": {
+                "triggerTimes": {
+                    "item": [
+                        {
+                            "mode": "everyWeek",
+                            "hour": 9,
+                            "weekday": "1"
+                        }
+                    ]
+                }
+            },
+            "name": "Weekly Monday",
+            "type": "n8n-nodes-base.cron",
+            "typeVersion": 1,
+            "position": [
+                60,
+                1300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "SELECT count(*) as total_reqs, avg(latency_ms) as avg_lat FROM request_logs WHERE timestamp > now() - interval '7 days'"
+            },
+            "name": "Supabase (Stats)",
+            "type": "n8n-nodes-base.supabase",
+            "typeVersion": 1,
+            "position": [
+                240,
+                1300
+            ]
+        },
+        {
+            "parameters": {
+                "model": "gpt-4o-mini",
+                "messages": {
+                    "values": [
+                        {
+                            "content": "Summarize these weekly stats for the founder. Be brief. Stats: {{$json}}"
+                        }
+                    ]
+                }
+            },
+            "name": "AI Analyst",
+            "type": "n8n-nodes-base.openai",
+            "typeVersion": 1,
+            "position": [
+                440,
+                1300
+            ]
+        },
+        {
+            "parameters": {
+                "channel": "omi-general",
+                "text": "📅 **Weekly Briefing**\n{{$json.content}}",
+                "attachments": [],
+                "otherOptions": {}
+            },
+            "name": "Slack (Briefing)",
+            "type": "n8n-nodes-base.slack",
+            "typeVersion": 1,
+            "position": [
+                640,
+                1300
+            ]
+        }
+    ],
+    "connections": {
+        "Lemon Squeezy Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Slack (Sales)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "API Log Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Verify Secret",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Verify Secret": {
+            "main": [
+                [
+                    {
+                        "node": "Anomaly Detector",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Supabase (Logger)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Anomaly Detector": {
+            "main": [
+                [
+                    {
+                        "node": "Slack (Alerts)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Cron (5m)": {
+            "main": [
+                [
+                    {
+                        "node": "Health Check",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Health Check": {
+            "main": [
+                [
+                    {
+                        "node": "Slack (Heartbeat - Debug)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Weekly Monday": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase (Stats)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Supabase (Stats)": {
+            "main": [
+                [
+                    {
+                        "node": "AI Analyst",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "AI Analyst": {
+            "main": [
+                [
+                    {
+                        "node": "Slack (Briefing)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}
