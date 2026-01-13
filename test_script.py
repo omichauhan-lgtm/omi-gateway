@@ -12,7 +12,7 @@ headers = {
 }
 
 def test_endpoint(name: str, prompt: str, mode: str) -> None:
-    print(f"\n🧪 TESTING: {name} (Mode: {mode})")
+    print(f"\n[TEST]: {name} (Mode: {mode})")
     start = time.time()
     try:
         payload = {"prompt": prompt, "mode": mode}
@@ -21,29 +21,30 @@ def test_endpoint(name: str, prompt: str, mode: str) -> None:
         if response.status_code == 200:
             data = response.json()
             duration = time.time() - start
-            print(f"✅ SUCCESS ({duration:.2f}s)")
+            print(f"[PASS] SUCCESS ({duration:.2f}s)")
             print(f"   Routed to: {data['meta']['model']}")
             print(f"   Response Preview: {data['response'][:60]}...")
         else:
-            print(f"❌ FAILED: {response.status_code} - {response.text}")
+            print(f"[FAIL] FAILED: {response.status_code} - {response.text}")
             
     except Exception as e:
-        print(f"❌ ERROR: {str(e)}")
+        print(f"[FAIL] ERROR: {str(e)}")
 
 if __name__ == "__main__":
-    print("🚀 OMI GATEWAY DIAGNOSTICS")
+    print("OMI GATEWAY DIAGNOSTICS")
     
     # Check Health
     try:
         health = requests.get(f"{BASE_URL}/health")
         if health.status_code == 200:
-            print("✅ Server is reachable")
+            print("[PASS] Server is reachable")
         else:
-            print("❌ Server returned error")
+            print("[FAIL] Server returned error")
             exit()
-    except Exception:
-        print("❌ Server is DOWN. Run 'uvicorn main:app --reload'")
-        exit()
+    except Exception as e:
+        print("[FAIL] Server is DOWN. Run 'uvicorn main:app --reload'")
+        print(str(e))
+        exit(1)
 
     # Run Scenarios
     test_endpoint("Cost Saving (DeepSeek)", "Explain Quantum Physics briefly", "saving")
