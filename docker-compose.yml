@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  omi-control-plane:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist the Learning Loop database and native Chroma embeddings
+      - ./learning_loop.db:/app/learning_loop.db
+      - ./chroma_db:/app/chroma_db
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
+
+  # Future expansion for hybrid multi-tenant architecture
+  # telemetry-db:
+  #   image: postgres:15
+  #   ...

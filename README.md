@@ -1,103 +1,71 @@
-# OMI: The Universal Intelligence Gateway 🧠
+# OMI: Sovereign Intelligence Orchestrator 🧠🇮🇳
 
-> **Stop paying for lazy AI tokens. Start architecting intelligence.**
+> **Stop treating AI like a utility. Start building it directly into your own infrastructure.**
 
-OMI is a middleware API that sits between your app and the LLMs. It uses advanced linguistic compression and routing to **slash your API bills by 40%** while **increasing reasoning accuracy**.
+OMI is an enterprise-grade **Sovereign Intelligence Orchestrator** designed to sit between your scalable applications and target LLMs. Built with the **IndiaAI Mission** in mind, OMI ensures that routing strategy, embeddings, and context logic never leak out of your controlled perimeter.
 
-## 🚀 Features (The 4 Engines)
+It's not just a router. It's an **AI Control Plane**.
 
-| Mode | Target Model | Optimization Strategy | Best For |
-| :--- | :--- | :--- | :--- |
-| **`saving`** | **DeepSeek V3** | **Chinese Compression** (Input translated to dense Chinese; Output forced to English) | Logs, Summaries, Bulk Data |
-| **`accuracy`** | **GPT-4o** | **Polish Logic + Mermaid** (Forces AI to map logic visually before answering) | Legal, Fintech, Complex Logic |
-| **`coding`** | **Claude 3.5 Sonnet** | **Strict XML Specs** (Wraps requirements in tech-spec tags for cleaner code) | Python, JS, Rust generation |
-| **`speed`** | **Gemini 2.0 Flash** | **Direct Path** (Zero-latency routing for chat) | Real-time Chatbots |
-| **`balance`** | **GPT-4o** | **Pseudo-Code YAML** (Removes fluff, structures data) | General SaaS, Chatbots |
+## 🚀 Why OMI? (The Enterprise Differentiation)
+
+If you are just calling standard LLM APIs directly, you are losing money on simple queries, losing accuracy on complex logic, and losing control over data context.
+
+OMI provides:
+- **Frugal Routing:** Slashes API bills by 40-90% by intelligently detecting task complexity and routing "easy" queries to near-free edge models.
+- **Embedded RAG (ChromaDB):** A built-in, local-only Vector DB. Upload context natively and inject it into specific LLM calls seamlessly—all within your VPC.
+- **Deep Multilingual Integration:** Explicitly detects indicative languages and routes natively to localized sovereign models (e.g. Sarvam AI) instead of utilizing lossy English translation cycles.
+- **Reliability Engines (The Judge):** Not every affordable model gets it right. Internal escalation heuristics verify output confidence automatically. If the cheap model hallucinates, the system silently escalates to an expensive model layer.
+
+## 🏗️ Architecture
+
+OMI departs from single-file hackathon scripts. It is a strict modular infrastructure layer:
+
+```text
+/api        → Thin, high-performance FastAPI server wrapping entry routes.
+/core       → Language Classification, Complexity Scoring, Dynamic Routing matrices.
+/services   → Built-in Local RAG (ChromaDB) + Global Model Registries.
+/infra      → Reliability layers, Automated Judge verification, and Telemetry/Metrics logging.
+```
 
 ## 🛠️ Quick Start
 
 ### Installation
 ```bash
+git clone https://github.com/adenhq/omi
+cd omi
 pip install -r requirements.txt
 ```
 
-### Run Server
+### Run the Control Plane
+Because of the modular enterprise split, run the API path natively:
 ```bash
-uvicorn main:app --reload
+uvicorn api.main:app --reload
 ```
 
-### Test
+### Ingest Data (RAG Setup)
+Post a `.txt` file straight to your local ChromaDB cluster running in-memory:
 ```bash
-python test_script.py
+curl -X POST "http://localhost:8000/rag/ingest" \
+     -F "doc_id=company_handbook_v1" \
+     -F "file=@/path/to/doc.txt"
 ```
 
-## 🔌 Integration (5 Seconds)
-
-Use our Python SDK:
-
-```python
-from omi_client import OMI
-
-client = OMI(api_key="YOUR_SUBSCRIPTION_KEY")
-
-# Get a cheaper, smarter answer
-response = client.generate(
-    prompt="Analyze this massive log file for errors...", 
-    mode="saving"
-)
-
-print(response['final_response'])
+### Route Intelligence (Execute)
+Witness Frugal Routing and Threshold-driven RAG automatically:
+```bash
+curl -X POST "http://localhost:8000/generate" \
+     -H "Content-Type: application/json" \
+     -H "x-omi-api-key: YOUR_KEY" \
+     -d '{"prompt": "What is our leave policy based on the handbook?", "use_rag": true, "mode": "accuracy"}'
 ```
 
-Or call the API directly:
+## 🔐 Compliance & Data Sovereignty
 
-```python
-import requests
+- **Data Locality:** The embedded RAG engine stores embeddings linearly on your disk. Context bounds are completely controllable.
+- **BYOK (Bring Your Own Key):** Never store raw keys in databases. End-users can pass temporal headers `x-openai-key` seamlessly.
+- **Failure Telemetry:** Full visibility into exactly *how many* tokens were saved, the accuracy of routing logic, and where logic is failing.
 
-url = "http://localhost:8000/generate"
-headers = {"x-omi-api-key": "YOUR_KEY"}
-data = {"prompt": "Fix this code...", "mode": "coding"}
+## 📄 License & Contributing
 
-response = requests.post(url, json=data, headers=headers)
-print(response.json())
-```
-
-## 🔐 Privacy & Security
-
-- **Zero-Retention**: We do not store your prompts or keys.
-- **BYOK (Bring Your Own Key)**: Enterprise users can pass their own `x-openai-key` headers.
-- **SSL Encrypted**: All traffic is secured via HTTPS.
-
-## 💰 Pricing
-
-| Tier | Price | Features |
-| :--- | :--- | :--- |
-| Hobby | Free | 50 req/day |
-| Pro | $29/mo | Unlimited Optimization + BYOK |
-| Enterprise | Custom | On-Premise Docker Container |
-
-## 🏗️ Architecture
-
-```
-User Input (English)
-       ↓
-┌──────────────────┐
-│  OMI Middleware  │ ← Gemini Flash rewrites prompt
-│  (Optimization)  │   based on selected MODE
-└──────────────────┘
-       ↓
-┌──────────────────┐
-│  Route to Best   │ ← DeepSeek / GPT-4o / Claude / Gemini
-│     Model        │
-└──────────────────┘
-       ↓
-Clean English Output
-```
-
-## 📄 License
-
-MIT
-
----
-
-**Built with 🔥 by OMI Labs**
+MIT Licensed. 
+**Built by OMI Labs for scalable Open Source adoption.**
