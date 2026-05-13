@@ -28,7 +28,7 @@ GROUND_TRUTH = [
 ]
 
 def run_reliability_benchmark():
-    print("🚀 Starting Ground Truth Reliability Benchmark...\n")
+    print("Starting Ground Truth Reliability Benchmark...\n")
     
     metrics = {
         "true_positive": 0,  # Judge correctly caught a failure
@@ -66,7 +66,7 @@ def run_reliability_benchmark():
                     metrics["false_negative"] += 1
                     
         except requests.exceptions.ConnectionError:
-            print("🚨 Connection Error: OMI Control Plane is offline.")
+            print("[!] Connection Error: OMI Control Plane is offline.")
             return
 
     # Calculate Matrix
@@ -79,7 +79,7 @@ def run_reliability_benchmark():
     f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
     print("\n========================================")
-    print("🧠 JUDGE RELIABILITY MATRIX")
+    print("[JUDGE RELIABILITY MATRIX]")
     print("========================================")
     print(f"True Positives (Correct Escalations): {metrics['true_positive']}")
     print(f"True Negatives (Correct Acceptances): {metrics['true_negative']}")

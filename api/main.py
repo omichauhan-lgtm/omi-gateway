@@ -11,6 +11,7 @@ from services.rag_service import rag_engine
 from infra.reliability import ConfidenceEngine
 from infra.metrics import metrics
 from infra.benchmark import benchmark_engine
+from core.learning_loop import memory_bank
 
 
 

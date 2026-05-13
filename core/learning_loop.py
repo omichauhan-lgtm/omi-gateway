@@ -27,28 +27,58 @@ class DataMoat:
                     escalated BOOLEAN,
                     final_route TEXT,
                     latency_ms REAL,
-                    confidence REAL
+                    confidence REAL,
+                    shadow_model TEXT
+                )
+            """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS model_failures (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT,
+                    model_id TEXT,
+                    complexity REAL,
+                    failure_reason TEXT,
+                    raw_confidence REAL,
+                    calibrated_confidence REAL,
+                    latency_ms REAL
                 )
             """)
             conn.commit()
 
     def log_decision(
         self,
+        prompt: str,
+        selected_model: str,
         complexity: float,
-        language: str,
-        initial_route: str,
         escalated: bool,
-        final_route: str,
         latency_ms: float,
-        confidence: float
+        shadow_model: str = None
     ):
         """Asynchronously log interactions to slowly build the proprietary data moat."""
         with sqlite3.connect(DB_PATH) as conn:
             conn.execute(
                 """INSERT INTO routing_decisions 
-                   (timestamp, complexity, language, initial_route, escalated, final_route, latency_ms, confidence)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-                (datetime.utcnow().isoformat(), complexity, language, initial_route, escalated, final_route, latency_ms, confidence)
+                   (timestamp, complexity, language, initial_route, escalated, final_route, latency_ms, confidence, shadow_model)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (datetime.utcnow().isoformat(), complexity, "en", selected_model, escalated, selected_model, latency_ms, 0.0, shadow_model)
+            )
+            conn.commit()
+            
+    def log_failure(
+        self,
+        model_id: str,
+        complexity: float,
+        failure_reason: str,
+        raw_confidence: float = 0.0,
+        calibrated_confidence: float = 0.0,
+        latency_ms: float = 0.0
+    ):
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.execute(
+                """INSERT INTO model_failures 
+                   (timestamp, model_id, complexity, failure_reason, raw_confidence, calibrated_confidence, latency_ms)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (datetime.utcnow().isoformat(), model_id, complexity, failure_reason, raw_confidence, calibrated_confidence, latency_ms)
             )
             conn.commit()
 
