@@ -15,6 +15,7 @@ HOUSE_KEYS = {
     "deepseek": os.getenv("DEEPSEEK_API_KEY"),
     "anthropic": os.getenv("ANTHROPIC_API_KEY"),
     "google": os.getenv("GOOGLE_API_KEY"),
+    "sarvam": os.getenv("SARVAM_API_KEY"),
     "omi_secret": os.getenv("OMI_ADMIN_KEY")
 }
 
@@ -40,6 +41,14 @@ class ModelRegistry:
         if not key:
             raise ValueError("Anthropic key not configured.")
         return Anthropic(api_key=key)
+
+    @staticmethod
+    def get_sarvam_client(user_key: str = None) -> Any:
+        # Sarvam typically uses standard REST, returning an initialized session or mock
+        key = user_key or HOUSE_KEYS.get("sarvam") or ("MOCK_KEY" if USE_MOCK_PROVIDERS else None)
+        if not key:
+            raise ValueError("Sarvam key not configured.")
+        return {"api_key": key, "base_url": "https://api.sarvam.ai"}
 
     @staticmethod
     def get_deepseek_client(user_key: str = None) -> OpenAI:

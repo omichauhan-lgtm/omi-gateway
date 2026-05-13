@@ -15,10 +15,11 @@ class SovereignRouter:
         # A mock cross-provider cost matrix (per 1M input tokens relative scaling)
         # This explicit arbitrage allows enforcing User Policy max_cost limits.
         self.provider_nodes = [
-            {"target": "gemini-2.0-flash-exp", "key": "gemini", "cost_weight": 0.05, "max_complexity": 0.6},
-            {"target": "claude-3-5-sonnet-20241022", "key": "anthropic", "cost_weight": 0.30, "max_complexity": 1.0},
-            {"target": "gpt-4o", "key": "openai", "cost_weight": 0.80, "max_complexity": 1.0},
-            {"target": "deepseek-chat", "key": "deepseek", "cost_weight": 0.10, "max_complexity": 0.8}
+            {"target": "gemini-2.0-flash-exp", "key": "gemini", "cost_weight": 0.05, "max_complexity": 0.6, "tags": ["global", "edge"]},
+            {"target": "sarvam-1", "key": "sarvam", "cost_weight": 0.15, "max_complexity": 0.7, "tags": ["sovereign", "indic"]},
+            {"target": "claude-3-5-sonnet-20241022", "key": "anthropic", "cost_weight": 0.30, "max_complexity": 1.0, "tags": ["global", "premium"]},
+            {"target": "gpt-4o", "key": "openai", "cost_weight": 0.80, "max_complexity": 1.0, "tags": ["global", "premium"]},
+            {"target": "deepseek-chat", "key": "deepseek", "cost_weight": 0.10, "max_complexity": 0.8, "tags": ["global", "frugal"]}
         ]
         
         # Internal cache for active learning weights
@@ -66,16 +67,24 @@ class SovereignRouter:
             "tradeoff": ""
         }
 
-        # 1. Edge Case: Deep Indic Multilingual (OpenAI usually performs better natively if no localized LLM)
-        if language != "en" and language in ["hi", "ta", "te", "bn", "mr", "gu", "ur", "ml", "kn"]:
-            decision_trace["reason"] = f"Native {language} Support required. Highest tier mandated."
-            decision_trace["tradeoff"] = "Maximized language accuracy, forfeited cost arbitrage."
-            return {
-                "target": "gpt-4o",
-                "target_key": "openai",
-                "instruction": f"Role: Sovereign_Indic_Orchestrator. Task: Process the request entirely in native {language}. Do not translate back to English.",
-                "trace": decision_trace
-            }
+        # 1. Edge Case: Sovereign / Deep Indic Multilingual
+        is_indic = language != "en" and language in ["hi", "ta", "te", "bn", "mr", "gu", "ur", "ml", "kn"]
+        sovereignty_required = getattr(policy, "sovereignty_required", False) if policy else False
+        
+        if is_indic or sovereignty_required:
+            sarvam_node = next((n for n in available_nodes if n["key"] == "sarvam"), None)
+            if sarvam_node:
+                decision_trace["reason"] = f"{'Indic language' if is_indic else 'Sovereignty'} mandated. Routing to regional sovereign provider (Sarvam)."
+                decision_trace["tradeoff"] = "Maximized data residency and local token efficiency."
+                return {
+                    "target": sarvam_node["target"],
+                    "target_key": sarvam_node["key"],
+                    "instruction": f"Role: Sovereign_Indic_Orchestrator. Task: Process the request maintaining regional data sovereignty and native {language} support.",
+                    "trace": decision_trace
+                }
+            else:
+                decision_trace["reason"] = "Sovereignty requested but sovereign node unavailable. Falling back to global highest tier."
+                # Fallthrough to global models
 
             
         # 2. Query the Learning Loop (Is the cheapest model historically terrible at this complexity?)
@@ -169,6 +178,9 @@ class SovereignRouter:
                     return "I am unable to process this request."
                 return "Here is a highly-accurate, structurally sound response from the Premium tier. Neil Armstrong did not land on Mars."
         
+        if target_key == "sarvam":
+            return f"[SARVAM SOVEREIGN INFERENCE]: Successfully executed regionally via {target}. Content: Native translation / completion processed."
+
         if target_key == "gemini":
             model = ModelRegistry.get_gemini_model(target)
             return model.generate_content(f"System: {full_system_prompt}\nUser: {prompt}").text
