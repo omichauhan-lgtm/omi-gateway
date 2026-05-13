@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMI | Sovereign Observability</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside>
+            <div class="logo">OMI_GATEWAY</div>
+            <nav>
+                <ul>
+                    <li class="active">Intelligence Center</li>
+                    <li>Reliability Matrix</li>
+                    <li>Sovereign Nodes</li>
+                    <li>Drift Analysis</li>
+                    <li>Data Moat</li>
+                    <li>Settings</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+            <header>
+                <h1>Calibration Intelligence</h1>
+                <div class="status-badge">System: Sovereign_Mode_Active</div>
+            </header>
+
+            <div class="grid">
+                <!-- Calibration Curve -->
+                <div class="card">
+                    <div class="card-title">Judge Calibration Curve (Confidence vs Truth)</div>
+                    <div class="chart-container">
+                        <canvas id="calibrationChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Reliability Heatmap -->
+                <div class="card">
+                    <div class="card-title">Provider Reliability Heatmap</div>
+                    <div class="chart-container">
+                        <canvas id="heatmapChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Live Traces -->
+                <div class="card trace-log">
+                    <div class="card-title">Live Execution Traces (Priority 04)</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Model</th>
+                                <th>Complexity</th>
+                                <th>Confidence</th>
+                                <th>Latency</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="traceBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

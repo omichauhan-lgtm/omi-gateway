@@ -1,6 +1,7 @@
 import time
 import os
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Header, BackgroundTasks
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional
 
@@ -22,6 +23,9 @@ app = FastAPI(
     version="2026.2.0-Enterprise"
 )
 app.include_router(analytics_router)
+
+# Mount Dashboard for Public Technical Demonstration (Priority 10)
+app.mount("/dashboard", StaticFiles(directory="dashboard", html=True), name="dashboard")
 
 # Shared Router Instance
 sovereign_router = build_router
