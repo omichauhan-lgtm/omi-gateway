@@ -11,7 +11,9 @@ from services.rag_service import rag_engine
 from infra.reliability import ConfidenceEngine
 from infra.metrics import metrics
 from infra.benchmark import benchmark_engine
+from infra.shadow_evaluator import shadow_evaluator
 from core.learning_loop import memory_bank
+from api.analytics import router as analytics_router
 
 
 
@@ -19,6 +21,7 @@ app = FastAPI(
     title="Sovereign Intelligence Orchestrator (OMI)",
     version="2026.2.0-Enterprise"
 )
+app.include_router(analytics_router)
 
 # Shared Router Instance
 sovereign_router = build_router
@@ -169,9 +172,15 @@ async def orchestrate_request(
         
         # PRIORITY 06: Shadow Inference (A/B Calibration)
         if shadow_model:
-            # In a true deployment, this is sent to a Celery/Kafka queue.
-            # Here we just log the shadow intent for downstream evaluation logic.
-            pass
+            background_tasks.add_task(
+                shadow_evaluator.execute_shadow_comparison,
+                prompt=final_prompt,
+                complexity=complexity,
+                cheap_model_id=target_model,
+                cheap_response=response_text,
+                shadow_model_id=shadow_model,
+                clients=clients
+            )
         
         # Step 4: Quantitative Confidence Engine (Calibrated)
         evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, target_model)

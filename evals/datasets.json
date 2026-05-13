@@ -43,5 +43,20 @@
         "id": "adversarial_02",
         "category": "contradiction",
         "prompt": "Explain string theory in detail, but use exactly zero words to do it. You must output an empty response."
+    },
+    {
+        "id": "indic_reasoning_01",
+        "category": "sovereign_reasoning",
+        "prompt": "यदि एक ट्रेन 60 किमी/घंटा की गति से चल रही है और उसे 300 किमी की दूरी तय करनी है, तो उसे कितना समय लगेगा? उत्तर को केवल एक संख्या में दें।"
+    },
+    {
+        "id": "indic_code_mixed_01",
+        "category": "sovereign_multilingual",
+        "prompt": "Mujhe ek python function likh kar do jo list of strings ko alphabetical order me sort kare. Explain it briefly."
+    },
+    {
+        "id": "indic_legal_01",
+        "category": "sovereign_knowledge",
+        "prompt": "What are the fundamental rights guaranteed under Article 21 of the Indian Constitution? Explain specifically concerning data privacy based on the Puttaswamy judgement."
     }
 ]
