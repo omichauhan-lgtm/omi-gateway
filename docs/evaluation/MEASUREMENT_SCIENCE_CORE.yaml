@@ -1,0 +1,101 @@
+# OMI_PHASE_02: MEASUREMENT_SCIENCE_CORE
+# Status: Mandatory Implementation
+# Objective: Transform from Routing Logic to Reliability Infrastructure
+
+infrastructure_identity:
+  current_state: Operational Judge
+  target_state: Inference Science Engine
+  core_directive: "Simple execution, complex intelligence"
+  north_star_metric: |
+    $$Reliability \propto \frac{\text{Correct Escalations} + \text{Correct Acceptances}}{\text{False Acceptances} + \text{False Escalations}}$$
+
+priority_01:
+  task: build_judge_metrics
+  objective: Quantify Judge Accuracy & Calibration
+  tracking_matrix:
+    dimensions: [true_positive, true_negative, false_positive, false_negative]
+    targets:
+      - hallucination_detection
+      - escalation_decisions
+      - malformed_output_detection
+      - reasoning_failures
+  risk: "Without measurement, the reliability layer is an illusion."
+
+priority_02:
+  task: confidence_calibration_research
+  objective: Solve the "Overconfidence Gap"
+  deliverables:
+    - confidence_histograms: "Distribution of judge certainty."
+    - calibration_curves: "Expected vs. observed accuracy."
+    - uncertainty_buckets: "Categorization of 'I don't know' states."
+    - correctness_correlation: "Does 0.8 confidence = 80% accuracy?"
+
+priority_03:
+  task: failure_taxonomy_formalization
+  objective: Standardize error classification for routing/benchmarking
+  schema:
+    hallucination: "Factually incorrect or ungrounded generation."
+    timeout: "Provider or network latency threshold breach."
+    malformed_output: "Schema or syntax violation (JSON/Markdown)."
+    reasoning_failure: "Logical disconnect in Chain-of-Thought."
+    provider_instability: "Fluctuations in uptime or model behavior."
+    context_loss: "Loss of coherence in large window contexts."
+    policy_violation: "Safety or alignment refusal."
+    semantic_drift: "Deterioration of intent across conversational turns."
+
+priority_04:
+  task: routing_trace_visualization
+  objective: Transition from "Black Box" to "Glass Box" observability
+  views:
+    - request_journey_tracing: "Full path of a single prompt."
+    - escalation_timelines: "When and why the Judge promoted a task."
+    - provider_decision_graphs: "Logic tree of the router."
+    - latency_waterfall: "Time-cost breakdown per hop."
+
+priority_05:
+  task: longitudinal_drift_detection
+  objective: Build a moat via silent provider monitoring
+  capability: "Detect subtle degradation (e.g., 'Claude reasoning -11% on Python this week')."
+  value_prop: "Enterprise-critical intelligence on model decay."
+
+priority_06:
+  task: shadow_inference_deployment
+  objective: Safe benchmarking and judge calibration
+  mechanism:
+    primary_route: "Fast/Cheap model serves the user."
+    shadow_route: "Premium model (e.g., GPT-5/O1) runs in background."
+    comparison_loop: "Judge compares outputs to refine routing weights."
+
+priority_07:
+  task: frontier_mapping
+  objective: Intelligence-per-Dollar Optimization
+  variables: [task_type, provider, region, context_size]
+  output: "Real-time cost-performance frontier curve."
+
+priority_08:
+  task: adversarial_evaluation
+  objective: Infrastructure hardening
+  attack_vectors:
+    - prompt_injection
+    - ambiguity_traps
+    - contradictory_instructions
+    - deceptive_correctness
+    - jailbreak_attempts
+
+priority_09:
+  task: statistical_rigor_enforcement
+  objective: Move beyond anecdotal success
+  requirements:
+    - confidence_intervals: 95% minimum for production stats.
+    - sample_sizes: Statistically significant N-counts.
+    - regression_tracking: Ensure new updates don't break old wins.
+
+priority_10:
+  task: architectural_simplicity_preservation
+  objective: Prevent "Complexity Collapse"
+  warning: "Do not let research ambition destroy iteration speed."
+  principle: "Sophisticated science, minimalist implementation."
+
+strategic_summary:
+  focus: "Evaluation rigor, calibration quality, and operational learning loops."
+  outcome: "OMI becomes the definitive reliability layer for the probabilistic web."

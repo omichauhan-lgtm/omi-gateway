@@ -1,5 +1,16 @@
 from typing import Dict, Any
+from enum import Enum
 from core.learning_loop import memory_bank
+
+class FailureTaxonomy(str, Enum):
+    HALLUCINATION = "hallucination"
+    TIMEOUT = "timeout"
+    MALFORMED_OUTPUT = "malformed_output"
+    REASONING_FAILURE = "reasoning_failure"
+    PROVIDER_INSTABILITY = "provider_instability"
+    CONTEXT_LOSS = "context_loss"
+    POLICY_VIOLATION = "policy_violation"
+    SEMANTIC_DRIFT = "semantic_drift"
 
 class ConfidenceEngine:
     """
@@ -18,12 +29,12 @@ class ConfidenceEngine:
         risk_level = "low"
         failure_reason = None
         
-        # 1. Simple empty check
+        # 1. Simple empty check / JSON verification
         if not response_text or len(response_text.strip()) < 5:
             return {
                 "confidence": 0.0,
                 "risk_level": "critical",
-                "failure_reason": "empty_response"
+                "failure_reason": FailureTaxonomy.MALFORMED_OUTPUT.value
             }
             
         word_count = len(response_text.split())
@@ -31,17 +42,17 @@ class ConfidenceEngine:
         # 2. Heuristic: Logic Truncation (Complex query, abnormally short response)
         if complexity_score > 0.8 and word_count < 20:
             score -= 0.6
-            failure_reason = "logic_truncation"
+            failure_reason = FailureTaxonomy.REASONING_FAILURE.value
         elif complexity_score > 0.6 and word_count < 50:
             score -= 0.3
-            failure_reason = "abnormal_brevity"
+            failure_reason = FailureTaxonomy.REASONING_FAILURE.value
             
         # 3. Format/Leak heuristics (System prompts leaking into output)
         leak_markers = ["<output_lang>", "System:", "CRITICAL PROTOCOL", "Role:", "Task:"]
         for marker in leak_markers:
             if marker in response_text:
                 score -= 0.5
-                failure_reason = "prompt_leakage"
+                failure_reason = FailureTaxonomy.POLICY_VIOLATION.value
                 break
                 
         # 4. Ambiguity heuristics (Tokens indicating uncertainty in factual output)
@@ -51,12 +62,12 @@ class ConfidenceEngine:
             if marker in response_text.lower():
                 score -= 0.2
                 if not failure_reason:
-                    failure_reason = "ambiguous_statements"
+                    failure_reason = FailureTaxonomy.HALLUCINATION.value
                     
         for marker in refusal_tokens:
             if marker in response_text.lower():
                 score -= 0.8  # Heavy penalty for outright refusal
-                failure_reason = "model_refusal"
+                failure_reason = FailureTaxonomy.POLICY_VIOLATION.value
 
         # Final constraints clamping (Raw Score)
         raw_confidence = max(0.0, min(1.0, score))
