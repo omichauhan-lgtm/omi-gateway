@@ -46,11 +46,17 @@ class ConfidenceEngine:
                 
         # 4. Ambiguity heuristics (Tokens indicating uncertainty in factual output)
         ambiguous_tokens = ["I think", "might be", "not entirely sure", "assuming"]
+        refusal_tokens = ["don't know", "unable to", "cannot answer", "as an ai"]
         for marker in ambiguous_tokens:
             if marker in response_text.lower():
                 score -= 0.2
                 if not failure_reason:
                     failure_reason = "ambiguous_statements"
+                    
+        for marker in refusal_tokens:
+            if marker in response_text.lower():
+                score -= 0.8  # Heavy penalty for outright refusal
+                failure_reason = "model_refusal"
 
         # Final constraints clamping (Raw Score)
         raw_confidence = max(0.0, min(1.0, score))

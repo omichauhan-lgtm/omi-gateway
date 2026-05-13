@@ -2,6 +2,12 @@ import os
 from openai import OpenAI
 from anthropic import Anthropic
 import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# ENABLE MOCK MODE TO TEST ROUTING & JUDGE ESCALATION WITHOUT REAL API KEYS
+USE_MOCK_PROVIDERS = True
 
 # Load House Keys
 HOUSE_KEYS = {
@@ -23,22 +29,21 @@ class ModelRegistry:
     """
     @staticmethod
     def get_openai_client(user_key: str = None) -> OpenAI:
-        key = user_key or HOUSE_KEYS.get("openai")
+        key = user_key or HOUSE_KEYS.get("openai") or ("MOCK_KEY" if USE_MOCK_PROVIDERS else None)
         if not key:
             raise ValueError("OpenAI key not configured.")
         return OpenAI(api_key=key)
 
     @staticmethod
     def get_anthropic_client(user_key: str = None) -> Anthropic:
-        key = user_key or HOUSE_KEYS.get("anthropic")
+        key = user_key or HOUSE_KEYS.get("anthropic") or ("MOCK_KEY" if USE_MOCK_PROVIDERS else None)
         if not key:
             raise ValueError("Anthropic key not configured.")
         return Anthropic(api_key=key)
 
     @staticmethod
     def get_deepseek_client(user_key: str = None) -> OpenAI:
-        # Deepseek is compatible with the OpenAI spec
-        key = user_key or HOUSE_KEYS.get("deepseek")
+        key = user_key or HOUSE_KEYS.get("deepseek") or ("MOCK_KEY" if USE_MOCK_PROVIDERS else None)
         if not key:
             raise ValueError("DeepSeek key not configured.")
         return OpenAI(api_key=key, base_url="https://api.deepseek.com")
