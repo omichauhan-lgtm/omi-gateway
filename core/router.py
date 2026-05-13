@@ -66,6 +66,10 @@ class SovereignRouter:
             "alternatives": [n["target"] for n in available_nodes],
             "tradeoff": ""
         }
+        
+        # Determine the Premium Ground-Truth Model for Shadow Inference
+        premium_nodes = [n for n in available_nodes if "premium" in n.get("tags", [])]
+        shadow_model = premium_nodes[0] if premium_nodes else available_nodes[-1]
 
         # 1. Edge Case: Sovereign / Deep Indic Multilingual
         is_indic = language != "en" and language in ["hi", "ta", "te", "bn", "mr", "gu", "ur", "ml", "kn"]
@@ -79,6 +83,7 @@ class SovereignRouter:
                 return {
                     "target": sarvam_node["target"],
                     "target_key": sarvam_node["key"],
+                    "shadow_target": shadow_model["target"],
                     "instruction": f"Role: Sovereign_Indic_Orchestrator. Task: Process the request maintaining regional data sovereignty and native {language} support.",
                     "trace": decision_trace
                 }
@@ -110,6 +115,7 @@ class SovereignRouter:
             return {
                 "target": cheapest_model["target"],
                 "target_key": cheapest_model["key"],
+                "shadow_target": shadow_model["target"] if cheapest_model["target"] != shadow_model["target"] else None,
                 "instruction": "Role: Frugal_Edge_Model. Task: Provide a direct, factual answer. No markdown fluff or complex reasoning paths.",
                 "trace": decision_trace
             }

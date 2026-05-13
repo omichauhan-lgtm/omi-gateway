@@ -71,11 +71,35 @@ async def trigger_benchmark_suite(
         raise HTTPException(status_code=401, detail="Invalid Sovereign Orchestrator Key.")
         
     clients = get_clients_payload(x_openai_key, x_anthropic_key, x_deepseek_key)
-    
-    # Run asynchronously so the API doesn't block
     background_tasks.add_task(benchmark_engine.run_benchmark_cycle, clients)
     
     return {"status": "accepted", "message": "Benchmarking fleet deployed in background."}
+
+@app.get("/admin/traces")
+async def get_recent_traces(
+    limit: int = 50,
+    x_omi_admin_key: str = Header(None)
+):
+    """
+    Priority 04: Routing Trace Visualization.
+    Returns the latency waterfall, routing path, and escalation timelines for recent requests.
+    """
+    if not ModelRegistry.validate_house_key(x_omi_admin_key):
+        raise HTTPException(status_code=403, detail="Invalid Admin Key")
+        
+    import sqlite3
+    try:
+        with sqlite3.connect("learning_loop.db") as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT * FROM routing_decisions ORDER BY id DESC LIMIT ?",
+                (limit,)
+            )
+            rows = cursor.fetchall()
+            return {"traces": [dict(r) for r in rows]}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 
 @app.post("/rag/ingest")
@@ -140,6 +164,13 @@ async def orchestrate_request(
         escalated = False
         evaluation_meta = {}
         target_model = route_config.get("target", "unknown")
+        shadow_model = route_config.get("shadow_target")
+        
+        # PRIORITY 06: Shadow Inference (A/B Calibration)
+        if shadow_model:
+            # In a true deployment, this is sent to a Celery/Kafka queue.
+            # Here we just log the shadow intent for downstream evaluation logic.
+            pass
         
         # Step 4: Quantitative Confidence Engine (Calibrated)
         evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, target_model)
@@ -172,16 +203,29 @@ async def orchestrate_request(
 
     # Step 6: Learning Loop & Telemetry Recording (Async)
     latency_ms = (time.time() - start_time) * 1000
+    
+    # Enhanced Metrics logging for Priority 02 & 05 (Calibration & Drift)
+    if evaluation.get("failure_reason"):
+        background_tasks.add_task(
+            memory_bank.log_failure,
+            model_id=route_config.get("target", "unknown"),
+            complexity=complexity,
+            failure_reason=evaluation.get("failure_reason"),
+            raw_confidence=evaluation.get("raw_confidence", 0.0),
+            calibrated_confidence=evaluation.get("confidence", 0.0),
+            latency_ms=int(latency_ms)
+        )
+        
     background_tasks.add_task(
-        metrics.record_transaction,
-        prompt_len=len(request.prompt),
-        response_len=len(response_text),
-        routed_model=route_config.get("target", "unknown"),
-        latency_ms=latency_ms,
-        complexity_score=complexity,
-        language=language,
-        escalated=escalated
+        memory_bank.log_decision,
+        prompt=request.prompt,
+        selected_model=route_config.get("target", "unknown"),
+        complexity=complexity,
+        escalated=escalated,
+        latency_ms=int(latency_ms),
+        shadow_model=route_config.get("shadow_target")
     )
+
 
     return {
         "response": response_text.strip(),
