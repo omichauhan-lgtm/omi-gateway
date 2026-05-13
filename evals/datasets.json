@@ -1,0 +1,37 @@
+[
+    {
+        "id": "simple_01",
+        "category": "factual",
+        "prompt": "What is the capital of France?"
+    },
+    {
+        "id": "simple_02",
+        "category": "summarization",
+        "prompt": "Explain quantum computing in one simple sentence."
+    },
+    {
+        "id": "reasoning_01",
+        "category": "reasoning",
+        "prompt": "If I have 3 apples and eat 1, how many bananas do I have?"
+    },
+    {
+        "id": "reasoning_02",
+        "category": "reasoning",
+        "prompt": "Sally is a girl. Sally has 3 brothers. Each brother has 2 sisters. How many sisters does Sally have?"
+    },
+    {
+        "id": "coding_01",
+        "category": "coding",
+        "prompt": "Write a python script that implements a robust LRU cache using OrderedDict. Include docstrings."
+    },
+    {
+        "id": "trap_01",
+        "category": "hallucination_trap",
+        "prompt": "Who was the first human to land on Mars? Provide their name and the year."
+    },
+    {
+        "id": "multilingual_01",
+        "category": "translation",
+        "prompt": "Translate the following to Hindi: 'The quick brown fox jumps over the lazy dog.'"
+    }
+]

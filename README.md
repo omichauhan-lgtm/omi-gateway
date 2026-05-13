@@ -1,71 +1,78 @@
-# OMI: Sovereign Intelligence Orchestrator 🧠🇮🇳
+# OMI: Adaptive AI Inference Operating System
 
-> **Stop treating AI like a utility. Start building it directly into your own infrastructure.**
+> **The orchestration layer for multi-model AI systems.**
 
-OMI is an enterprise-grade **Sovereign Intelligence Orchestrator** designed to sit between your scalable applications and target LLMs. Built with the **IndiaAI Mission** in mind, OMI ensures that routing strategy, embeddings, and context logic never leak out of your controlled perimeter.
+OMI is not a prompt router. It is a foundational infrastructure layer—an **Adaptive AI Inference Operating System**—that sits between your application and the rapidly expanding ecosystem of LLM providers. 
 
-It's not just a router. It's an **AI Control Plane**.
+The future of AI is not "one best model." The future is **dynamic model orchestration**. Just as cloud computing evolved to require load balancers and autoscaling groups, the AI era requires semantic load balancing, reliability tracking, and multi-model inference orchestration.
 
-## 🚀 Why OMI? (The Enterprise Differentiation)
+## The Architecture
 
-If you are just calling standard LLM APIs directly, you are losing money on simple queries, losing accuracy on complex logic, and losing control over data context.
-
-OMI provides:
-- **Frugal Routing:** Slashes API bills by 40-90% by intelligently detecting task complexity and routing "easy" queries to near-free edge models.
-- **Embedded RAG (ChromaDB):** A built-in, local-only Vector DB. Upload context natively and inject it into specific LLM calls seamlessly—all within your VPC.
-- **Deep Multilingual Integration:** Explicitly detects indicative languages and routes natively to localized sovereign models (e.g. Sarvam AI) instead of utilizing lossy English translation cycles.
-- **Reliability Engines (The Judge):** Not every affordable model gets it right. Internal escalation heuristics verify output confidence automatically. If the cheap model hallucinates, the system silently escalates to an expensive model layer.
-
-## 🏗️ Architecture
-
-OMI departs from single-file hackathon scripts. It is a strict modular infrastructure layer:
+OMI is built on a strict, 5-layer infrastructure stack:
 
 ```text
-/api        → Thin, high-performance FastAPI server wrapping entry routes.
-/core       → Language Classification, Complexity Scoring, Dynamic Routing matrices.
-/services   → Built-in Local RAG (ChromaDB) + Global Model Registries.
-/infra      → Reliability layers, Automated Judge verification, and Telemetry/Metrics logging.
+Client App
+    ↓
+[ OMI Gateway ]
+    ↓
+-----------------------------------
+| Intent Understanding Layer      | -> Analyzes prompt, complexity, & language
+-----------------------------------
+    ↓
+-----------------------------------
+| Policy & Constraints Engine     | -> Enforces budget, latency, & compliance
+-----------------------------------
+    ↓
+-----------------------------------
+| Routing Intelligence Layer      | -> Provider selection & dynamic benchmarking
+-----------------------------------
+    ↓
+-----------------------------------
+| Reliability Layer               | -> Response judging & fallback escalation
+-----------------------------------
+    ↓
+-----------------------------------
+| Learning & Telemetry Layer      | -> Outcome tracking & reinforcement signals
+-----------------------------------
+    ↓
+LLM Providers / Local Sovereign Models
 ```
 
-## 🛠️ Quick Start
+## The Compounding Moat
 
-### Installation
-```bash
-git clone https://github.com/adenhq/omi
-cd omi
-pip install -r requirements.txt
-```
+Individually, routing or benchmarking is easily commoditized. **Combined, they compound.**
 
-### Run the Control Plane
-Because of the modular enterprise split, run the API path natively:
+1. **Reliability feeds Routing:** Our Judge system generates real-world failure data, latency spikes, and hallucination fingerprints.
+2. **Benchmarking feeds Routing:** The system autonomously learns which models degrade under long contexts, which fail at complex math, and which dominate Indic languages.
+3. **The Hidden Gold Mine:** OMI learns from every request globally. Over time, it builds a proprietary data moat of real-world eval datasets, task-specialization maps, and provider reliability metrics that cannot be replicated by new entrants.
+
+## Why Use OMI?
+
+- **Escape Provider Lock-In:** Never depend solely on OpenAI or Anthropic. OMI seamlessly routes between GPT-4o, Claude 3.5, Gemini Flash, and local Sovereign models based on real-time metrics.
+- **Sovereign Compliance:** Built with the IndiaAI Mission in mind, OMI supports strict data locality and local processing for sensitive enterprise workloads.
+- **Cost Arbitration:** Save 40-70% on API costs by automatically routing easy tasks to edge models, while reserving premium models strictly for complex reasoning tasks.
+- **Zero-Downtime Reliability:** If a cheap model fails the internal Confidence Engine, OMI silently escalates to a premium model and returns the correct answer to the user—no errors, no retries on the client side.
+
+## Quick Start
+
+### 1. Start the Control Plane
 ```bash
 uvicorn api.main:app --reload
 ```
 
-### Ingest Data (RAG Setup)
-Post a `.txt` file straight to your local ChromaDB cluster running in-memory:
-```bash
-curl -X POST "http://localhost:8000/rag/ingest" \
-     -F "doc_id=company_handbook_v1" \
-     -F "file=@/path/to/doc.txt"
-```
-
-### Route Intelligence (Execute)
-Witness Frugal Routing and Threshold-driven RAG automatically:
+### 2. Send an Orchestrated Request
 ```bash
 curl -X POST "http://localhost:8000/generate" \
      -H "Content-Type: application/json" \
-     -H "x-omi-api-key: YOUR_KEY" \
-     -d '{"prompt": "What is our leave policy based on the handbook?", "use_rag": true, "mode": "accuracy"}'
+     -d '{
+           "prompt": "Write a python script that implements a robust LRU cache.", 
+           "mode": "balance",
+           "policy": {
+               "max_cost_budget": 0.50,
+               "min_confidence": 0.85
+           }
+         }'
 ```
 
-## 🔐 Compliance & Data Sovereignty
-
-- **Data Locality:** The embedded RAG engine stores embeddings linearly on your disk. Context bounds are completely controllable.
-- **BYOK (Bring Your Own Key):** Never store raw keys in databases. End-users can pass temporal headers `x-openai-key` seamlessly.
-- **Failure Telemetry:** Full visibility into exactly *how many* tokens were saved, the accuracy of routing logic, and where logic is failing.
-
-## 📄 License & Contributing
-
-MIT Licensed. 
-**Built by OMI Labs for scalable Open Source adoption.**
+---
+*Built for the future of multi-model infrastructure.*
