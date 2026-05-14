@@ -19,7 +19,9 @@ jobs:
         run: pip install -r requirements.txt
       
       - name: Lint check
-        run: python -c "import main; print('✅ Syntax OK')"
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/api
+          python -c "import main; print('✅ Syntax OK')"
 
   # Uncomment when you connect Render
   # deploy:

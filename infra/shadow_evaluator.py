@@ -1,6 +1,6 @@
 import asyncio
 from typing import Dict, Any
-from core.router import sovereign_router
+from core.router import router as sovereign_router
 from infra.reliability import ConfidenceEngine
 from core.learning_loop import memory_bank
 
