@@ -27,6 +27,11 @@ env/
 .DS_Store
 Thumbs.db
 
+# Databases
+*.db
+*.db-journal
+chroma_db/
+
 # Logs
 *.log
 logs/
