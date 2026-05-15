@@ -85,11 +85,26 @@ def get_drift_detection(db: sqlite3.Connection = Depends(get_db), x_omi_admin_ke
     """)
     
     drift = {}
+    alerts = []
     for row in cursor.fetchall():
-        drift[row["provider"]] = {
+        provider = row["provider"]
+        esc_rate = round(row["escalation_rate"] or 0, 2)
+        
+        drift[provider] = {
             "average_latency_ms": round(row["avg_latency"] or 0, 2),
-            "escalation_rate_pct": round(row["escalation_rate"] or 0, 2),
+            "escalation_rate_pct": esc_rate,
             "total_requests": row["volume"]
         }
+        
+        # Priority 06: Drift Detection Alerting
+        if esc_rate > 15.0: # Threshold for 'significant degradation'
+            alerts.append({
+                "provider": provider,
+                "severity": "CRITICAL",
+                "message": f"Reliability drift detected: Escalation rate increased to {esc_rate}%"
+            })
     
-    return {"drift_analysis": drift}
+    return {
+        "drift_analysis": drift,
+        "active_alerts": alerts
+    }
