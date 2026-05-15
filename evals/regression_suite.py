@@ -2,6 +2,7 @@ import requests
 import sys
 import json
 import time
+import os
 
 # OMI Continuous Reliability Regression Suite
 # Objective: Fail the CI if Judge Accuracy or Escalation correctness drops below thresholds.
@@ -19,9 +20,12 @@ def run_regression_check():
     
     try:
         # 1. Fetch Scorecard
-        resp = requests.get(f"{BASE_URL}/admin/scorecard")
+        admin_key = os.getenv("OMI_ADMIN_KEY", "")
+        headers = {"X-OMI-Admin-Key": admin_key}
+        
+        resp = requests.get(f"{BASE_URL}/admin/scorecard", headers=headers)
         if resp.status_code != 200:
-            print(f"FAILED: Could not fetch scorecard ({resp.status_code})")
+            print(f"FAILED: Could not fetch scorecard ({resp.status_code}) - {resp.text}")
             sys.exit(1)
             
         scorecard = resp.json()["metrics"]
