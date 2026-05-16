@@ -108,3 +108,72 @@ def get_drift_detection(db: sqlite3.Connection = Depends(get_db), x_omi_admin_ke
         "drift_analysis": drift,
         "active_alerts": alerts
     }
+
+@router.get("/time-series")
+def get_reliability_timeline(db: sqlite3.Connection = Depends(get_db), x_omi_admin_key: str = Header(None)):
+    """
+    Priority 3: Reliability Drift Timelines.
+    Historical hallucination trends and provider degradation over time.
+    """
+    cursor = db.cursor()
+    # Group by simple hour/day buckets for longitudinal intelligence
+    cursor.execute("""
+        SELECT 
+            substr(timestamp, 1, 13) as time_bucket, -- Grouping by hour: YYYY-MM-DDTHH
+            initial_route as provider,
+            SUM(escalated)*100.0/COUNT(*) as hourly_escalation_rate
+        FROM routing_decisions
+        GROUP BY time_bucket, provider
+        ORDER BY time_bucket DESC
+        LIMIT 100
+    """)
+    
+    timeline = {}
+    for row in cursor.fetchall():
+        provider = row["provider"]
+        if provider not in timeline:
+            timeline[provider] = []
+        timeline[provider].append({
+            "timestamp": row["time_bucket"] + ":00:00",
+            "escalation_rate": round(row["hourly_escalation_rate"] or 0, 2)
+        })
+        
+    return {"reliability_timeline": timeline}
+
+@router.get("/forecast")
+def get_reliability_forecast(db: sqlite3.Connection = Depends(get_db), x_omi_admin_key: str = Header(None)):
+    """
+    Priority 4: Reliability Forecasting.
+    Predictive orchestration intelligence estimating future failure likelihoods.
+    """
+    # In a mature system, this uses ARIMA or Exponential Moving Averages (EMA).
+    # Here, we simulate the predictive output based on recent vs historical delta.
+    cursor = db.cursor()
+    
+    cursor.execute("""
+        SELECT 
+            initial_route as provider,
+            SUM(escalated)*100.0/COUNT(*) as historical_rate,
+            COUNT(*) as volume
+        FROM routing_decisions
+        GROUP BY initial_route
+    """)
+    
+    forecasts = {}
+    for row in cursor.fetchall():
+        provider = row["provider"]
+        hist_rate = row["historical_rate"] or 0
+        volume = row["volume"]
+        
+        # Simple predictive heuristic: High volume + current historical rate -> slight degradation expectation
+        # Represents the predictive governance constraint layer
+        expected_escalation = round(hist_rate * 1.05, 2) if volume > 50 else round(hist_rate, 2)
+        
+        forecasts[provider] = {
+            "expected_escalation_likelihood": expected_escalation,
+            "forecasted_hallucination_probability": round(expected_escalation * 0.8, 2), # Heuristic correlation
+            "calibration_risk": "High" if expected_escalation > 20 else "Low"
+        }
+        
+    return {"predictive_governance": forecasts}
+

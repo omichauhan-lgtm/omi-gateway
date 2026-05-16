@@ -54,7 +54,19 @@ class DataMoat:
                     trust_score REAL DEFAULT 1.0
                 )
             """)
+            # Priority 1: Telemetry Lineage Tracking
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS telemetry_lineage (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT,
+                    action_type TEXT,
+                    influenced_entity TEXT,
+                    source_evidence_ids TEXT,
+                    metadata_hash TEXT
+                )
+            """)
             conn.commit()
+
 
 
 
@@ -173,12 +185,12 @@ class DataMoat:
                     # Look at failures in the upper boundary of its capability
                     lower_bound = current_max - 0.2
                     cursor.execute(
-                        "SELECT COUNT(*), SUM(escalated) FROM routing_decisions WHERE initial_route = ? AND complexity > ?",
+                        "SELECT id, escalated FROM routing_decisions WHERE initial_route = ? AND complexity > ?",
                         (target, lower_bound)
                     )
-                    row = cursor.fetchone()
-                    total = row[0] if row[0] is not None else 0
-                    fails = row[1] if row[1] is not None else 0
+                    evidence_rows = cursor.fetchall()
+                    total = len(evidence_rows)
+                    fails = sum(1 for row in evidence_rows if row[1])
                     
                     adjusted_node = dict(node)
                     if total >= 10: # Only learn if statistically significant traffic exists
@@ -187,8 +199,19 @@ class DataMoat:
                             # Model is consistently failing its upper bound -> Permanently downgrade its max logic threshold
                             adjusted_node["max_complexity"] = round(max(0.2, current_max - 0.15), 2)
                             
+                            # Priority 1: Record Lineage for Optimization Event
+                            evidence_ids = ",".join([str(row[0]) for row in evidence_rows if row[1]])
+                            cursor.execute(
+                                """INSERT INTO telemetry_lineage 
+                                   (timestamp, action_type, influenced_entity, source_evidence_ids, metadata_hash)
+                                   VALUES (?, ?, ?, ?, ?)""",
+                                (datetime.utcnow().isoformat(), "ROUTING_WEIGHT_DECAY", target, evidence_ids, f"failure_rate:{failure_rate:.2f}")
+                            )
+                            
                     optimized_nodes.append(adjusted_node)
+                conn.commit()
             return optimized_nodes
+
         except Exception:
             # Safe failover to unoptimized nodes if DB fails
             return baseline_nodes
