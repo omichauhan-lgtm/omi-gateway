@@ -198,7 +198,7 @@ class FeedbackRequest(BaseModel):
 
 @app.post("/feedback")
 @limiter.limit("10/minute")
-async def submit_reliability_feedback(http_req: Request, feedback: FeedbackRequest, background_tasks: BackgroundTasks):
+async def submit_reliability_feedback(request: Request, feedback: FeedbackRequest, background_tasks: BackgroundTasks):
     """
     Priority 2: Human Reliability Feedback Loop.
     Capture real-world user disagreement signals for calibration science.
@@ -213,11 +213,12 @@ async def submit_reliability_feedback(http_req: Request, feedback: FeedbackReque
     return {"status": "success", "message": "Feedback captured for telemetry calibration."}
 
 
+
 @app.post("/generate")
 @limiter.limit("30/minute")
 async def orchestrate_request(
-    http_req: Request,
-    request: OrchestratorRequest,
+    request: Request,
+    payload: OrchestratorRequest,
     background_tasks: BackgroundTasks,
     x_omi_api_key: str = Header(None),
     x_openai_key: str = Header(None),
@@ -237,22 +238,23 @@ async def orchestrate_request(
     clients = get_clients_payload(x_openai_key, x_anthropic_key, x_deepseek_key)
     
     # Step 1: Pre-Flight Analysis
-    analysis = RequestClassifier.analyze(request.prompt)
+    analysis = RequestClassifier.analyze(payload.prompt)
     complexity = analysis["complexity_score"]
     language = analysis["language"]
     
     # Step 2: RAG Context Gathering
-    final_prompt = request.prompt
-    if request.use_rag:
+    final_prompt = payload.prompt
+    if payload.use_rag:
         # Retrieve context with a strict relativity threshold
-        retrieved_context = rag_engine.retrieve_context(query=request.prompt, top_k=2, threshold=1.5)
+        retrieved_context = rag_engine.retrieve_context(query=payload.prompt, top_k=2, threshold=1.5)
         if retrieved_context:
-            final_prompt = f"Background Context:\n{retrieved_context}\n\nTask:\n{request.prompt}"
-    elif request.context:
-        final_prompt = f"Background Context:\n{request.context}\n\nTask:\n{request.prompt}"
+            final_prompt = f"Background Context:\n{retrieved_context}\n\nTask:\n{payload.prompt}"
+    elif payload.context:
+        final_prompt = f"Background Context:\n{payload.context}\n\nTask:\n{payload.prompt}"
 
     # Step 3: Routing Matrix Execution
-    route_config = sovereign_router.calculate_route(request.mode, complexity, language, request.policy)
+    route_config = sovereign_router.calculate_route(payload.mode, complexity, language, payload.policy)
+
     
     try:
         response_text = sovereign_router.execute_route(final_prompt, route_config, clients)
@@ -276,7 +278,7 @@ async def orchestrate_request(
         # Step 4: Quantitative Confidence Engine (Calibrated)
         evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, target_model)
         confidence_score = evaluation["confidence"]
-        min_allowed_confidence = request.policy.min_confidence if request.policy else 0.8
+        min_allowed_confidence = payload.policy.min_confidence if payload.policy else 0.8
         
         if confidence_score < min_allowed_confidence:
             # Escalation Path -> Failed threshold, fallback to smartest model disregarding cost budget
@@ -319,7 +321,7 @@ async def orchestrate_request(
         
     background_tasks.add_task(
         memory_bank.log_decision,
-        prompt=request.prompt,
+        prompt=payload.prompt,
         selected_model=route_config.get("target", "unknown"),
         complexity=complexity,
         escalated=escalated,

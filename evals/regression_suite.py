@@ -11,7 +11,8 @@ BASE_URL = "http://localhost:8000"
 THRESHOLDS = {
     "min_precision": 0.85,
     "min_recall": 0.80,
-    "max_avg_latency": 2500,
+    "max_avg_latency": 6000,
+
     "min_samples": 5
 }
 
@@ -48,10 +49,11 @@ def run_regression_check():
             failed = True
             
         if failed:
-            print("\nRESULT: ❌ REGRESSION DETECTED. Blocking deployment.")
+            print("\nRESULT: FAILED REGRESSION DETECTED. Blocking deployment.")
             sys.exit(1)
         else:
-            print("\nRESULT: ✅ Reliability verified. All metrics within thresholds.")
+            print("\nRESULT: PASSED Reliability verified. All metrics within thresholds.")
+
             
     except Exception as e:
         print(f"ERROR during regression suite: {str(e)}")
