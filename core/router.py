@@ -92,57 +92,49 @@ class SovereignRouter:
                 # Fallthrough to global models
 
             
-        # 2. Query the Learning Loop (Is the cheapest model historically terrible at this complexity?)
-        cheapest_model = sorted(available_nodes, key=lambda x: x["cost_weight"])[0]
-        historical_failure_rate = memory_bank.get_escalation_rate(cheapest_model["target"], min_complexity=complexity)
+        # 2. Priority 6: Reliability-Aware Economic Routing (Expected Utility)
+        # Utility = Correctness - (CostWeight * Cost) - (LatencyWeight * Latency) - (RiskWeight * FailureProb)
+        best_node = None
+        highest_utility = -9999.0
         
-        # If the preferred cheap model fails > 30% of the time at this complexity, skip it! (Unless strict_mode forces cheap)
         strict_mode = getattr(policy, "strict_mode", False) if policy else False
         
-        if historical_failure_rate > 0.3 and not strict_mode:
-            # Filter out the unreliable cheap model and grab the next tier up
-            discarded_model = cheapest_model["target"]
-            available_nodes = [n for n in available_nodes if n["target"] != cheapest_model["target"]]
-            if available_nodes:
-                cheapest_model = sorted(available_nodes, key=lambda x: x["cost_weight"])[0]
-                decision_trace["reason"] = f"Learning Loop override. Discarded {discarded_model} due to {int(historical_failure_rate * 100)}% failure rate at complexity {round(complexity, 2)}."
-
-        # 3. Final Explicit Routing Matrix
-        if mode in ["saving", "frugal"] or complexity < 0.4:
-            if not decision_trace["reason"]:
-                decision_trace["reason"] = "Low complexity / frugal mode requested. Routing to cheapest available model."
-            decision_trace["tradeoff"] = "Maximized cost savings, slight reasoning risk."
-            return {
-                "target": cheapest_model["target"],
-                "target_key": cheapest_model["key"],
-                "shadow_target": shadow_model["target"] if cheapest_model["target"] != shadow_model["target"] else None,
-                "instruction": "Role: Frugal_Edge_Model. Task: Provide a direct, factual answer. No markdown fluff or complex reasoning paths.",
-                "trace": decision_trace
-            }
-
+        for node in available_nodes:
+            # Gather empirical probabilities from the Data Moat
+            failure_prob = memory_bank.get_escalation_rate(node["target"], min_complexity=complexity)
             
-        if mode == "coding" or complexity >= 0.8:
-            # Prefer Claude for code if bounds allow
-            claude_node = next((n for n in available_nodes if n["key"] == "anthropic"), None)
-            if claude_node:
-                decision_trace["reason"] = "Complexity > 0.8 or coding mode requested. Routing to specialized struct model."
-                decision_trace["tradeoff"] = "Maximized tier 1 logic execution."
-                return {
-                    "target": claude_node["target"], "target_key": claude_node["key"],
-                    "instruction": "Role: Senior_Engineer. Task: Provide highly accurate logic, structured strictly, focusing on edge cases. Wrap code in blocks.",
-                    "trace": decision_trace
-                }
+            # If strict mode is off and it fails too often, heavily penalize it
+            if failure_prob > 0.3 and not strict_mode:
+                continue
+                
+            # Base correctness estimation (distance between task complexity and model capability)
+            correctness_estimate = 1.0 if node["max_complexity"] >= complexity else (node["max_complexity"] / complexity)
             
-        # Default fallback to the smartest allowed model
-        smartest_node = sorted(available_nodes, key=lambda x: x["max_complexity"], reverse=True)[0]
-        decision_trace["reason"] = "Standard routing fallback to highest allowed logic bound based on policy constraints."
-        decision_trace["tradeoff"] = "Balanced quality and cost constraint boundary."
+            # Simple economics for the utility function
+            cost_penalty = node["cost_weight"] * 2.0
+            risk_penalty = failure_prob * 3.0
+            
+            # Expected Utility Calculation
+            expected_utility = correctness_estimate - cost_penalty - risk_penalty
+            
+            if expected_utility > highest_utility:
+                highest_utility = expected_utility
+                best_node = node
+                
+        if not best_node:
+            best_node = sorted(available_nodes, key=lambda x: x["max_complexity"], reverse=True)[0]
+
+        decision_trace["reason"] = f"Reliability-Aware Economic Routing. Selected {best_node['target']} with highest Expected Utility."
+        decision_trace["tradeoff"] = f"Expected Utility Score: {highest_utility:.2f}"
+        
         return {
-            "target": smartest_node["target"],
-            "target_key": smartest_node["key"],
-            "instruction": "Role: Logic_Architect. Task: Structure response analytically. Break down into step-by-step logic chains.",
+            "target": best_node["target"],
+            "target_key": best_node["key"],
+            "shadow_target": shadow_model["target"] if best_node["target"] != shadow_model["target"] else None,
+            "instruction": "Role: Inference_Engine. Task: Respond directly with high accuracy.",
             "trace": decision_trace
         }
+
 
 
     def execute_route(self, prompt: str, route_config: dict, registry_clients: dict) -> str:

@@ -1,9 +1,12 @@
 import time
 import os
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Header, BackgroundTasks
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Header, BackgroundTasks, Request
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from core.classifier import RequestClassifier
 from core.router import router as build_router
@@ -18,10 +21,15 @@ from api.analytics import router as analytics_router
 
 
 
+limiter = Limiter(key_func=get_remote_address)
+
 app = FastAPI(
     title="Sovereign Intelligence Orchestrator (OMI)",
-    version="2026.2.0-Enterprise"
+    version="2026.3.0-LiveValidation"
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 app.include_router(analytics_router)
 
 # Mount Dashboard for Public Technical Demonstration (Priority 10)
@@ -135,6 +143,15 @@ async def get_reliability_scorecard(x_omi_admin_key: str = Header(None)):
             cursor.execute("SELECT AVG(latency_ms) FROM routing_decisions")
             avg_latency = cursor.fetchone()[0] or 0
             
+            cursor.execute("SELECT COUNT(*) FROM routing_decisions WHERE initial_route != 'gpt-4o' AND escalated = 0")
+            successful_frugal_routes = cursor.fetchone()[0]
+            
+            # Priority 4: Reliability Economics
+            cost_avoided = successful_frugal_routes * 0.02 # Assume $0.02 saved per frugal success vs GPT-4o
+            failures_prevented_value = total_failures * 0.05 # Value of catching a failure before user sees it
+            escalation_overhead = escalations * 0.03 # Cost of double-processing
+            value_generated = cost_avoided + failures_prevented_value - escalation_overhead
+            
             return {
                 "metrics": {
                     "judge_precision": 0.91, # Hardcoded baseline for now, will calculate dynamically as dataset grows
@@ -142,6 +159,12 @@ async def get_reliability_scorecard(x_omi_admin_key: str = Header(None)):
                     "avg_escalation_latency_ms": round(avg_latency, 2),
                     "total_telemetry_samples": total_failures + escalations,
                     "reliability_index": 0.88
+                },
+                "economics": {
+                    "cost_avoided_usd": round(cost_avoided, 2),
+                    "failures_prevented_value_usd": round(failures_prevented_value, 2),
+                    "escalation_overhead_usd": round(escalation_overhead, 2),
+                    "total_value_generated_usd": round(value_generated, 2)
                 },
                 "status": "healthy"
             }
@@ -167,9 +190,33 @@ async def ingest_document(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+class FeedbackRequest(BaseModel):
+    request_id: str
+    provider: str
+    feedback_type: str # e.g., "hallucination", "false_confidence", "unnecessary_escalation"
+    disagreement_reason: Optional[str] = None
+
+@app.post("/feedback")
+@limiter.limit("10/minute")
+async def submit_reliability_feedback(http_req: Request, feedback: FeedbackRequest, background_tasks: BackgroundTasks):
+    """
+    Priority 2: Human Reliability Feedback Loop.
+    Capture real-world user disagreement signals for calibration science.
+    """
+    background_tasks.add_task(
+        memory_bank.log_feedback,
+        request_id=feedback.request_id,
+        provider=feedback.provider,
+        feedback_type=feedback.feedback_type,
+        disagreement_reason=feedback.disagreement_reason
+    )
+    return {"status": "success", "message": "Feedback captured for telemetry calibration."}
+
 
 @app.post("/generate")
+@limiter.limit("30/minute")
 async def orchestrate_request(
+    http_req: Request,
     request: OrchestratorRequest,
     background_tasks: BackgroundTasks,
     x_omi_api_key: str = Header(None),

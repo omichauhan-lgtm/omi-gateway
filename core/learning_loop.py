@@ -43,7 +43,18 @@ class DataMoat:
                     latency_ms REAL
                 )
             """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS human_feedback (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT,
+                    request_id TEXT,
+                    provider TEXT,
+                    feedback_type TEXT,
+                    disagreement_reason TEXT
+                )
+            """)
             conn.commit()
+
 
     def log_decision(
         self,
@@ -81,6 +92,24 @@ class DataMoat:
                 (datetime.utcnow().isoformat(), model_id, complexity, failure_reason, raw_confidence, calibrated_confidence, latency_ms)
             )
             conn.commit()
+
+    def log_feedback(
+        self,
+        request_id: str,
+        provider: str,
+        feedback_type: str,
+        disagreement_reason: str = None
+    ):
+        """Priority 2: Human Reliability Feedback Loop."""
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.execute(
+                """INSERT INTO human_feedback 
+                   (timestamp, request_id, provider, feedback_type, disagreement_reason)
+                   VALUES (?, ?, ?, ?, ?)""",
+                (datetime.utcnow().isoformat(), request_id, provider, feedback_type, disagreement_reason)
+            )
+            conn.commit()
+
 
     def get_escalation_rate(self, target_model: str, min_complexity: float = 0.5) -> float:
         """
