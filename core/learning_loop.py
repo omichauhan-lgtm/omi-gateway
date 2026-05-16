@@ -50,10 +50,12 @@ class DataMoat:
                     request_id TEXT,
                     provider TEXT,
                     feedback_type TEXT,
-                    disagreement_reason TEXT
+                    disagreement_reason TEXT,
+                    trust_score REAL DEFAULT 1.0
                 )
             """)
             conn.commit()
+
 
 
     def log_decision(
@@ -100,15 +102,28 @@ class DataMoat:
         feedback_type: str,
         disagreement_reason: str = None
     ):
-        """Priority 2: Human Reliability Feedback Loop."""
+        """
+        Priority 2: Human Reliability Feedback Loop.
+        Includes Phase 4 Anti-Corruption Layer (Telemetry Trust Scoring).
+        """
+        # Baseline Trust Score (in a real system, calculated via rate/entropy analysis)
+        trust_score = 1.0
+        
+        # Simple Anomaly Filtering: Penalize excessively short or noisy disagreement reasons
+        if disagreement_reason and len(disagreement_reason.strip()) < 10:
+            trust_score = 0.2  # Likely spam or unhelpful
+        elif not disagreement_reason:
+            trust_score = 0.5  # Lower weight for unverified single-click feedback
+            
         with sqlite3.connect(DB_PATH) as conn:
             conn.execute(
                 """INSERT INTO human_feedback 
-                   (timestamp, request_id, provider, feedback_type, disagreement_reason)
-                   VALUES (?, ?, ?, ?, ?)""",
-                (datetime.utcnow().isoformat(), request_id, provider, feedback_type, disagreement_reason)
+                   (timestamp, request_id, provider, feedback_type, disagreement_reason, trust_score)
+                   VALUES (?, ?, ?, ?, ?, ?)""",
+                (datetime.utcnow().isoformat(), request_id, provider, feedback_type, disagreement_reason, trust_score)
             )
             conn.commit()
+
 
 
     def get_escalation_rate(self, target_model: str, min_complexity: float = 0.5) -> float:
