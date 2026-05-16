@@ -1,78 +1,119 @@
-# OMI: Adaptive AI Inference Operating System
+# OMI: Probabilistic AI Orchestration & Reliability Infrastructure
 
-> **The orchestration layer for multi-model AI systems.**
+**OMI** is an open-source inference science engine. It is an orchestration, reliability, observability, and calibration layer designed to sit between your applications and probabilistic machine intelligence systems.
 
-OMI is not a prompt router. It is a foundational infrastructure layer—an **Adaptive AI Inference Operating System**—that sits between your application and the rapidly expanding ecosystem of LLM providers. 
+It is **not** a chatbot, wrapper, or simple proxy. OMI treats AI providers as volatile commodities and establishes an **Execution Plane**, a **Reliability Plane**, and an **Intelligence Plane** to guarantee measurable, statistically provable performance under real-world entropy.
 
-The future of AI is not "one best model." The future is **dynamic model orchestration**. Just as cloud computing evolved to require load balancers and autoscaling groups, the AI era requires semantic load balancing, reliability tracking, and multi-model inference orchestration.
+---
 
-## The Architecture
+## 🏗️ Core Architecture
 
-OMI is built on a strict, 5-layer infrastructure stack:
-
-```text
-Client App
-    ↓
-[ OMI Gateway ]
-    ↓
------------------------------------
-| Intent Understanding Layer      | -> Analyzes prompt, complexity, & language
------------------------------------
-    ↓
------------------------------------
-| Policy & Constraints Engine     | -> Enforces budget, latency, & compliance
------------------------------------
-    ↓
------------------------------------
-| Routing Intelligence Layer      | -> Provider selection & dynamic benchmarking
------------------------------------
-    ↓
------------------------------------
-| Reliability Layer               | -> Response judging & fallback escalation
------------------------------------
-    ↓
------------------------------------
-| Learning & Telemetry Layer      | -> Outcome tracking & reinforcement signals
------------------------------------
-    ↓
-LLM Providers / Local Sovereign Models
-```
-
-## The Compounding Moat
-
-Individually, routing or benchmarking is easily commoditized. **Combined, they compound.**
-
-1. **Reliability feeds Routing:** Our Judge system generates real-world failure data, latency spikes, and hallucination fingerprints.
-2. **Benchmarking feeds Routing:** The system autonomously learns which models degrade under long contexts, which fail at complex math, and which dominate Indic languages.
-3. **The Hidden Gold Mine:** OMI learns from every request globally. Over time, it builds a proprietary data moat of real-world eval datasets, task-specialization maps, and provider reliability metrics that cannot be replicated by new entrants.
-
-## Why Use OMI?
-
-- **Escape Provider Lock-In:** Never depend solely on OpenAI or Anthropic. OMI seamlessly routes between GPT-4o, Claude 3.5, Gemini Flash, and local Sovereign models based on real-time metrics.
-- **Sovereign Compliance:** Built with the IndiaAI Mission in mind, OMI supports strict data locality and local processing for sensitive enterprise workloads.
-- **Cost Arbitration:** Save 40-70% on API costs by automatically routing easy tasks to edge models, while reserving premium models strictly for complex reasoning tasks.
-- **Zero-Downtime Reliability:** If a cheap model fails the internal Confidence Engine, OMI silently escalates to a premium model and returns the correct answer to the user—no errors, no retries on the client side.
-
-## Quick Start
-
-### 1. Start the Control Plane
-```bash
-uvicorn api.main:app --reload
-```
-
-### 2. Send an Orchestrated Request
-```bash
-curl -X POST "http://localhost:8000/generate" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "prompt": "Write a python script that implements a robust LRU cache.", 
-           "mode": "balance",
-           "policy": {
-               "max_cost_budget": 0.50,
-               "min_confidence": 0.85
-           }
-         }'
+```mermaid
+graph TD
+    Client[Client Application] --> Router[Routing Engine]
+    
+    subgraph Execution Plane
+    Router --> |Frugal Default| CheapModel[Edge / Fast Model]
+    Router --> |Policy Bound| PremiumModel[Premium Global Model]
+    Router --> |Sovereignty Mandate| SovereignNode[Local / Regional Node]
+    end
+    
+    subgraph Reliability Plane
+    CheapModel --> Judge[Judge Engine]
+    Judge --> |Calibrated Confidence Check| Confidence[Uncertainty Estimator]
+    Confidence --> |Pass| Return[Return to Client]
+    Confidence --> |Fail Threshold| Escalation[Escalate to Premium]
+    Escalation --> PremiumModel
+    end
+    
+    subgraph Intelligence Plane
+    Return -.-> |Async Logging| DataMoat[(Data Moat / SQLite)]
+    Escalation -.-> |Log Failure Taxonomy| DataMoat
+    DataMoat --> Drift[Drift Detection]
+    DataMoat --> Scorecard[Reliability Scorecards]
+    DataMoat --> ActiveLearning[Optimize Routing Weights]
+    ActiveLearning -.-> Router
+    end
 ```
 
 ---
-*Built for the future of multi-model infrastructure.*
+
+## 🚀 Key Features
+
+- **Reliability-Aware Routing**: Moves beyond simple cost heuristics to *Expected Utility Routing*, probabilistically avoiding models with historical escalation rates.
+- **Sovereign Orchestration**: Prioritizes local, regional, or specific indic language nodes (e.g., Sarvam) natively when data residency or deep localization is required.
+- **Hallucination & Failure Detection**: The internal Judge Engine classifies outputs against a strict failure taxonomy (Hallucination, Reasoning Failure, Malformed JSON) and traps errors before they reach the user.
+- **Continuous Calibration Infrastructure**: Confidence is mathematically meaningless without calibration. OMI uses shadow inference to continuously align model confidence against ground-truth outcomes.
+- **Drift Detection**: Automatic alerts when a provider's escalation rate spikes (e.g., "Gemini Flash hallucination rate increased 12%").
+- **Chaos Resilience**: Designed to survive timeouts, truncated responses, and provider outages through resilient fallback chains.
+- **Telemetry Intelligence**: Your telemetry becomes the moat. OMI tracks the economic *Value Generated* by quantifying cost avoided minus escalation overhead.
+
+---
+
+## 🛠️ Getting Started (Sandbox Validation)
+
+OMI is currently in **Phase 3: Live Probabilistic Validation**. The sandbox is rate-limited to safely capture real-world entropy and human reliability feedback.
+
+### Prerequisites
+- Python 3.12+
+- Keys for OpenAI, Anthropic, DeepSeek, Google, or Sarvam (You can use `USE_MOCK_PROVIDERS=True` to run entirely without keys for local chaos testing).
+
+### Installation
+
+```bash
+git clone https://github.com/omichauhan-lgtm/omi-gateway.git
+cd omi-gateway
+pip install -r requirements.txt
+```
+
+### Running the Infrastructure
+
+```bash
+# Start the Sovereign Inference Engine
+python -m uvicorn api.main:app --port 8000
+```
+
+### Submitting a Request
+
+```bash
+curl -X POST http://localhost:8000/generate \
+-H "Content-Type: application/json" \
+-d '{
+  "prompt": "Translate the Article 21 of the Indian Constitution to Hindi.",
+  "mode": "frugal",
+  "policy": {
+    "strict_mode": false,
+    "sovereignty_required": true
+  }
+}'
+```
+
+---
+
+## 📊 The Reliability Scorecard
+
+OMI quantifies everything. You can query the true statistical state of your AI infrastructure:
+
+```bash
+curl -X GET http://localhost:8000/admin/scorecard -H "X-OMI-Admin-Key: <your-key>"
+```
+
+Returns:
+- Judge Precision & Recall
+- False Negative Rates
+- Average Escalation Latency
+- **Reliability Economics**: Total Cost Avoided & Value Generated.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions to the measurement science core, sovereign routing, and calibration infrastructure. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting pull requests. All optimizations must be statistically validated via the `evals/regression_suite.py`.
+
+## 🛡️ Security
+
+Please refer to [SECURITY.md](SECURITY.md) for vulnerability disclosure and secret handling protocols.
+
+## 📄 License
+
+This project is licensed under the [Apache 2.0 License](LICENSE).

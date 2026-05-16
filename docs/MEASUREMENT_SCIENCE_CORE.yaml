@@ -1,0 +1,27 @@
+measurement_science:
+  doctrine:
+    - "If you cannot measure it, you cannot orchestrate it."
+    - "Confidence is meaningless without empirical calibration."
+    - "Telemetry integrity is the highest priority."
+  
+  metrics:
+    primary:
+      - true_positive
+      - true_negative
+      - false_positive
+      - false_negative
+    derived:
+      - precision
+      - recall
+      - f1_score
+      - reliability_adjusted_utility
+  
+  evaluation_dimensions:
+    - semantic_hallucination
+    - reasoning_failure
+    - malformed_output
+    - policy_violation
+  
+  calibration:
+    objective: "Align raw confidence output with real-world correctness probability"
+    methodology: "Continuous background shadow inference vs Premium Ground Truth models"
