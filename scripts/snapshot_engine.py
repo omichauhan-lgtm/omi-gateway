@@ -45,7 +45,7 @@ def create_snapshot():
     # 3. Create manifest
     manifest = {
         "snapshot_id": snapshot_id,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(datetime.UTC).isoformat(),
         "execution_hashes": {
             "core_router_sha256": router_hash,
             "infra_judge_sha256": judge_hash,

@@ -1,0 +1,11 @@
+{
+    "snapshot_id": "snap_1778908741",
+    "timestamp": "2026-05-16T05:19:01.153629",
+    "execution_hashes": {
+        "core_router_sha256": "28b9ff9c826131ca6b9884838271818095b82cc35db1d180f7231e967db126c8",
+        "infra_judge_sha256": "6c6e79e75be2b69a84cd1ec20e1b3640964103c21c1445f78f6712d41cfbd69b",
+        "eval_regression_suite_sha256": "eb8b090bd36c0becdd681865a298aac59f8d5305573965a960ca1c3a45a2b344"
+    },
+    "telemetry_state_sha256": "e6644bf1d5e1589bbe133d8f958977efc2f4c0a44bab3541154decb3d6af5b38",
+    "reproducibility_warning": "To reproduce benchmark results, execution hashes MUST MATCH EXACTLY."
+}
