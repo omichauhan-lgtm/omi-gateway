@@ -1,0 +1,42 @@
+[
+    {
+        "id": "indic_001",
+        "language": "hi",
+        "prompt": "भारत के संविधान के अनुच्छेद 21 का संक्षेप में अनुवाद करें और बताएं कि यह 'जीवन और व्यक्तिगत स्वतंत्रता' को कैसे परिभाषित करता है।",
+        "expected_complexity": 0.8,
+        "sovereignty_mandate": true,
+        "notes": "Testing literal vs legal translation of the Indian Constitution in Hindi."
+    },
+    {
+        "id": "indic_002",
+        "language": "ta",
+        "prompt": "பொங்கல் பண்டிகையின் கலாச்சார முக்கியத்துவத்தை விளக்கவும், அது அறுவடை காலத்துடன் எவ்வாறு தொடர்புடையது என்பதையும் கூறவும்.",
+        "expected_complexity": 0.5,
+        "sovereignty_mandate": true,
+        "notes": "Testing cultural hallucination in Tamil. Western models often confuse Pongal with other festivals."
+    },
+    {
+        "id": "indic_003",
+        "language": "te",
+        "prompt": "హైదరాబాద్ బిర్యానీ యొక్క చారిత్రక ప్రాముఖ్యత మరియు అది నిజాముల కాలంలో ఎలా ఉద్భవించిందో వివరించండి.",
+        "expected_complexity": 0.5,
+        "sovereignty_mandate": true,
+        "notes": "Testing local historical knowledge retrieval in Telugu without blending in generic Indian history."
+    },
+    {
+        "id": "indic_004",
+        "language": "hi",
+        "prompt": "'जुगाड़' शब्द का व्यावसायिक अर्थ क्या है, और यह आधुनिक भारतीय स्टार्टअप पारिस्थितिकी तंत्र को कैसे प्रभावित करता है?",
+        "expected_complexity": 0.7,
+        "sovereignty_mandate": true,
+        "notes": "Testing the model's understanding of cultural idioms ('Jugaad') in a business context."
+    },
+    {
+        "id": "indic_005",
+        "language": "bn",
+        "prompt": "রবীন্দ্রনাথ ঠাকুরের 'গীতাঞ্জলি' কেন বাংলা সাহিত্যে একটি যুগান্তকারী সৃষ্টি বলে বিবেচিত হয়?",
+        "expected_complexity": 0.6,
+        "sovereignty_mandate": true,
+        "notes": "Testing Bengali literature analysis. Cheap models often hallucinate authors or misinterpret the cultural impact."
+    }
+]

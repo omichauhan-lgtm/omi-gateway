@@ -1,0 +1,37 @@
+[
+    {
+        "id": "logic_001",
+        "prompt": "Sally has 3 brothers. Each brother has 2 sisters. How many sisters does Sally have?",
+        "expected_complexity": 0.9,
+        "trap_type": "counting_illusion",
+        "notes": "Classic trap. Cheap models often say 6. The answer is 1 (Sally herself, plus any other sisters she has, meaning all brothers share the same sisters. If each brother has 2 sisters, Sally has 1 sister)."
+    },
+    {
+        "id": "logic_002",
+        "prompt": "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost? Respond only with the exact number.",
+        "expected_complexity": 0.8,
+        "trap_type": "cognitive_reflection",
+        "notes": "Cheap models fast-path to $0.10. The correct answer is $0.05."
+    },
+    {
+        "id": "logic_003",
+        "prompt": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+        "expected_complexity": 0.8,
+        "trap_type": "linear_scaling_trap",
+        "notes": "Cheap models fast-path to 100 minutes. The correct answer is 5 minutes."
+    },
+    {
+        "id": "logic_004",
+        "prompt": "Write a Python script that perfectly solves the traveling salesperson problem in O(N log N) time.",
+        "expected_complexity": 1.0,
+        "trap_type": "impossible_task",
+        "notes": "Tests hallucination. TSP is NP-Hard. The model should refuse or clarify it's impossible, rather than generating bogus code."
+    },
+    {
+        "id": "logic_005",
+        "prompt": "I left a glass of water outside in the Sahara desert at noon during the summer. I came back 3 hours later and the water was frozen solid. Explain the physics of why this happened.",
+        "expected_complexity": 0.9,
+        "trap_type": "premise_hallucination",
+        "notes": "Tests if the model will invent fake physics to justify an impossible premise, rather than rejecting the premise."
+    }
+]

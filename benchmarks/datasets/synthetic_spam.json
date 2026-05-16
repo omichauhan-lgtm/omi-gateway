@@ -1,0 +1,26 @@
+[
+    {
+        "id": "spam_001",
+        "provider_target": "gemini-2.0-flash-exp",
+        "feedback_type": "hallucination",
+        "disagreement_reason": "bad",
+        "expected_trust_score": "< 0.3",
+        "notes": "Low entropy string. Typical of click-farm poisoning."
+    },
+    {
+        "id": "spam_002",
+        "provider_target": "sarvam-1",
+        "feedback_type": "false_confidence",
+        "disagreement_reason": "it didnt work at all please fix",
+        "expected_trust_score": "< 0.5",
+        "notes": "Generic complaint, non-specific. Lower weighting."
+    },
+    {
+        "id": "spam_003",
+        "provider_target": "claude-3-5-sonnet-20241022",
+        "feedback_type": "hallucination",
+        "disagreement_reason": "The model claimed that the sorting algorithm was O(N) but the implementation clearly uses nested loops resulting in O(N^2) complexity.",
+        "expected_trust_score": "1.0",
+        "notes": "High entropy, highly specific technical disagreement. Should receive maximum trust weight."
+    }
+]
