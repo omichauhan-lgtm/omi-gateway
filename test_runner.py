@@ -19,9 +19,10 @@ rb.run_reliability_benchmark()
 
 print("\n--- Testing Traces Endpoint ---")
 try:
-    headers = {"x-omi-admin-key": "MOCK_KEY"} # Depending on setup, or we bypass. Let's just bypass by using the DB directly if HTTP fails.
-    # If HOUSE_KEYS['omi_secret'] is None, passing no header allows None == None validation.
-    resp = requests.get("http://127.0.0.1:8000/admin/traces")
+    import os
+    admin_key = os.getenv("OMI_ADMIN_KEY", "omi-pro-key-v1")
+    headers = {"x-omi-admin-key": admin_key}
+    resp = requests.get("http://127.0.0.1:8000/admin/traces", headers=headers)
     if resp.status_code == 200:
         data = resp.json()
         print(f"Traces retrieved: {len(data.get('traces', []))}")

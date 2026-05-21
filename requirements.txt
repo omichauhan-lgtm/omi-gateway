@@ -12,3 +12,4 @@ python-multipart
 langdetect
 sqlalchemy
 numpy
+psycopg2-binary

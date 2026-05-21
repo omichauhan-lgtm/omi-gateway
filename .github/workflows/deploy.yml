@@ -23,14 +23,20 @@ jobs:
           export PYTHONPATH=$PYTHONPATH:$(pwd)/api
           python -c "import main; print('✅ Syntax OK')"
 
-      - name: Reliability Regression Suite
+      - name: Seed Telemetry and Scientific Proofs
+        run: |
+          python scripts/calibration_scientific_proof.py
+          python scripts/longitudinal_sim.py
+
+      - name: Run CI/CD Governance Infrastructure Gate
         env:
           OMI_ADMIN_KEY: "ci_test_key"
         run: |
           # Start server in background for testing
           export OMI_ADMIN_KEY="ci_test_key"
           python -m uvicorn api.main:app --port 8000 &
-          sleep 20
+          sleep 10
+          python scripts/ci_governance_gate.py
           python evals/regression_suite.py
 
 

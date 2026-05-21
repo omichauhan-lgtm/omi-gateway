@@ -1,8 +1,8 @@
-import sqlite3
 from typing import List, Dict, Any
 from datetime import datetime
 import json
-from core.learning_loop import DB_PATH
+from infra.database import SessionLocal
+from infra.models import TelemetryLineage
 
 class GovernanceLineage:
     """
@@ -26,26 +26,30 @@ class GovernanceLineage:
         evidence_str = ",".join(map(str, source_evidence_ids))
         prev_json = json.dumps(previous_state)
         new_json = json.dumps(new_state)
-        metadata_hash = f"conf:{confidence_level}|trigger:{trigger_source}"
+        metadata_hash = f"conf:{confidence_level}|trigger:{trigger_source}|prev:{prev_json}|new:{new_json}"
         
-        with sqlite3.connect(DB_PATH) as conn:
-            conn.execute(
-                """INSERT INTO telemetry_lineage 
-                   (timestamp, action_type, influenced_entity, source_evidence_ids, metadata_hash)
-                   VALUES (?, ?, ?, ?, ?)""",
-                (datetime.utcnow().isoformat(), action_type, influenced_entity, evidence_str, metadata_hash)
+        db = SessionLocal()
+        try:
+            lineage = TelemetryLineage(
+                timestamp=datetime.utcnow().isoformat(),
+                action_type=action_type,
+                influenced_entity=influenced_entity,
+                source_evidence_ids=evidence_str,
+                metadata_hash=metadata_hash
             )
-            # In Phase 6A, we will expand the schema to include previous_state and new_state columns natively.
-            # For now, we embed them in metadata or rely on ORM migration later.
-            conn.commit()
+            db.add(lineage)
+            db.commit()
+        finally:
+            db.close()
 
     @staticmethod
     def get_lineage(entity: str) -> List[Dict]:
         """Retrieves the history of mutations for a provider."""
-        with sqlite3.connect(DB_PATH) as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                "SELECT timestamp, action_type, metadata_hash FROM telemetry_lineage WHERE influenced_entity = ? ORDER BY id DESC",
-                (entity,)
-            )
-            return [{"timestamp": row[0], "action": row[1], "meta": row[2]} for row in cursor.fetchall()]
+        db = SessionLocal()
+        try:
+            records = db.query(TelemetryLineage).filter(
+                TelemetryLineage.influenced_entity == entity
+            ).order_by(TelemetryLineage.id.desc()).all()
+            return [{"timestamp": r.timestamp, "action": r.action_type, "meta": r.metadata_hash} for r in records]
+        finally:
+            db.close()

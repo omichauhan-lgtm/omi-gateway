@@ -11,9 +11,23 @@ services:
       - ./chroma_db:/app/chroma_db
     environment:
       - PYTHONUNBUFFERED=1
+      - OMI_DATABASE_URL=postgresql://omi_admin:omi_password@telemetry-db:5432/omi_telemetry
+    depends_on:
+      - telemetry-db
     restart: always
 
-  # Future expansion for hybrid multi-tenant architecture
-  # telemetry-db:
-  #   image: postgres:15
-  #   ...
+  telemetry-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: omi_telemetry
+      POSTGRES_USER: omi_admin
+      POSTGRES_PASSWORD: omi_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pgdata:
+

@@ -1,7 +1,7 @@
 from typing import Dict, Any, Tuple
-from core.learning_loop import DB_PATH
-import sqlite3
 from datetime import datetime, timedelta
+from infra.database import SessionLocal
+from infra.models import RoutingDecision, TelemetryLineage
 
 class GovernanceConstraints:
     """
@@ -25,34 +25,27 @@ class GovernanceConstraints:
         """
         Validates if a provider's weight can be decayed based on constraints.
         """
+        db = SessionLocal()
         try:
-            with sqlite3.connect(DB_PATH) as conn:
-                cursor = conn.cursor()
-                
-                # Check 1: Minimum Sample Size
-                cursor.execute(
-                    "SELECT COUNT(*) FROM routing_decisions WHERE initial_route = ?",
-                    (provider,)
-                )
-                sample_count = cursor.fetchone()[0]
-                if sample_count < GovernanceConstraints.MIN_SAMPLE_PROVIDER_DECAY:
-                    return False, f"Insufficient samples: {sample_count} / {GovernanceConstraints.MIN_SAMPLE_PROVIDER_DECAY}"
-                
-                # Check 2: Cooldown Window
-                cursor.execute(
-                    """SELECT timestamp FROM telemetry_lineage 
-                       WHERE influenced_entity = ? AND action_type = 'ROUTING_WEIGHT_DECAY' 
-                       ORDER BY id DESC LIMIT 1""",
-                    (provider,)
-                )
-                last_mutation = cursor.fetchone()
-                
-                if last_mutation:
-                    last_time = datetime.fromisoformat(last_mutation[0])
-                    if datetime.utcnow() - last_time < timedelta(hours=GovernanceConstraints.COOLDOWN_HOURS_PROVIDER_DECAY):
-                        return False, "Cooldown window active."
-                
-                return True, "Mutation permitted."
-                
+            # Check 1: Minimum Sample Size
+            sample_count = db.query(RoutingDecision).filter(RoutingDecision.initial_route == provider).count()
+            if sample_count < GovernanceConstraints.MIN_SAMPLE_PROVIDER_DECAY:
+                return False, f"Insufficient samples: {sample_count} / {GovernanceConstraints.MIN_SAMPLE_PROVIDER_DECAY}"
+            
+            # Check 2: Cooldown Window
+            last_mutation = db.query(TelemetryLineage).filter(
+                TelemetryLineage.influenced_entity == provider,
+                TelemetryLineage.action_type == 'ROUTING_WEIGHT_DECAY'
+            ).order_by(TelemetryLineage.id.desc()).first()
+            
+            if last_mutation:
+                last_time = datetime.fromisoformat(last_mutation.timestamp)
+                if datetime.utcnow() - last_time < timedelta(hours=GovernanceConstraints.COOLDOWN_HOURS_PROVIDER_DECAY):
+                    return False, "Cooldown window active."
+            
+            return True, "Mutation permitted."
+            
         except Exception as e:
             return False, f"Constraint evaluation failed: {str(e)}"
+        finally:
+            db.close()

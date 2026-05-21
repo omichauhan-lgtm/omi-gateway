@@ -2,9 +2,6 @@ import json
 import os
 import time
 import requests
-import sqlite3
-
-# Import Phase 5C Calibration Science
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from infra.calibration import AdvancedCalibrationEngine
