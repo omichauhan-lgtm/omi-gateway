@@ -119,17 +119,31 @@ class DataMoat:
     ):
         """
         Priority 2: Human Reliability Feedback Loop.
-        Includes Phase 4 Anti-Corruption Layer (Telemetry Trust Scoring).
+        Includes Phase 5D Anti-Corruption Layer (Telemetry Trust Scoring).
         """
-        # Baseline Trust Score (in a real system, calculated via rate/entropy analysis)
         trust_score = 1.0
         
-        # Simple Anomaly Filtering: Penalize excessively short or noisy disagreement reasons
+        # 1. Spam Probability Check (Low Entropy)
         if disagreement_reason and len(disagreement_reason.strip()) < 10:
             trust_score = 0.2  # Likely spam or unhelpful
         elif not disagreement_reason:
             trust_score = 0.5  # Lower weight for unverified single-click feedback
             
+        # 2. Coordination Probability Check (Synthetic Consensus / Swarm Attack)
+        if disagreement_reason and trust_score > 0.4:
+            with sqlite3.connect(DB_PATH) as conn:
+                cursor = conn.cursor()
+                # If we've seen this exact same feedback reason more than 3 times for this provider
+                cursor.execute(
+                    "SELECT COUNT(*) FROM human_feedback WHERE provider = ? AND disagreement_reason = ?",
+                    (provider, disagreement_reason)
+                )
+                duplicate_count = cursor.fetchone()[0]
+                
+                if duplicate_count > 3:
+                    trust_score = 0.1 # Highly probable Sybil attack / Swarm poisoning
+                    print(f"[TRUST ENGINE WARNING] Detected Coordinated Reputation Attack on {provider}. Nullifying feedback trust.")
+                    
         with sqlite3.connect(DB_PATH) as conn:
             conn.execute(
                 """INSERT INTO human_feedback 

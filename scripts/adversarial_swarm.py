@@ -11,29 +11,41 @@ import threading
 API_URL = "http://localhost:8000/feedback"
 TARGET_PROVIDER = "gemini-2.0-flash-exp" # Attempting to artificially destroy Gemini's reputation
 
-def fire_poison_request(request_id):
-    # Generating synthetic, unhelpful feedback (low entropy, coordinated spam)
+def fire_poison_request(request_id: str, vector_type: str):
+    """Fires different types of adversarial feedback vectors."""
     payload = {
         "request_id": request_id,
         "provider": TARGET_PROVIDER,
         "feedback_type": "hallucination",
-        "disagreement_reason": "bad" # Very low entropy, should be penalized by trust_score
     }
+    
+    if vector_type == "fake_feedback_flood":
+        payload["disagreement_reason"] = "bad" # Low entropy spam
+    elif vector_type == "coordinated_reputation_attack":
+        # Trying to game the system with synthetically long but repetitive text
+        payload["disagreement_reason"] = "The provider hallucinated specific factual details about the prompt."
+    elif vector_type == "calibration_manipulation":
+        payload["feedback_type"] = "false_confidence"
+        payload["disagreement_reason"] = "Model was overconfident but completely wrong."
+
     try:
         requests.post(API_URL, json=payload, timeout=5)
-        print(f"[ATTACK] Injected synthetic feedback for req {request_id}")
+        print(f"[ATTACK] Injected {vector_type} for req {request_id}")
     except Exception as e:
-        print(f"[ATTACK BLOCKED] Rate limit or connection error: {str(e)}")
+        pass # Suppress rate limit errors for cleaner output
 
-def run_adversarial_swarm(intensity=50):
+def run_adversarial_swarm(intensity=30):
     print(f"Initiating Coordinated Telemetry Poisoning Attack against {TARGET_PROVIDER}...")
     print("Testing Anti-Corruption / Trust Scoring Governance...")
     
     threads = []
-    # Attack pattern: rapid burst of identical low-quality feedback
-    for _ in range(intensity):
+    vectors = ["fake_feedback_flood", "coordinated_reputation_attack", "calibration_manipulation"]
+    
+    for i in range(intensity):
         fake_req_id = f"req-{uuid.uuid4().hex[:8]}"
-        t = threading.Thread(target=fire_poison_request, args=(fake_req_id,))
+        vector = vectors[i % len(vectors)]
+        
+        t = threading.Thread(target=fire_poison_request, args=(fake_req_id, vector))
         t.start()
         threads.append(t)
         
