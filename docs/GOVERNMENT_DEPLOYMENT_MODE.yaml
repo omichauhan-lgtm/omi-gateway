@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: omi-government-policy
+data:
+  strict_mode: "true"
+  sovereignty_required: "true"
+  max_cost_budget: "0.20"
+  allow_global_fallback: "false" # Drops traffic rather than exporting data
+  trust_engine: "strict"
+  min_reputation_score: "0.80"
+  max_ece_tolerance: "0.15"
