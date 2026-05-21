@@ -5,6 +5,10 @@ from typing import List, Dict, Any
 
 # Phase 5B: Import Governance layers (late import inside functions if circular deps, or just here)
 
+# Phase 6A: Enterprise Foundation Migration
+from infra.database import engine, SessionLocal, Base
+# Import the declarative models to ensure they are registered with Base
+from infra.models import RoutingDecision, ModelFailure, HumanFeedback, TelemetryLineage
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "learning_loop.db")
 
@@ -19,56 +23,9 @@ class DataMoat:
         self._init_db()
 
     def _init_db(self):
-        with sqlite3.connect(DB_PATH) as conn:
-            conn.execute("""
-                CREATE TABLE IF NOT EXISTS routing_decisions (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    timestamp TEXT,
-                    complexity REAL,
-                    language TEXT,
-                    initial_route TEXT,
-                    escalated BOOLEAN,
-                    final_route TEXT,
-                    latency_ms REAL,
-                    confidence REAL,
-                    shadow_model TEXT
-                )
-            """)
-            conn.execute("""
-                CREATE TABLE IF NOT EXISTS model_failures (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    timestamp TEXT,
-                    model_id TEXT,
-                    complexity REAL,
-                    failure_reason TEXT,
-                    raw_confidence REAL,
-                    calibrated_confidence REAL,
-                    latency_ms REAL
-                )
-            """)
-            conn.execute("""
-                CREATE TABLE IF NOT EXISTS human_feedback (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    timestamp TEXT,
-                    request_id TEXT,
-                    provider TEXT,
-                    feedback_type TEXT,
-                    disagreement_reason TEXT,
-                    trust_score REAL DEFAULT 1.0
-                )
-            """)
-            # Priority 1: Telemetry Lineage Tracking
-            conn.execute("""
-                CREATE TABLE IF NOT EXISTS telemetry_lineage (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    timestamp TEXT,
-                    action_type TEXT,
-                    influenced_entity TEXT,
-                    source_evidence_ids TEXT,
-                    metadata_hash TEXT
-                )
-            """)
-            conn.commit()
+        # Phase 6A: Use SQLAlchemy to generate schema
+        Base.metadata.create_all(bind=engine)
+
 
 
 
@@ -82,15 +39,25 @@ class DataMoat:
         latency_ms: float,
         shadow_model: str = None
     ):
-        """Asynchronously log interactions to slowly build the proprietary data moat."""
-        with sqlite3.connect(DB_PATH) as conn:
-            conn.execute(
-                """INSERT INTO routing_decisions 
-                   (timestamp, complexity, language, initial_route, escalated, final_route, latency_ms, confidence, shadow_model)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (datetime.utcnow().isoformat(), complexity, "en", selected_model, escalated, selected_model, latency_ms, 0.0, shadow_model)
+        """Asynchronously log interactions to slowly build the proprietary data moat using SQLAlchemy."""
+        db = SessionLocal()
+        try:
+            decision = RoutingDecision(
+                timestamp=datetime.utcnow().isoformat(),
+                complexity=complexity,
+                language="en",
+                initial_route=selected_model,
+                escalated=escalated,
+                final_route=selected_model,
+                latency_ms=latency_ms,
+                confidence=0.0,
+                shadow_model=shadow_model
             )
-            conn.commit()
+            db.add(decision)
+            db.commit()
+        finally:
+            db.close()
+
             
     def log_failure(
         self,
@@ -101,14 +68,21 @@ class DataMoat:
         calibrated_confidence: float = 0.0,
         latency_ms: float = 0.0
     ):
-        with sqlite3.connect(DB_PATH) as conn:
-            conn.execute(
-                """INSERT INTO model_failures 
-                   (timestamp, model_id, complexity, failure_reason, raw_confidence, calibrated_confidence, latency_ms)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
-                (datetime.utcnow().isoformat(), model_id, complexity, failure_reason, raw_confidence, calibrated_confidence, latency_ms)
+        db = SessionLocal()
+        try:
+            failure = ModelFailure(
+                timestamp=datetime.utcnow().isoformat(),
+                model_id=model_id,
+                complexity=complexity,
+                failure_reason=failure_reason,
+                raw_confidence=raw_confidence,
+                calibrated_confidence=calibrated_confidence,
+                latency_ms=latency_ms
             )
-            conn.commit()
+            db.add(failure)
+            db.commit()
+        finally:
+            db.close()
 
     def log_feedback(
         self,
