@@ -163,5 +163,119 @@ def generate_messy_telemetry():
     print(f"[SUCCESS] Seeded {total_decisions} decisions with structured messy telemetry.")
     db.close()
 
+
+def generate_lui_degradation_telemetry():
+    """
+    Phase 8: Seed LUI-degradation telemetry profiles to validate Check 12 (LUI Blocker) behavior.
+
+    Profile 1 — Cost Spike Volatility (economic_consistency degradation):
+      Provider 'cost-spike-provider' alternates between cheap and very expensive calls.
+      This drives std(cost_usd) / mean(cost_usd) above 0.50, degrading EconomicConsistency.
+
+    Profile 2 — Reward Hacking Drift:
+      Provider 'reward-hacking-provider' accumulates many retried-yet-successful decisions,
+      meaning task_success=True AND is_retry=True, inflating RewardHackingProbability.
+    """
+    print("\n====================================================")
+    print("Phase 8: LUI Degradation Telemetry Seeding")
+    print("====================================================")
+
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+
+    start_time = datetime.utcnow() - timedelta(days=14)
+    total_decisions = 0
+
+    # ── Profile 1: Cost Spike Volatility ─────────────────────────────────────
+    print("Seeding cost-spike-provider decisions (economic instability)...")
+    cost_spike_provider = "cost-spike-provider"
+
+    costs = []
+    for day in range(14):
+        for req in range(20):
+            req_time = start_time + timedelta(days=day, hours=random.randint(0, 23))
+            timestamp_str = req_time.strftime('%Y-%m-%dT%H:%M:%S.000000Z')
+            workflow_id = f"wf_cost_{day}_{req // 3}"
+
+            # Alternate between very cheap and very expensive (high volatility)
+            if req % 3 == 0:
+                cost_usd = random.uniform(0.001, 0.005)  # cheap
+            else:
+                cost_usd = random.uniform(0.15, 0.35)    # expensive spike
+
+            costs.append(cost_usd)
+            confidence = random.uniform(0.80, 0.92)
+
+            decision = RoutingDecision(
+                timestamp=timestamp_str,
+                complexity=random.uniform(0.3, 0.7),
+                language="en",
+                initial_route=cost_spike_provider,
+                escalated=False,
+                final_route=cost_spike_provider,
+                latency_ms=float(random.randint(200, 600)),
+                confidence=confidence,
+                workflow_id=workflow_id,
+                cost_usd=cost_usd,
+                input_tokens=random.randint(200, 800),
+                output_tokens=random.randint(100, 400),
+                utility_score=0.9,
+                is_retry=False,
+                task_success=True,
+                is_reliable=True,
+            )
+            db.add(decision)
+            total_decisions += 1
+
+    # Verify the volatility ratio we seeded
+    if costs:
+        vol_ratio = float(np.std(costs)) / (float(np.mean(costs)) + 1e-6)
+        print(f"  Cost volatility ratio seeded: {vol_ratio:.3f} (target > 0.50 to degrade EconomicConsistency)")
+
+    # ── Profile 2: Reward Hacking Drift ──────────────────────────────────────
+    print("Seeding reward-hacking-provider decisions (reward hacking inflation)...")
+    reward_hack_provider = "reward-hacking-provider"
+
+    for day in range(14):
+        for req in range(20):
+            req_time = start_time + timedelta(days=day, hours=random.randint(0, 23))
+            timestamp_str = req_time.strftime('%Y-%m-%dT%H:%M:%S.000000Z')
+            workflow_id = f"wf_rh_{day}_{req // 3}"
+
+            # High proportion of task_success=True with is_retry=True → reward hacking
+            is_retry = random.random() < 0.70  # 70% retried-yet-marked-successful
+            task_success = True
+            confidence = random.uniform(0.82, 0.96)
+
+            decision = RoutingDecision(
+                timestamp=timestamp_str,
+                complexity=random.uniform(0.2, 0.8),
+                language="en",
+                initial_route=reward_hack_provider,
+                escalated=False,
+                final_route=reward_hack_provider,
+                latency_ms=float(random.randint(100, 500)),
+                confidence=confidence,
+                workflow_id=workflow_id,
+                cost_usd=random.uniform(0.005, 0.02),
+                input_tokens=random.randint(100, 500),
+                output_tokens=random.randint(50, 250),
+                utility_score=0.95,
+                is_retry=is_retry,
+                task_success=task_success,
+                is_reliable=True,
+            )
+            db.add(decision)
+            total_decisions += 1
+
+    db.commit()
+    print(f"[SUCCESS] Phase 8 LUI degradation profiles seeded: {total_decisions} total decisions.")
+    print("  - cost-spike-provider: high cost volatility → EconomicConsistency degraded")
+    print("  - reward-hacking-provider: high reward-hacking probability → LUI degraded")
+    db.close()
+
+
 if __name__ == "__main__":
     generate_messy_telemetry()
+    generate_lui_degradation_telemetry()
+

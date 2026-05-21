@@ -308,6 +308,43 @@ def run_ust_blocker_check() -> bool:
     finally:
         db.close()
 
+def run_lui_blocker_check() -> bool:
+    print("\n--- Check 12: Longitudinal Utility Integrity (LUI) Blocker ---")
+    db = SessionLocal()
+    try:
+        from core.utility_intelligence import UtilityIntelligencePlane
+        # Get active providers
+        providers = [p[0] for p in db.query(RoutingDecision.initial_route).distinct().all() if p[0]]
+        if not providers:
+            print("[PASS] No routing decisions found. Skipping LUI checks.")
+            return True
+
+        print(f"Active providers detected: {providers}")
+        all_passed = True
+
+        for provider in providers:
+            lui = UtilityIntelligencePlane.calculate_lui(db, provider)
+            threshold = UtilityIntelligencePlane.get_lui_threshold(provider)
+            category = UtilityIntelligencePlane.get_model_category(provider)
+
+            print(f"  - Provider: {provider} | Category: {category} | LUI: {lui:.4f} | Required Threshold: {threshold:.2f}")
+
+            if lui < threshold:
+                print(f"  [BLOCKER] LUI Degradation: {provider} LUI ({lui:.4f}) is below "
+                      f"tiered threshold of {threshold:.2f} for {category}!")
+                print(f"    Possible causes: cost volatility, reward hacking, or reliability inconsistency.")
+                all_passed = False
+            else:
+                print(f"  [PASS] LUI for {provider} is within safe operational bounds.")
+
+        return all_passed
+    except Exception as e:
+        print(f"[FAIL] Error checking LUI blocker: {e}")
+        return False
+    finally:
+        db.close()
+
+
 def main():
     print("====================================================")
     print("OMI CI/CD GOVERNANCE INFRASTRUCTURE GATE")
@@ -352,6 +389,10 @@ def main():
     # 10. UST blocker (Check 11)
     if not run_ust_blocker_check():
         sys.exit(1)
+
+    # 11. LUI blocker (Check 12) — Economic Longitudinal Utility Integrity
+    if not run_lui_blocker_check():
+        sys.exit(1)
         
     print("\n====================================================")
     print("[SUCCESS] ALL OMI CI GOVERNANCE GATES PASSED")
@@ -361,3 +402,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

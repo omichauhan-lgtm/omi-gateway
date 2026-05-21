@@ -24,6 +24,10 @@ class RoutingDecision(Base):
     utility_score = Column(Float, default=1.0)
     is_retry = Column(Boolean, default=False)
     task_success = Column(Boolean, default=True)
+    is_consensus = Column(Boolean, default=False)
+    consensus_score = Column(Float, nullable=True)
+    cer_value = Column(Float, nullable=True)
+    consensus_trace = Column(Text, nullable=True)
 
 
 class ModelFailure(Base):

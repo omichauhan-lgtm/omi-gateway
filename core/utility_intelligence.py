@@ -791,3 +791,65 @@ class UtilityIntelligencePlane:
         
         ust = 1.0 - (utility_drift + retry_escalation + workflow_failure_volatility + 0.15 * calibration_drift)
         return float(round(max(0.0, min(1.0, ust)), 4))
+
+    @staticmethod
+    def get_lui_threshold(model_name: str) -> float:
+        category = UtilityIntelligencePlane.get_model_category(model_name)
+        thresholds = {
+            "frontier_models": 0.70,
+            "standard_models": 0.65,
+            "sovereign_models": 0.60,
+            "experimental_models": 0.55
+        }
+        return thresholds.get(category, 0.65)
+
+    @staticmethod
+    def calculate_lui(db, provider: str, window_days: int = 14) -> float:
+        """
+        Longitudinal Utility Integrity (LUI):
+        LUI = UST * (1.0 - RewardHackingProbability) * ReliabilityConsistency * EconomicConsistency
+        """
+        ust = UtilityIntelligencePlane.calculate_ust(db, provider, window_days)
+        
+        cutoff_dt = datetime.utcnow() - timedelta(days=window_days)
+        cutoff_str = cutoff_dt.isoformat()
+        
+        decisions = db.query(RoutingDecision).filter(
+            RoutingDecision.initial_route == provider,
+            RoutingDecision.timestamp >= cutoff_str
+        ).all()
+        
+        if len(decisions) < 10:
+            decisions = db.query(RoutingDecision).filter(
+                RoutingDecision.initial_route == provider
+            ).all()
+            
+        if len(decisions) < 2:
+            return float(round(ust, 4))
+            
+        # 1. Reward Hacking Probability
+        successful_decisions = [d for d in decisions if d.task_success]
+        if successful_decisions:
+            retried_successes = sum(1 for d in successful_decisions if d.is_retry)
+            reward_hacking_prob = retried_successes / len(successful_decisions)
+            reward_hacking_prob = min(0.90, reward_hacking_prob)
+        else:
+            reward_hacking_prob = 0.0
+            
+        # 2. Reliability Consistency
+        success_vals = [1.0 if d.task_success else 0.0 for d in decisions]
+        std_dev = np.std(success_vals)
+        reliability_consistency = 1.0 - float(std_dev)
+        
+        # 3. Economic Consistency
+        costs = [d.cost_usd for d in decisions if d.cost_usd is not None]
+        if costs and np.mean(costs) > 0:
+            std_cost = np.std(costs)
+            mean_cost = np.mean(costs)
+            economic_volatility = std_cost / (mean_cost + 1e-6)
+            economic_consistency = 1.0 - min(0.50, economic_volatility)
+        else:
+            economic_consistency = 1.0
+            
+        lui = ust * (1.0 - reward_hacking_prob) * reliability_consistency * economic_consistency
+        return float(round(max(0.0, min(1.0, lui)), 4))

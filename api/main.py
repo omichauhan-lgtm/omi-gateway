@@ -1,4 +1,5 @@
 import time
+import json
 import os
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Header, BackgroundTasks, Request
 from fastapi.staticfiles import StaticFiles
@@ -20,6 +21,7 @@ from core.learning_loop import memory_bank
 from core.economic_intelligence import EconomicIntelligencePlane, agentic_governor
 from api.analytics import router as analytics_router
 from core.utility_intelligence import UtilityIntelligencePlane
+from core.consensus import SovereignConsensusArbitrator
 import re
 import threading
 import uuid
@@ -486,15 +488,78 @@ async def orchestrate_request(
     for token in forbidden_tokens:
         response_text = response_text.replace(token, "")
 
+    # ── Phase 8: Conditional Consensus Arbitration ─────────────────────────
+    is_consensus = False
+    consensus_score_val = None
+    cer_value_val = None
+    consensus_trace_val = None
+    consensus_provider_reliabilities = {
+        final_route_model: float(evaluation.get("confidence") or 0.5),
+    }
+
+    try:
+        arbitrator = SovereignConsensusArbitrator()
+        hallucination_prob = 1.0 - float(evaluation.get("confidence") or 0.5)
+        gov_stability = 1.0  # Default stable; real value from governance analytics
+        should_run, trigger_reason = arbitrator.should_trigger_consensus(
+            prompt=payload.prompt,
+            complexity=complexity,
+            domain=getattr(payload, "domain", "consumer_chat"),
+            calibration_confidence=float(evaluation.get("confidence") or 0.5),
+            hallucination_probability=hallucination_prob,
+            governance_stability=gov_stability,
+            entropy=complexity,  # Use complexity as entropy proxy
+            escalation_depth=1 if escalated else 0,
+        )
+
+        if should_run:
+            # Select committee from available model pool (excluding primary)
+            available_providers = ["sarvam-1", "claude-3-5-sonnet-20241022", "gemini-2.0-flash-exp", "gpt-4o"]
+            committee = [p for p in available_providers if p != final_route_model][:2]
+            committee = [final_route_model] + committee  # Always include primary
+
+            # Gather reliability scores from telemetry (simplified: use confidence)
+            for p in committee:
+                if p not in consensus_provider_reliabilities:
+                    consensus_provider_reliabilities[p] = 0.6  # Default unknown provider reliability
+
+            consensus_result = arbitrator.execute_consensus(
+                prompt=payload.prompt,
+                committee=committee,
+                provider_reliabilities=consensus_provider_reliabilities,
+                db=None,
+                escalation_depth=1 if escalated else 0,
+                escalation_budget_usd=0.50,
+                baseline_cost_usd=total_cost_usd,
+                baseline_reliability=float(evaluation.get("confidence") or 0.5),
+            )
+
+            if consensus_result.get("error") is None and consensus_result.get("selected_response"):
+                is_consensus = True
+                response_text = consensus_result["selected_response"]
+                consensus_score_val = consensus_result["consensus_score"]
+                cer_value_val = consensus_result["cost_accounting"]["cer_value"]
+                consensus_trace_val = json.dumps(consensus_result["consensus_trace"])
+
+                # Accumulate consensus token cost
+                extra_tokens = consensus_result["cost_accounting"].get("additional_tokens_spent", 0)
+                extra_cost = consensus_result["cost_accounting"].get("additional_cost_usd", 0.0)
+                total_input_tokens += extra_tokens
+                total_cost_usd += extra_cost
+                agentic_governor.record_spend(extra_cost)
+    except Exception as ce:
+        print(f"Consensus arbitration error (non-fatal, continuing with primary response): {ce}")
+    # ── End Consensus ─────────────────────────────────────────────────────
+
     # Step 6: Learning Loop & Telemetry Recording
     latency_ms = (time.time() - start_time) * 1000
     
     # Record spend
     agentic_governor.record_spend(total_cost_usd)
-        
+
     decision_id = memory_bank.log_decision(
         prompt=payload.prompt,
-        selected_model=target_model, # Initial route model
+        selected_model=target_model,  # Initial route model
         complexity=complexity,
         escalated=escalated,
         latency_ms=int(latency_ms),
@@ -509,6 +574,22 @@ async def orchestrate_request(
         is_retry=False,
         task_success=not escalated
     )
+
+    # Persist consensus telemetry into RoutingDecision record
+    if is_consensus and decision_id:
+        try:
+            db_consensus = SessionLocal()
+            from infra.models import RoutingDecision
+            dec = db_consensus.query(RoutingDecision).filter(RoutingDecision.id == decision_id).first()
+            if dec:
+                dec.is_consensus = True
+                dec.consensus_score = consensus_score_val
+                dec.cer_value = cer_value_val
+                dec.consensus_trace = consensus_trace_val
+                db_consensus.commit()
+            db_consensus.close()
+        except Exception as e:
+            print(f"Error persisting consensus trace: {e}")
     
     # Add current decision to recent prompts cache
     add_to_recent_prompts(decision_id, payload.prompt)

@@ -18,15 +18,11 @@ from api.main import orchestrate_request, OrchestratorRequest, submit_utility_fe
 
 
 def init_db():
+    # Drop all tables first to ensure schema stays in sync with ORM models
+    # (SQLite create_all does not add new columns to existing tables)
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
-    # Clear tables
-    db.query(RoutingDecision).delete()
-    db.query(UtilityEstimate).delete()
-    db.query(ModelFailure).delete()
-    db.query(HumanFeedback).delete()
-    db.query(TelemetryLineage).delete()
-    db.commit()
     db.close()
 
 def test_urate_calculation():
