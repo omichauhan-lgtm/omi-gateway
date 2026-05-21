@@ -103,19 +103,30 @@ async def get_recent_traces(
     if not ModelRegistry.validate_house_key(x_omi_admin_key):
         raise HTTPException(status_code=403, detail="Invalid Admin Key")
         
-    import sqlite3
+    from infra.database import SessionLocal
+    from infra.models import RoutingDecision
+    db = SessionLocal()
     try:
-        with sqlite3.connect("learning_loop.db") as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            cursor.execute(
-                "SELECT * FROM routing_decisions ORDER BY id DESC LIMIT ?",
-                (limit,)
-            )
-            rows = cursor.fetchall()
-            return {"traces": [dict(r) for r in rows]}
+        decisions = db.query(RoutingDecision).order_by(RoutingDecision.id.desc()).limit(limit).all()
+        traces = []
+        for d in decisions:
+            traces.append({
+                "id": d.id,
+                "timestamp": d.timestamp,
+                "complexity": d.complexity,
+                "language": d.language,
+                "initial_route": d.initial_route,
+                "escalated": d.escalated,
+                "final_route": d.final_route,
+                "latency_ms": d.latency_ms,
+                "confidence": d.confidence,
+                "shadow_model": d.shadow_model
+            })
+        return {"traces": traces}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+    finally:
+        db.close()
 
 @app.get("/admin/scorecard")
 async def get_reliability_scorecard(x_omi_admin_key: str = Header(None)):
@@ -126,50 +137,45 @@ async def get_reliability_scorecard(x_omi_admin_key: str = Header(None)):
     if not ModelRegistry.validate_house_key(x_omi_admin_key):
         raise HTTPException(status_code=403, detail="Invalid Admin Key")
         
-    import sqlite3
+    from infra.database import SessionLocal
+    from infra.models import RoutingDecision, ModelFailure
+    from sqlalchemy.sql import func
+    db = SessionLocal()
     try:
-        with sqlite3.connect("learning_loop.db") as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            
-            # Calculate Judge Precision/Recall/F1
-            # We assume a successful escalation (true positive) is when it was escalated and didn't fail further.
-            cursor.execute("SELECT COUNT(*) FROM routing_decisions WHERE escalated = 1")
-            escalations = cursor.fetchone()[0]
-            
-            cursor.execute("SELECT COUNT(*) FROM model_failures WHERE failure_reason IS NOT NULL")
-            total_failures = cursor.fetchone()[0]
-            
-            cursor.execute("SELECT AVG(latency_ms) FROM routing_decisions")
-            avg_latency = cursor.fetchone()[0] or 0
-            
-            cursor.execute("SELECT COUNT(*) FROM routing_decisions WHERE initial_route != 'gpt-4o' AND escalated = 0")
-            successful_frugal_routes = cursor.fetchone()[0]
-            
-            # Priority 4: Reliability Economics
-            cost_avoided = successful_frugal_routes * 0.02 # Assume $0.02 saved per frugal success vs GPT-4o
-            failures_prevented_value = total_failures * 0.05 # Value of catching a failure before user sees it
-            escalation_overhead = escalations * 0.03 # Cost of double-processing
-            value_generated = cost_avoided + failures_prevented_value - escalation_overhead
-            
-            return {
-                "metrics": {
-                    "judge_precision": 0.91, # Hardcoded baseline for now, will calculate dynamically as dataset grows
-                    "judge_recall": 0.84,
-                    "avg_escalation_latency_ms": round(avg_latency, 2),
-                    "total_telemetry_samples": total_failures + escalations,
-                    "reliability_index": 0.88
-                },
-                "economics": {
-                    "cost_avoided_usd": round(cost_avoided, 2),
-                    "failures_prevented_value_usd": round(failures_prevented_value, 2),
-                    "escalation_overhead_usd": round(escalation_overhead, 2),
-                    "total_value_generated_usd": round(value_generated, 2)
-                },
-                "status": "healthy"
-            }
+        escalations = db.query(RoutingDecision).filter(RoutingDecision.escalated == True).count()
+        total_failures = db.query(ModelFailure).filter(ModelFailure.failure_reason.isnot(None)).count()
+        avg_latency = db.query(func.avg(RoutingDecision.latency_ms)).scalar() or 0.0
+        successful_frugal_routes = db.query(RoutingDecision).filter(
+            RoutingDecision.initial_route != 'gpt-4o',
+            RoutingDecision.escalated == False
+        ).count()
+        
+        # Priority 4: Reliability Economics
+        cost_avoided = successful_frugal_routes * 0.02 # Assume $0.02 saved per frugal success vs GPT-4o
+        failures_prevented_value = total_failures * 0.05 # Value of catching a failure before user sees it
+        escalation_overhead = escalations * 0.03 # Cost of double-processing
+        value_generated = cost_avoided + failures_prevented_value - escalation_overhead
+        
+        return {
+            "metrics": {
+                "judge_precision": 0.91, # Hardcoded baseline for now, will calculate dynamically as dataset grows
+                "judge_recall": 0.84,
+                "avg_escalation_latency_ms": round(avg_latency, 2),
+                "total_telemetry_samples": total_failures + escalations,
+                "reliability_index": 0.88
+            },
+            "economics": {
+                "cost_avoided_usd": round(cost_avoided, 2),
+                "failures_prevented_value_usd": round(failures_prevented_value, 2),
+                "escalation_overhead_usd": round(escalation_overhead, 2),
+                "total_value_generated_usd": round(value_generated, 2)
+            },
+            "status": "healthy"
+        }
     except Exception as e:
         return {"status": "error", "message": str(e)}
+    finally:
+        db.close()
 
 
 
