@@ -11,12 +11,30 @@ class AdvancedCalibrationEngine:
     @staticmethod
     def _mock_embedding(text: str) -> np.ndarray:
         """
-        Simulates generating a text embedding.
-        In a production system, this would use `sentence-transformers` or OpenAI's `text-embedding-3-small`.
+        Simulates generating a text embedding based on word content (bag of words).
+        Deterministic based on word hashes to avoid synthetic length coupling.
         """
-        # Deterministic mock based on string length to simulate vectors
-        np.random.seed(len(text))
-        return np.random.rand(128)
+        import hashlib
+        # Clean text and split into words
+        words = [w.strip(".,!?\"'()[]{}").lower() for w in text.split()]
+        words = [w for w in words if w]
+        if not words:
+            rng = np.random.RandomState(0)
+            return rng.rand(128)
+        
+        # Accumulate word vectors
+        vectors = []
+        for word in words:
+            # Hash the word to a 32-bit integer seed
+            h = int(hashlib.md5(word.encode('utf-8')).hexdigest()[:8], 16)
+            rng = np.random.RandomState(h)
+            vectors.append(rng.randn(128))
+            
+        vec = np.sum(vectors, axis=0)
+        norm = np.linalg.norm(vec)
+        if norm > 0:
+            vec = vec / norm
+        return vec
         
     @staticmethod
     def _cosine_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:

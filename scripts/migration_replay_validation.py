@@ -29,8 +29,8 @@ def migrate_and_validate():
     # Destination DB (could be PostgreSQL or temporary SQLite depending on OMI_DATABASE_URL)
     target_url = os.getenv("OMI_DATABASE_URL", "sqlite:///learning_loop.db")
     print(f"Target Database URL: {target_url}")
-    
-    if "sqlite" in target_url and os.path.abspath("learning_loop.db") == os.path.abspath(sqlite_db_path):
+    target_db_name = target_url.split("sqlite:///")[-1] if "sqlite:///" in target_url else "learning_loop.db"
+    if "sqlite" in target_url and os.path.abspath(target_db_name) == os.path.abspath(sqlite_db_path):
         print("[WARNING] Target and Source database are the same SQLite file. Skipping migration, running integrity checks only.")
         run_integrity_validation()
         return
@@ -78,56 +78,67 @@ def migrate_and_validate():
         
         print("Replaying/Inserting routing decisions...")
         for row in decisions:
+            d = dict(row)
             db_decision = RoutingDecision(
-                id=row["id"],
-                timestamp=row["timestamp"],
-                complexity=row["complexity"],
-                language=row["language"],
-                initial_route=row["initial_route"],
-                escalated=bool(row["escalated"]),
-                final_route=row["final_route"],
-                latency_ms=row["latency_ms"],
-                confidence=row["confidence"],
-                shadow_model=row.get("shadow_model")
+                id=d["id"],
+                timestamp=d["timestamp"],
+                complexity=d["complexity"],
+                language=d["language"],
+                initial_route=d["initial_route"],
+                escalated=bool(d["escalated"]),
+                final_route=d["final_route"],
+                latency_ms=d["latency_ms"],
+                confidence=d["confidence"],
+                shadow_model=d.get("shadow_model"),
+                input_tokens=d.get("input_tokens"),
+                output_tokens=d.get("output_tokens"),
+                cost_usd=d.get("cost_usd"),
+                is_reliable=bool(d.get("is_reliable")) if d.get("is_reliable") is not None else None
             )
             db.add(db_decision)
             
         print("Replaying/Inserting model failures...")
         for row in failures:
+            d = dict(row)
             db_failure = ModelFailure(
-                id=row["id"],
-                timestamp=row["timestamp"],
-                model_id=row["model_id"],
-                complexity=row["complexity"],
-                failure_reason=row["failure_reason"],
-                raw_confidence=row["raw_confidence"],
-                calibrated_confidence=row["calibrated_confidence"],
-                latency_ms=row["latency_ms"]
+                id=d["id"],
+                timestamp=d["timestamp"],
+                model_id=d["model_id"],
+                complexity=d["complexity"],
+                failure_reason=d["failure_reason"],
+                raw_confidence=d["raw_confidence"],
+                calibrated_confidence=d["calibrated_confidence"],
+                latency_ms=d["latency_ms"],
+                input_tokens=d.get("input_tokens"),
+                output_tokens=d.get("output_tokens"),
+                cost_usd=d.get("cost_usd")
             )
             db.add(db_failure)
             
         print("Replaying/Inserting human feedback...")
         for row in feedback:
+            d = dict(row)
             db_feedback = HumanFeedback(
-                id=row["id"],
-                timestamp=row["timestamp"],
-                request_id=row["request_id"],
-                provider=row["provider"],
-                feedback_type=row["feedback_type"],
-                disagreement_reason=row["disagreement_reason"],
-                trust_score=row["trust_score"]
+                id=d["id"],
+                timestamp=d["timestamp"],
+                request_id=d["request_id"],
+                provider=d["provider"],
+                feedback_type=d["feedback_type"],
+                disagreement_reason=d["disagreement_reason"],
+                trust_score=d["trust_score"]
             )
             db.add(db_feedback)
             
         print("Replaying/Inserting telemetry lineage...")
         for row in lineage:
+            d = dict(row)
             db_lineage = TelemetryLineage(
-                id=row["id"],
-                timestamp=row["timestamp"],
-                action_type=row["action_type"],
-                influenced_entity=row["influenced_entity"],
-                source_evidence_ids=row["source_evidence_ids"],
-                metadata_hash=row["metadata_hash"]
+                id=d["id"],
+                timestamp=d["timestamp"],
+                action_type=d["action_type"],
+                influenced_entity=d["influenced_entity"],
+                source_evidence_ids=d["source_evidence_ids"],
+                metadata_hash=d["metadata_hash"]
             )
             db.add(db_lineage)
             

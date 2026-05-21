@@ -17,6 +17,7 @@ from infra.metrics import metrics
 from infra.benchmark import benchmark_engine
 from infra.shadow_evaluator import shadow_evaluator
 from core.learning_loop import memory_bank
+from core.economic_intelligence import EconomicIntelligencePlane, agentic_governor
 from api.analytics import router as analytics_router
 
 
@@ -248,26 +249,58 @@ async def orchestrate_request(
     complexity = analysis["complexity_score"]
     language = analysis["language"]
     
-    # Step 2: RAG Context Gathering
+    # Step 2: RAG Context Gathering & Compression
     final_prompt = payload.prompt
+    raw_prompt_for_comp = payload.prompt
+    
     if payload.use_rag:
         # Retrieve context with a strict relativity threshold
         retrieved_context = rag_engine.retrieve_context(query=payload.prompt, top_k=2, threshold=1.5)
         if retrieved_context:
-            final_prompt = f"Background Context:\n{retrieved_context}\n\nTask:\n{payload.prompt}"
+            docs = retrieved_context.split("\n---\n")
+            pruned_docs = EconomicIntelligencePlane.retrieval_pruning(docs, payload.prompt, threshold=0.50)
+            if pruned_docs:
+                retrieved_context = "\n---\n".join(pruned_docs)
+                final_prompt = f"Background Context:\n{retrieved_context}\n\nTask:\n{payload.prompt}"
+                raw_prompt_for_comp = final_prompt
+            else:
+                final_prompt = payload.prompt
     elif payload.context:
         final_prompt = f"Background Context:\n{payload.context}\n\nTask:\n{payload.prompt}"
+        raw_prompt_for_comp = final_prompt
+
+    # Apply Context Compression
+    # 1. Semantic Compression
+    compressed_prompt = EconomicIntelligencePlane.semantic_compression(raw_prompt_for_comp, threshold=0.82)
+    # 2. Redundancy Elimination
+    compressed_prompt = EconomicIntelligencePlane.redundancy_elimination(compressed_prompt)
+    # 3. Adaptive Context Windowing
+    compressed_prompt = EconomicIntelligencePlane.adaptive_context_windowing(compressed_prompt, complexity)
+    
+    final_prompt = compressed_prompt
 
     # Step 3: Routing Matrix Execution
     route_config = sovereign_router.calculate_route(payload.mode, complexity, language, payload.policy)
-
+    target_model = route_config.get("target", "unknown")
     
+    # Agentic Budget Control Check
+    est_input_tokens = EconomicIntelligencePlane.estimate_tokens(final_prompt)
+    est_output_tokens = 250
+    est_cost = EconomicIntelligencePlane.calculate_cost(target_model, est_input_tokens, est_output_tokens)
+    
+    if not agentic_governor.check_budget(est_cost):
+        raise HTTPException(status_code=402, detail="Autonomous Agentic spend budget exceeded. Operation blocked by governor.")
+
     try:
         response_text = sovereign_router.execute_route(final_prompt, route_config, clients)
         escalated = False
-        evaluation_meta = {}
         target_model = route_config.get("target", "unknown")
         shadow_model = route_config.get("shadow_target")
+        
+        # Calculate tokens and cost for first try
+        input_tokens_1 = EconomicIntelligencePlane.estimate_tokens(final_prompt)
+        output_tokens_1 = EconomicIntelligencePlane.estimate_tokens(response_text)
+        cost_1 = EconomicIntelligencePlane.calculate_cost(target_model, input_tokens_1, output_tokens_1)
         
         # PRIORITY 06: Shadow Inference (A/B Calibration)
         if shadow_model:
@@ -286,6 +319,8 @@ async def orchestrate_request(
         confidence_score = evaluation["confidence"]
         min_allowed_confidence = payload.policy.min_confidence if payload.policy else 0.8
         
+        first_model_failed = evaluation.get("failure_reason") is not None
+        
         if confidence_score < min_allowed_confidence:
             # Escalation Path -> Failed threshold, fallback to smartest model disregarding cost budget
             escalated = True
@@ -295,13 +330,55 @@ async def orchestrate_request(
                 "instruction": "Role: Senior_Architect. Task: The previous frugal model failed to satisfy the structural logic. Provide a highly robust, verbose, and complete response.",
                 "trace": {"reason": "Judge Engine Escalation", "tradeoff": "Forced override due to failure thresholds"}
             }
+            
+            # Log failure of the first model
+            background_tasks.add_task(
+                memory_bank.log_failure,
+                model_id=target_model,
+                complexity=complexity,
+                failure_reason=evaluation.get("failure_reason") or "low_confidence_escalation",
+                raw_confidence=evaluation.get("raw_confidence", 0.0),
+                calibrated_confidence=confidence_score,
+                latency_ms=int((time.time() - start_time) * 1000),
+                input_tokens=input_tokens_1,
+                output_tokens=output_tokens_1,
+                cost_usd=cost_1
+            )
+            
             response_text = sovereign_router.execute_route(final_prompt, escalation_config, clients)
-            route_config = escalation_config # Update telemetry to reflect the escalated final model
             
-            # Re-evaluate the escalated payload
-            target_model = escalation_config["target"]
-            evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, target_model)
+            input_tokens_2 = EconomicIntelligencePlane.estimate_tokens(final_prompt) + 20
+            output_tokens_2 = EconomicIntelligencePlane.estimate_tokens(response_text)
+            cost_2 = EconomicIntelligencePlane.calculate_cost("gpt-4o", input_tokens_2, output_tokens_2)
             
+            total_input_tokens = input_tokens_1 + input_tokens_2
+            total_output_tokens = output_tokens_1 + output_tokens_2
+            total_cost_usd = cost_1 + cost_2
+            
+            # Update target model and evaluation for the final escalated response
+            final_route_model = escalation_config["target"]
+            evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, final_route_model)
+        else:
+            # Not escalated
+            total_input_tokens = input_tokens_1
+            total_output_tokens = output_tokens_1
+            total_cost_usd = cost_1
+            final_route_model = target_model
+            
+            if first_model_failed:
+                background_tasks.add_task(
+                    memory_bank.log_failure,
+                    model_id=target_model,
+                    complexity=complexity,
+                    failure_reason=evaluation.get("failure_reason"),
+                    raw_confidence=evaluation.get("raw_confidence", 0.0),
+                    calibrated_confidence=confidence_score,
+                    latency_ms=int((time.time() - start_time) * 1000),
+                    input_tokens=input_tokens_1,
+                    output_tokens=output_tokens_1,
+                    cost_usd=cost_1
+                )
+                
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Routing backend failed: {str(e)}")
 
@@ -313,28 +390,23 @@ async def orchestrate_request(
     # Step 6: Learning Loop & Telemetry Recording (Async)
     latency_ms = (time.time() - start_time) * 1000
     
-    # Enhanced Metrics logging for Priority 02 & 05 (Calibration & Drift)
-    if evaluation.get("failure_reason"):
-        background_tasks.add_task(
-            memory_bank.log_failure,
-            model_id=route_config.get("target", "unknown"),
-            complexity=complexity,
-            failure_reason=evaluation.get("failure_reason"),
-            raw_confidence=evaluation.get("raw_confidence", 0.0),
-            calibrated_confidence=evaluation.get("confidence", 0.0),
-            latency_ms=int(latency_ms)
-        )
+    # Record spend
+    agentic_governor.record_spend(total_cost_usd)
         
     background_tasks.add_task(
         memory_bank.log_decision,
         prompt=payload.prompt,
-        selected_model=route_config.get("target", "unknown"),
+        selected_model=target_model, # Initial route model
         complexity=complexity,
         escalated=escalated,
         latency_ms=int(latency_ms),
-        shadow_model=route_config.get("shadow_target")
+        shadow_model=route_config.get("shadow_target"),
+        input_tokens=total_input_tokens,
+        output_tokens=total_output_tokens,
+        cost_usd=total_cost_usd,
+        is_reliable=not escalated,
+        final_route=final_route_model
     )
-
 
     return {
         "response": response_text.strip(),
@@ -342,11 +414,16 @@ async def orchestrate_request(
             "orchestrator_latency_ms": round(latency_ms, 2),
             "language_detected": language,
             "complexity_score": round(complexity, 2),
-            "routed_model": route_config.get("target"),
+            "routed_model": final_route_model,
             "confidence": evaluation["confidence"],
             "risk_level": evaluation["risk_level"],
             "failure_reason": evaluation.get("failure_reason"),
             "escalated_via_judge": escalated,
-            "decision_trace": route_config.get("trace", {})
+            "decision_trace": route_config.get("trace", {}),
+            "economic_metrics": {
+                "input_tokens": total_input_tokens,
+                "output_tokens": total_output_tokens,
+                "cost_usd": total_cost_usd
+            }
         }
     }

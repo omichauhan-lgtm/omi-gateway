@@ -167,4 +167,43 @@ def get_reliability_forecast(db: Session = Depends(get_db), x_omi_admin_key: str
         
     return {"predictive_governance": forecasts}
 
+@router.get("/admin/economics")
+def get_admin_economics(db: Session = Depends(get_db), x_omi_admin_key: str = Header(None)):
+    """
+    Exposes overall RATE, average cost per reliable output, context compression savings,
+    and token waste ratios.
+    """
+    from core.economic_intelligence import EconomicIntelligencePlane
+    metrics = EconomicIntelligencePlane.get_rate_metrics(db)
+    return metrics
+
+@router.get("/admin/rate-trend")
+def get_rate_trend(db: Session = Depends(get_db), x_omi_admin_key: str = Header(None)):
+    """
+    Exposes time-series trend of RATE and token efficiency over days.
+    """
+    from core.economic_intelligence import EconomicIntelligencePlane
+    # Group by date from timestamp (first 10 chars)
+    # We will compute RATE daily
+    results = db.query(
+        func.substr(RoutingDecision.timestamp, 1, 10).label("day"),
+        func.sum(RoutingDecision.input_tokens + RoutingDecision.output_tokens).label("total_tokens"),
+        func.sum(func.case((RoutingDecision.is_reliable == True, 1), else_=0)).label("reliable_count")
+    ).group_by(func.substr(RoutingDecision.timestamp, 1, 10)).order_by(func.substr(RoutingDecision.timestamp, 1, 10).asc()).all()
+    
+    trend = []
+    for row in results:
+        day = row.day or "unknown"
+        tokens = row.total_tokens or 0
+        reliable = row.reliable_count or 0
+        rate = float(tokens / reliable) if reliable > 0 else float(tokens)
+        trend.append({
+            "date": day,
+            "rate": round(rate, 2),
+            "total_tokens": tokens,
+            "reliable_outputs": reliable
+        })
+    return {"rate_trend": trend}
+
+
 

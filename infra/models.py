@@ -16,6 +16,10 @@ class RoutingDecision(Base):
     latency_ms = Column(Float)
     confidence = Column(Float)
     shadow_model = Column(String)
+    input_tokens = Column(Integer, default=0)
+    output_tokens = Column(Integer, default=0)
+    cost_usd = Column(Float, default=0.0)
+    is_reliable = Column(Boolean, default=True)
 
 class ModelFailure(Base):
     __tablename__ = "model_failures"
@@ -28,6 +32,9 @@ class ModelFailure(Base):
     raw_confidence = Column(Float)
     calibrated_confidence = Column(Float)
     latency_ms = Column(Float)
+    input_tokens = Column(Integer, default=0)
+    output_tokens = Column(Integer, default=0)
+    cost_usd = Column(Float, default=0.0)
 
 class HumanFeedback(Base):
     __tablename__ = "human_feedback"

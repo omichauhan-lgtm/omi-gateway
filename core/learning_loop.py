@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict, Any
 
 # Phase 5B: Import Governance layers (late import inside functions if circular deps, or just here)
@@ -25,9 +25,33 @@ class DataMoat:
         # Phase 6A: Use SQLAlchemy to generate schema
         Base.metadata.create_all(bind=engine)
 
-
-
-
+        # Phase 6B: SQLite/PostgreSQL Auto-Upgrade Migration check
+        from sqlalchemy import inspect, text
+        inspector = inspect(engine)
+        
+        # Check routing_decisions
+        if "routing_decisions" in inspector.get_table_names():
+            rd_cols = [c["name"] for c in inspector.get_columns("routing_decisions")]
+            with engine.begin() as conn:
+                if "input_tokens" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN input_tokens INTEGER DEFAULT 0"))
+                if "output_tokens" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN output_tokens INTEGER DEFAULT 0"))
+                if "cost_usd" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN cost_usd FLOAT DEFAULT 0.0"))
+                if "is_reliable" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN is_reliable BOOLEAN DEFAULT 1"))
+                    
+        # Check model_failures
+        if "model_failures" in inspector.get_table_names():
+            mf_cols = [c["name"] for c in inspector.get_columns("model_failures")]
+            with engine.begin() as conn:
+                if "input_tokens" not in mf_cols:
+                    conn.execute(text("ALTER TABLE model_failures ADD COLUMN input_tokens INTEGER DEFAULT 0"))
+                if "output_tokens" not in mf_cols:
+                    conn.execute(text("ALTER TABLE model_failures ADD COLUMN output_tokens INTEGER DEFAULT 0"))
+                if "cost_usd" not in mf_cols:
+                    conn.execute(text("ALTER TABLE model_failures ADD COLUMN cost_usd FLOAT DEFAULT 0.0"))
 
     def log_decision(
         self,
@@ -36,7 +60,12 @@ class DataMoat:
         complexity: float,
         escalated: bool,
         latency_ms: float,
-        shadow_model: str = None
+        shadow_model: str = None,
+        input_tokens: int = 0,
+        output_tokens: int = 0,
+        cost_usd: float = 0.0,
+        is_reliable: bool = True,
+        final_route: str = None
     ):
         """Asynchronously log interactions to slowly build the proprietary data moat using SQLAlchemy."""
         db = SessionLocal()
@@ -47,10 +76,14 @@ class DataMoat:
                 language="en",
                 initial_route=selected_model,
                 escalated=escalated,
-                final_route=selected_model,
+                final_route=final_route or selected_model,
                 latency_ms=latency_ms,
                 confidence=0.0,
-                shadow_model=shadow_model
+                shadow_model=shadow_model,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                cost_usd=cost_usd,
+                is_reliable=is_reliable
             )
             db.add(decision)
             db.commit()
@@ -65,7 +98,10 @@ class DataMoat:
         failure_reason: str,
         raw_confidence: float = 0.0,
         calibrated_confidence: float = 0.0,
-        latency_ms: float = 0.0
+        latency_ms: float = 0.0,
+        input_tokens: int = 0,
+        output_tokens: int = 0,
+        cost_usd: float = 0.0
     ):
         db = SessionLocal()
         try:
@@ -76,9 +112,23 @@ class DataMoat:
                 failure_reason=failure_reason,
                 raw_confidence=raw_confidence,
                 calibrated_confidence=calibrated_confidence,
-                latency_ms=latency_ms
+                latency_ms=latency_ms,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                cost_usd=cost_usd
             )
             db.add(failure)
+            
+            # Find the corresponding RoutingDecision and mark it unreliable
+            # Look for decisions in the last 10 seconds for the same provider
+            cutoff = (datetime.utcnow() - timedelta(seconds=10)).isoformat()
+            decision = db.query(RoutingDecision).filter(
+                RoutingDecision.initial_route == model_id,
+                RoutingDecision.timestamp >= cutoff
+            ).order_by(RoutingDecision.id.desc()).first()
+            if decision:
+                decision.is_reliable = False
+                
             db.commit()
         finally:
             db.close()
@@ -223,6 +273,8 @@ class DataMoat:
         from infra.governance_constraints import GovernanceConstraints
         from infra.governance_lineage import GovernanceLineage
         from infra.governance_replay import GovernanceReplayEngine
+        from analytics.governance_history import calculate_governance_stability_score
+        import json
         
         optimized_nodes = []
         db = SessionLocal()
@@ -232,6 +284,45 @@ class DataMoat:
                 current_max = node["max_complexity"]
                 
                 adjusted_node = dict(node)
+                
+                # Check governance stability score
+                stability = calculate_governance_stability_score(db, target)
+                if stability["governance_stability_score"] < 0.70:
+                    # Automatically roll back weight decays if the score falls below 0.70
+                    last_decay = db.query(TelemetryLineage).filter(
+                        TelemetryLineage.influenced_entity == target,
+                        TelemetryLineage.action_type == "ROUTING_WEIGHT_DECAY"
+                    ).order_by(TelemetryLineage.id.desc()).first()
+                    
+                    restored_max = current_max
+                    if last_decay:
+                        try:
+                            # Parse previous_state from metadata_hash
+                            # metadata_hash = f"conf:{confidence_level}|trigger:{trigger_source}|prev:{prev_json}|new:{new_json}"
+                            parts = last_decay.metadata_hash.split("|")
+                            prev_part = [p for p in parts if p.startswith("prev:")][0]
+                            prev_json = prev_part[len("prev:"):]
+                            prev_state = json.loads(prev_json)
+                            restored_max = prev_state.get("max_complexity", current_max)
+                        except Exception:
+                            restored_max = min(1.0, current_max + 0.15)
+                    else:
+                        restored_max = min(1.0, current_max + 0.15)
+                        
+                    if restored_max != current_max:
+                        adjusted_node["max_complexity"] = restored_max
+                        GovernanceLineage.log_mutation(
+                            action_type="ROUTING_WEIGHT_ROLLBACK",
+                            influenced_entity=target,
+                            source_evidence_ids=[],
+                            previous_state={"max_complexity": current_max},
+                            new_state={"max_complexity": restored_max},
+                            trigger_source="stability_guard",
+                            confidence_level=0.99
+                        )
+                        print(f"[Stability Guard] Rolled back decay for {target} to {restored_max} due to low stability score ({stability['governance_stability_score']})")
+                    optimized_nodes.append(adjusted_node)
+                    continue
                 
                 # Look at failures in the upper boundary of its capability
                 lower_bound = current_max - 0.2
