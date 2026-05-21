@@ -168,6 +168,62 @@ class DataMoat:
         except Exception:
             return 0.0
 
+    def get_provider_ece(self, target_model: str) -> float:
+        """
+        Phase 5: Expected Calibration Error (ECE).
+        Calculates the historical gap between a provider's confidence and its actual accuracy.
+        ECE = abs(Average Confidence - Average Accuracy)
+        """
+        try:
+            with sqlite3.connect(DB_PATH) as conn:
+                cursor = conn.cursor()
+                # Use model_failures to find historical calibrated_confidence vs actual success
+                # A successful request is one where failure_reason is NULL
+                cursor.execute(
+                    """SELECT 
+                        AVG(calibrated_confidence),
+                        SUM(CASE WHEN failure_reason IS NULL OR failure_reason = '' THEN 1 ELSE 0 END) * 1.0 / COUNT(*)
+                       FROM model_failures 
+                       WHERE model_id = ?""",
+                    (target_model,)
+                )
+                row = cursor.fetchone()
+                if not row or row[0] is None or row[1] is None:
+                    return 0.1 # Default optimistic ECE
+                    
+                avg_conf = row[0]
+                avg_acc = row[1]
+                return round(abs(avg_conf - avg_acc), 3)
+        except Exception:
+            return 0.1
+
+    def get_reputation_score(self, target_model: str) -> float:
+        """
+        Phase 5: Reputation Economy.
+        Providers gain reputation by avoiding escalations and maintaining low ECE.
+        Providers lose reputation from human feedback (trust_score weighted) and high ECE.
+        """
+        try:
+            with sqlite3.connect(DB_PATH) as conn:
+                cursor = conn.cursor()
+                # Aggregate human feedback trust penalties
+                cursor.execute(
+                    "SELECT SUM(trust_score) FROM human_feedback WHERE provider = ? AND feedback_type IN ('hallucination', 'false_confidence')",
+                    (target_model,)
+                )
+                penalty_row = cursor.fetchone()
+                penalties = penalty_row[0] if penalty_row and penalty_row[0] else 0.0
+                
+                # Base reputation from escalation rate
+                esc_rate = self.get_escalation_rate(target_model, min_complexity=0.0)
+                ece = self.get_provider_ece(target_model)
+                
+                # Formula: 1.0 - (Escalation Rate) - (ECE Penalty) - (Feedback Penalties scaled)
+                reputation = 1.0 - esc_rate - (ece * 0.5) - (penalties * 0.01)
+                return max(0.1, round(reputation, 3))
+        except Exception:
+            return 1.0
+
     def optimize_routing_weights(self, baseline_nodes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
         Active Learning System.

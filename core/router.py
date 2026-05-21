@@ -103,6 +103,9 @@ class SovereignRouter:
             # Gather empirical probabilities from the Data Moat
             failure_prob = memory_bank.get_escalation_rate(node["target"], min_complexity=complexity)
             
+            # Phase 5: Reputation Economy
+            reputation = memory_bank.get_reputation_score(node["target"])
+            
             # If strict mode is off and it fails too often, heavily penalize it
             if failure_prob > 0.3 and not strict_mode:
                 continue
@@ -114,8 +117,9 @@ class SovereignRouter:
             cost_penalty = node["cost_weight"] * 2.0
             risk_penalty = failure_prob * 3.0
             
-            # Expected Utility Calculation
-            expected_utility = correctness_estimate - cost_penalty - risk_penalty
+            # Expected Utility Calculation (Phase 5: Factoring Reputation)
+            expected_utility = (correctness_estimate * reputation) - cost_penalty - risk_penalty
+
             
             if expected_utility > highest_utility:
                 highest_utility = expected_utility

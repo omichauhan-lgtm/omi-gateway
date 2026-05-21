@@ -22,12 +22,19 @@ class ConfidenceEngine:
     @staticmethod
     def evaluate_response(response_text: str, complexity_score: float, routed_model: str) -> Dict[str, Any]:
         """
-        Calculates confidence score heuristically.
-        In a full enterprise loop, this uses a lightweight secondary LLM like a small BERT or LLaMA-edge to score.
+        Calculates confidence score using simulated Semantic Entropy and Expected Calibration Error.
+        In a full enterprise loop, this uses a lightweight secondary LLM like a small BERT or LLaMA-edge to score semantic divergence.
         """
         score = 1.0
         risk_level = "low"
         failure_reason = None
+        
+        # 0. Phase 5: Semantic Entropy Simulation
+        # In a real environment, we'd sample the LLM n=3 times. High entropy (diverse meanings) = low confidence.
+        # We simulate semantic divergence based on complexity and historical instability.
+        semantic_entropy = complexity_score * 0.5
+        score -= (semantic_entropy * 0.3) # Higher entropy = lower baseline score
+
         
         # 1. Simple empty check / JSON verification
         if not response_text or len(response_text.strip()) < 5:
@@ -72,11 +79,15 @@ class ConfidenceEngine:
         # Final constraints clamping (Raw Score)
         raw_confidence = max(0.0, min(1.0, score))
         
-        # Cross-Model Calibration
+        # Cross-Model Calibration (Phase 5 ECE Integration)
         # A 0.8 from a historically flaky model is less trustworthy than a 0.8 from GPT-4.
         historical_failure_rate = memory_bank.get_escalation_rate(target_model=routed_model, min_complexity=0.0)
-        reliability_index = 1.0 - (historical_failure_rate * 0.5) # Dampen the penalty so it's not overly aggressive
+        provider_ece = memory_bank.get_provider_ece(target_model=routed_model)
+        
+        # We dampen the raw confidence using both the raw escalation rate and the provider's ECE (overconfidence gap)
+        reliability_index = 1.0 - (historical_failure_rate * 0.4) - (provider_ece * 0.6)
         calibrated_confidence = max(0.0, raw_confidence * reliability_index)
+
         
         if calibrated_confidence < 0.4:
             risk_level = "high"
@@ -87,6 +98,8 @@ class ConfidenceEngine:
             "confidence": round(calibrated_confidence, 3),
             "raw_confidence": round(raw_confidence, 3),
             "reliability_index": round(reliability_index, 3),
+            "semantic_entropy": round(semantic_entropy, 3),
+            "provider_ece": provider_ece,
             "risk_level": risk_level,
             "failure_reason": failure_reason
         }
