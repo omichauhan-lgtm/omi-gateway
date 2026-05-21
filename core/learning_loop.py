@@ -3,6 +3,9 @@ import os
 from datetime import datetime
 from typing import List, Dict, Any
 
+# Phase 5B: Import Governance layers (late import inside functions if circular deps, or just here)
+
+
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "learning_loop.db")
 
 class DataMoat:
@@ -226,10 +229,15 @@ class DataMoat:
 
     def optimize_routing_weights(self, baseline_nodes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
-        Active Learning System.
+        Active Learning System + Phase 5B Governance Stabilization.
         Automatically down-weights the 'max_complexity' limit for any model that 
         historically hallucinates/fails when stretched to its current limits.
         """
+        # Late imports to avoid circular dependencies with DB_PATH
+        from infra.governance_constraints import GovernanceConstraints
+        from infra.governance_lineage import GovernanceLineage
+        from infra.governance_replay import GovernanceReplayEngine
+        
         optimized_nodes = []
         try:
             with sqlite3.connect(DB_PATH) as conn:
@@ -237,6 +245,8 @@ class DataMoat:
                 for node in baseline_nodes:
                     target = node["target"]
                     current_max = node["max_complexity"]
+                    
+                    adjusted_node = dict(node)
                     
                     # Look at failures in the upper boundary of its capability
                     lower_bound = current_max - 0.2
@@ -248,28 +258,40 @@ class DataMoat:
                     total = len(evidence_rows)
                     fails = sum(1 for row in evidence_rows if row[1])
                     
-                    adjusted_node = dict(node)
-                    if total >= 10: # Only learn if statistically significant traffic exists
+                    if total >= 10: # Minimum local traffic for evaluation
                         failure_rate = fails / total
                         if failure_rate > 0.4:
-                            # Model is consistently failing its upper bound -> Permanently downgrade its max logic threshold
-                            adjusted_node["max_complexity"] = round(max(0.2, current_max - 0.15), 2)
+                            # Candidate for Decay. Phase 5B Check 1: Are we allowed to mutate?
+                            can_mutate, reason = GovernanceConstraints.can_mutate_provider(target)
                             
-                            # Priority 1: Record Lineage for Optimization Event
-                            evidence_ids = ",".join([str(row[0]) for row in evidence_rows if row[1]])
-                            cursor.execute(
-                                """INSERT INTO telemetry_lineage 
-                                   (timestamp, action_type, influenced_entity, source_evidence_ids, metadata_hash)
-                                   VALUES (?, ?, ?, ?, ?)""",
-                                (datetime.utcnow().isoformat(), "ROUTING_WEIGHT_DECAY", target, evidence_ids, f"failure_rate:{failure_rate:.2f}")
-                            )
-                            
+                            if can_mutate:
+                                proposed_max = round(max(0.2, current_max - 0.15), 2)
+                                
+                                # Phase 5B Check 2: Replay Engine Simulation
+                                replay_result = GovernanceReplayEngine.simulate_provider_decay(target, proposed_max)
+                                
+                                # Only proceed if the simulation doesn't indicate catastrophic failure (e.g. 100% simulated failure)
+                                if replay_result.get("status") == "success" and replay_result.get("simulated_escalation_rate", 1.0) < 0.9:
+                                    
+                                    adjusted_node["max_complexity"] = proposed_max
+                                    
+                                    # Phase 5B Check 3: Structured Lineage Tracking
+                                    evidence_ids = [row[0] for row in evidence_rows if row[1]]
+                                    GovernanceLineage.log_mutation(
+                                        action_type="ROUTING_WEIGHT_DECAY",
+                                        influenced_entity=target,
+                                        source_evidence_ids=evidence_ids,
+                                        previous_state={"max_complexity": current_max},
+                                        new_state={"max_complexity": proposed_max},
+                                        trigger_source="auto_healer",
+                                        confidence_level=0.95
+                                    )
+                                    
                     optimized_nodes.append(adjusted_node)
-                conn.commit()
-            return optimized_nodes
+                return optimized_nodes
 
-        except Exception:
-            # Safe failover to unoptimized nodes if DB fails
+        except Exception as e:
+            print(f"[Governance Guard] Failed to optimize weights: {str(e)}")
             return baseline_nodes
             
 # Global memory engine
