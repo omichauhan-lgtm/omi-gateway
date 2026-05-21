@@ -20,6 +20,11 @@ class RoutingDecision(Base):
     output_tokens = Column(Integer, default=0)
     cost_usd = Column(Float, default=0.0)
     is_reliable = Column(Boolean, default=True)
+    workflow_id = Column(String, index=True, nullable=True)
+    utility_score = Column(Float, default=1.0)
+    is_retry = Column(Boolean, default=False)
+    task_success = Column(Boolean, default=True)
+
 
 class ModelFailure(Base):
     __tablename__ = "model_failures"
@@ -56,3 +61,17 @@ class TelemetryLineage(Base):
     influenced_entity = Column(String, index=True)
     source_evidence_ids = Column(Text)
     metadata_hash = Column(Text)
+
+class UtilityEstimate(Base):
+    __tablename__ = "utility_estimates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    decision_id = Column(Integer, index=True)
+    timestamp = Column(String, index=True)
+    utility_score = Column(Float)
+    confidence = Column(Float)
+    contributing_signals = Column(Text)
+    signal_weights = Column(Text)
+    session_context = Column(Text)
+    inference_reasoning = Column(Text)
+

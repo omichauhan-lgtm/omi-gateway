@@ -41,6 +41,15 @@ class DataMoat:
                     conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN cost_usd FLOAT DEFAULT 0.0"))
                 if "is_reliable" not in rd_cols:
                     conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN is_reliable BOOLEAN DEFAULT 1"))
+                if "workflow_id" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN workflow_id VARCHAR"))
+                if "utility_score" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN utility_score FLOAT DEFAULT 1.0"))
+                if "is_retry" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN is_retry BOOLEAN DEFAULT 0"))
+                if "task_success" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN task_success BOOLEAN DEFAULT 1"))
+
                     
         # Check model_failures
         if "model_failures" in inspector.get_table_names():
@@ -65,7 +74,11 @@ class DataMoat:
         output_tokens: int = 0,
         cost_usd: float = 0.0,
         is_reliable: bool = True,
-        final_route: str = None
+        final_route: str = None,
+        workflow_id: str = None,
+        utility_score: float = 1.0,
+        is_retry: bool = False,
+        task_success: bool = True
     ):
         """Asynchronously log interactions to slowly build the proprietary data moat using SQLAlchemy."""
         db = SessionLocal()
@@ -83,12 +96,19 @@ class DataMoat:
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
                 cost_usd=cost_usd,
-                is_reliable=is_reliable
+                is_reliable=is_reliable,
+                workflow_id=workflow_id,
+                utility_score=utility_score,
+                is_retry=is_retry,
+                task_success=task_success
             )
             db.add(decision)
             db.commit()
+            db.refresh(decision)
+            return decision.id
         finally:
             db.close()
+
 
             
     def log_failure(

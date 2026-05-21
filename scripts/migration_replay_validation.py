@@ -8,9 +8,10 @@ from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from infra.database import engine, SessionLocal, Base
-from infra.models import RoutingDecision, ModelFailure, HumanFeedback, TelemetryLineage
+from infra.models import RoutingDecision, ModelFailure, HumanFeedback, TelemetryLineage, UtilityEstimate
 from analytics.calibration_drift import compute_ece
 from analytics.governance_history import calculate_governance_stability_score
+
 
 def migrate_and_validate():
     print("====================================================")
@@ -74,7 +75,9 @@ def migrate_and_validate():
         db.query(ModelFailure).delete()
         db.query(HumanFeedback).delete()
         db.query(TelemetryLineage).delete()
+        db.query(UtilityEstimate).delete()
         db.commit()
+
         
         print("Replaying/Inserting routing decisions...")
         for row in decisions:
@@ -93,7 +96,11 @@ def migrate_and_validate():
                 input_tokens=d.get("input_tokens"),
                 output_tokens=d.get("output_tokens"),
                 cost_usd=d.get("cost_usd"),
-                is_reliable=bool(d.get("is_reliable")) if d.get("is_reliable") is not None else None
+                is_reliable=bool(d.get("is_reliable")) if d.get("is_reliable") is not None else None,
+                workflow_id=d.get("workflow_id"),
+                utility_score=d.get("utility_score", 1.0),
+                is_retry=bool(d.get("is_retry")) if d.get("is_retry") is not None else False,
+                task_success=bool(d.get("task_success")) if d.get("task_success") is not None else True
             )
             db.add(db_decision)
             
@@ -165,8 +172,10 @@ def run_integrity_validation():
         fail_count = db.query(ModelFailure).count()
         feedback_count = db.query(HumanFeedback).count()
         lineage_count = db.query(TelemetryLineage).count()
+        utility_count = db.query(UtilityEstimate).count()
         
-        print(f"Target DB Stats: Decisions={dec_count}, Failures={fail_count}, Feedback={feedback_count}, Lineage={lineage_count}")
+        print(f"Target DB Stats: Decisions={dec_count}, Failures={fail_count}, Feedback={feedback_count}, Lineage={lineage_count}, UtilityEstimates={utility_count}")
+
         
         if dec_count < 100:
             print("[WARNING] Target database has very few records. Run scientific validation script first.")

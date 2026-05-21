@@ -19,6 +19,30 @@ from infra.shadow_evaluator import shadow_evaluator
 from core.learning_loop import memory_bank
 from core.economic_intelligence import EconomicIntelligencePlane, agentic_governor
 from api.analytics import router as analytics_router
+from core.utility_intelligence import UtilityIntelligencePlane
+import re
+import threading
+import uuid
+from typing import List, Dict, Any
+from datetime import datetime, timedelta
+from infra.database import SessionLocal
+
+_RECENT_PROMPTS = [] # List of {"id": int, "prompt": str, "timestamp": datetime}
+_RECENT_PROMPTS_LOCK = threading.Lock()
+
+def add_to_recent_prompts(decision_id: int, prompt: str):
+    global _RECENT_PROMPTS
+    now = datetime.utcnow()
+    with _RECENT_PROMPTS_LOCK:
+        _RECENT_PROMPTS.append({
+            "id": decision_id,
+            "prompt": prompt,
+            "timestamp": now
+        })
+        # Keep only last 300 seconds of prompts
+        cutoff = now - timedelta(seconds=300)
+        _RECENT_PROMPTS = [entry for entry in _RECENT_PROMPTS if entry["timestamp"] >= cutoff]
+
 
 
 
@@ -52,6 +76,7 @@ class OrchestratorRequest(BaseModel):
     use_rag: bool = False       # Set true to dynamically query ChromaDB
     context: Optional[str] = "" # Optional direct context injection
     policy: Optional[PolicyConfig] = None
+    workflow_id: Optional[str] = None
 
 def get_clients_payload(x_openai_key, x_anthropic_key, x_deepseek_key):
 
@@ -219,6 +244,45 @@ async def submit_reliability_feedback(request: Request, feedback: FeedbackReques
     )
     return {"status": "success", "message": "Feedback captured for telemetry calibration."}
 
+class UtilityFeedbackRequest(BaseModel):
+    decision_id: int
+    signal: str  # thumbs_up, thumbs_down, task_failed, manual_user_report
+    reasoning: Optional[str] = None
+
+@app.post("/feedback/utility")
+async def submit_utility_feedback(payload: UtilityFeedbackRequest):
+    """
+    Ingest explicit utility feedback from users or external systems.
+    """
+    db = SessionLocal()
+    try:
+        from infra.models import RoutingDecision
+        decision = db.query(RoutingDecision).filter(RoutingDecision.id == payload.decision_id).first()
+        if not decision:
+            raise HTTPException(status_code=404, detail=f"Routing decision {payload.decision_id} not found.")
+            
+        reason = payload.reasoning or f"Explicit feedback: {payload.signal}"
+        
+        db_est = UtilityIntelligencePlane.record_utility_provenance(
+            db=db,
+            decision_id=payload.decision_id,
+            signals=[payload.signal],
+            reasoning=reason,
+            session_context={"source": "explicit_feedback_endpoint"}
+        )
+        return {
+            "status": "success",
+            "decision_id": payload.decision_id,
+            "utility_score": db_est.utility_score,
+            "task_success": decision.task_success
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+
 
 
 @app.post("/generate")
@@ -244,6 +308,22 @@ async def orchestrate_request(
 
     clients = get_clients_payload(x_openai_key, x_anthropic_key, x_deepseek_key)
     
+    # Implicit Retry Detection
+    is_retry_detected = False
+    prev_decision_id = -1
+    retry_reason = ""
+    db_retry = SessionLocal()
+    try:
+        with _RECENT_PROMPTS_LOCK:
+            recent_prompts_copy = list(_RECENT_PROMPTS)
+        is_retry_detected, prev_decision_id, retry_reason = UtilityIntelligencePlane.detect_implicit_retry(
+            db_retry, payload.prompt, recent_prompts_copy, time_window_sec=300, workflow_id=payload.workflow_id
+        )
+    except Exception as e:
+        print(f"Error during implicit retry detection check: {e}")
+    finally:
+        db_retry.close()
+        
     # Step 1: Pre-Flight Analysis
     analysis = RequestClassifier.analyze(payload.prompt)
     complexity = analysis["complexity_score"]
@@ -319,11 +399,30 @@ async def orchestrate_request(
         confidence_score = evaluation["confidence"]
         min_allowed_confidence = payload.policy.min_confidence if payload.policy else 0.8
         
-        first_model_failed = evaluation.get("failure_reason") is not None
+        # Check utility constraints on first response
+        failed_constraints = UtilityIntelligencePlane.verify_utility_constraints(
+            payload.prompt, response_text, complexity
+        )
+        # Static utility truth validation
+        db_truth = SessionLocal()
+        try:
+            truth_res = UtilityIntelligencePlane.verify_utility_truth(
+                payload.prompt, response_text, payload.workflow_id, db_truth
+            )
+            if not truth_res["is_truth_valid"]:
+                failed_checks = [k for k, v in truth_res["checks"].items() if not v]
+                failed_constraints.append(f"static_truth_failed:{','.join(failed_checks)}")
+        finally:
+            db_truth.close()
+            
+        utility_failed = len(failed_constraints) > 0
+        first_model_failed = (evaluation.get("failure_reason") is not None) or utility_failed
         
-        if confidence_score < min_allowed_confidence:
+        if confidence_score < min_allowed_confidence or utility_failed:
             # Escalation Path -> Failed threshold, fallback to smartest model disregarding cost budget
             escalated = True
+            escalation_reason = f"utility_constraint_violated: {', '.join(failed_constraints)}" if utility_failed else (evaluation.get("failure_reason") or "low_confidence_escalation")
+            
             escalation_config = {
                 "target": "gpt-4o",
                 "target_key": "openai",
@@ -336,7 +435,7 @@ async def orchestrate_request(
                 memory_bank.log_failure,
                 model_id=target_model,
                 complexity=complexity,
-                failure_reason=evaluation.get("failure_reason") or "low_confidence_escalation",
+                failure_reason=escalation_reason,
                 raw_confidence=evaluation.get("raw_confidence", 0.0),
                 calibrated_confidence=confidence_score,
                 latency_ms=int((time.time() - start_time) * 1000),
@@ -387,14 +486,13 @@ async def orchestrate_request(
     for token in forbidden_tokens:
         response_text = response_text.replace(token, "")
 
-    # Step 6: Learning Loop & Telemetry Recording (Async)
+    # Step 6: Learning Loop & Telemetry Recording
     latency_ms = (time.time() - start_time) * 1000
     
     # Record spend
     agentic_governor.record_spend(total_cost_usd)
         
-    background_tasks.add_task(
-        memory_bank.log_decision,
+    decision_id = memory_bank.log_decision(
         prompt=payload.prompt,
         selected_model=target_model, # Initial route model
         complexity=complexity,
@@ -405,8 +503,79 @@ async def orchestrate_request(
         output_tokens=total_output_tokens,
         cost_usd=total_cost_usd,
         is_reliable=not escalated,
-        final_route=final_route_model
+        final_route=final_route_model,
+        workflow_id=payload.workflow_id,
+        utility_score=1.0 if not escalated else 0.0,
+        is_retry=False,
+        task_success=not escalated
     )
+    
+    # Add current decision to recent prompts cache
+    add_to_recent_prompts(decision_id, payload.prompt)
+    
+    # Log initial utility provenance
+    db_current = SessionLocal()
+    try:
+        initial_signals = []
+        reasoning = "Initial assessment: request succeeded with default metrics."
+        if escalated:
+            initial_signals.append("task_failed")
+            reasoning = f"Initial assessment: escalated due to low confidence or utility constraint violation."
+            
+        UtilityIntelligencePlane.record_utility_provenance(
+            db_current,
+            decision_id=decision_id,
+            signals=initial_signals,
+            reasoning=reasoning,
+            session_context={"workflow_id": payload.workflow_id, "mode": payload.mode}
+        )
+    except Exception as e:
+        print(f"Error logging initial utility provenance: {e}")
+    finally:
+        db_current.close()
+
+    # Retrospective update if retry was detected
+    if is_retry_detected and prev_decision_id != -1:
+        db_prev = SessionLocal()
+        try:
+            from infra.models import RoutingDecision
+            prev_dec = db_prev.query(RoutingDecision).filter(RoutingDecision.id == prev_decision_id).first()
+            if prev_dec:
+                prev_dec.is_retry = True
+                db_prev.commit()
+                
+                signals = ["immediate_retry"]
+                # If provider changed
+                if prev_dec.initial_route != target_model:
+                    signals.append("provider_switch")
+                    
+                # Check for prompt rewording
+                with _RECENT_PROMPTS_LOCK:
+                    prev_prompt_text = next((x["prompt"] for x in _RECENT_PROMPTS if x["id"] == prev_decision_id), "")
+                if prev_prompt_text:
+                    def calculate_overlap(s1: str, s2: str) -> float:
+                        words1 = set(re.findall(r'\w+', s1.lower()))
+                        words2 = set(re.findall(r'\w+', s2.lower()))
+                        if not words1 or not words2:
+                            return 0.0
+                        intersection = words1.intersection(words2)
+                        union = words1.union(words2)
+                        return len(intersection) / len(union)
+                    overlap = calculate_overlap(payload.prompt, prev_prompt_text)
+                    if 0.40 <= overlap < 0.85:
+                        signals.append("prompt_rewording")
+                
+                UtilityIntelligencePlane.record_utility_provenance(
+                    db_prev,
+                    decision_id=prev_decision_id,
+                    signals=signals,
+                    reasoning=f"Retrospectively downgraded via implicit retry detection: {retry_reason}",
+                    session_context={"current_workflow_id": payload.workflow_id}
+                )
+        except Exception as e:
+            print(f"Error updating previous decision utility: {e}")
+        finally:
+            db_prev.close()
 
     return {
         "response": response_text.strip(),

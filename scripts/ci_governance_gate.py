@@ -241,6 +241,73 @@ def run_entropy_prediction_blocker() -> bool:
         print(f"[FAIL] Error parsing scientific proof report: {e}")
         return False
 
+def run_utility_decay_protection_check() -> bool:
+    print("\n--- Check 10: Utility Decay Protection ---")
+    db = SessionLocal()
+    try:
+        from sqlalchemy import func
+        total = db.query(RoutingDecision).count()
+        if total == 0:
+            print("[PASS] No telemetry records found to check utility decay.")
+            return True
+            
+        retries = db.query(RoutingDecision).filter(RoutingDecision.is_retry == True).count()
+        retry_rate = retries / total
+        
+        avg_utility = db.query(func.avg(RoutingDecision.utility_score)).scalar()
+        if avg_utility is None:
+            avg_utility = 1.0
+            
+        print(f"Simulated Retry Rate: {retry_rate * 100.0:.2f}% (Threshold: 30.0%)")
+        print(f"Average Utility Score: {avg_utility:.4f} (Threshold: 0.85)")
+        
+        if retry_rate > 0.30:
+            print(f"  [BLOCKER] Utility Decay: Retry rate ({retry_rate * 100.0:.2f}%) exceeds threshold of 30%!")
+            return False
+            
+        if avg_utility < 0.85:
+            print(f"  [BLOCKER] Utility Decay: Average utility score ({avg_utility:.4f}) is below threshold of 0.85!")
+            return False
+            
+        print("[PASS] Utility decay protection check passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking utility decay protection: {e}")
+        return False
+    finally:
+        db.close()
+
+def run_ust_blocker_check() -> bool:
+    print("\n--- Check 11: UST Blocker ---")
+    db = SessionLocal()
+    try:
+        from core.utility_intelligence import UtilityIntelligencePlane
+        # Get active providers
+        providers = [p[0] for p in db.query(RoutingDecision.initial_route).distinct().all() if p[0]]
+        if not providers:
+            print("[PASS] No routing decisions found. Skipping UST checks.")
+            return True
+            
+        print(f"Active providers detected: {providers}")
+        all_passed = True
+        for provider in providers:
+            ust = UtilityIntelligencePlane.calculate_ust(db, provider)
+            threshold = UtilityIntelligencePlane.get_ust_threshold(provider)
+            print(f"  - Provider: {provider} | Calculated UST: {ust:.4f} | Required Threshold: {threshold:.2f}")
+            
+            if ust < threshold:
+                print(f"  [BLOCKER] UST Degradation: {provider} UST ({ust:.4f}) is below tiered threshold of {threshold:.2f}!")
+                all_passed = False
+            else:
+                print(f"  [PASS] UST for {provider} is within safe operational bounds.")
+                
+        return all_passed
+    except Exception as e:
+        print(f"[FAIL] Error checking UST blocker: {e}")
+        return False
+    finally:
+        db.close()
+
 def main():
     print("====================================================")
     print("OMI CI/CD GOVERNANCE INFRASTRUCTURE GATE")
@@ -276,6 +343,14 @@ def main():
         
     # 8. Entropy correlation blocker
     if not run_entropy_prediction_blocker():
+        sys.exit(1)
+        
+    # 9. Utility decay protection blocker (Check 10)
+    if not run_utility_decay_protection_check():
+        sys.exit(1)
+        
+    # 10. UST blocker (Check 11)
+    if not run_ust_blocker_check():
         sys.exit(1)
         
     print("\n====================================================")

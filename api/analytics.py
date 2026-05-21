@@ -205,5 +205,13 @@ def get_rate_trend(db: Session = Depends(get_db), x_omi_admin_key: str = Header(
         })
     return {"rate_trend": trend}
 
+@router.get("/utility")
+def get_utility_analytics_endpoint(db: Session = Depends(get_db)):
+    """
+    Exposes uRATE across providers, retry rates, and Cost Per Successful Workflow.
+    """
+    from core.utility_intelligence import UtilityIntelligencePlane
+    return UtilityIntelligencePlane.get_utility_analytics(db)
+
 
 
