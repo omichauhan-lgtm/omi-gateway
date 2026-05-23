@@ -316,6 +316,22 @@ def generate_cognitive_efficiency_telemetry():
         emb = emb / np.linalg.norm(emb)
         embedding_json = json.dumps(emb.tolist())
         
+        is_quar = (i == 4 or i == 8) # 2 out of 15 quarantined (13.3% rate)
+        drift_val = 0.65 if is_quar else 0.05
+        cri_val = 0.35 if is_quar else 0.88
+        
+        prov_dict = {
+            "cache_origin": "self",
+            "workflow_origin": f"wf_cache_{i // 3}",
+            "module_origin": module_name,
+            "compression_history": ["initial_store"],
+            "governance_state": {"min_confidence": 0.88},
+            "calibration_state": {"confidence": 0.88},
+            "reuse_confidence": 0.88,
+            "utility_preservation": 0.90,
+            "reuse_count": random.randint(1, 5)
+        }
+
         entry = SemanticCacheEntry(
             timestamp=(start_time + timedelta(days=i * 14 // 15)).isoformat(),
             prompt_hash=prompt_hash,
@@ -332,7 +348,11 @@ def generate_cognitive_efficiency_telemetry():
             output_tokens=100,
             cost_usd=0.002,
             embedding=embedding_json,
-            hits=random.randint(1, 5)
+            hits=random.randint(1, 5),
+            drift_score=drift_val,
+            is_quarantined=is_quar,
+            provenance=json.dumps(prov_dict),
+            provenance_cri=cri_val
         )
         db.add(entry)
         total_cache_entries += 1
@@ -369,7 +389,9 @@ def generate_cognitive_efficiency_telemetry():
                 is_reliable=True,
                 cache_hit=cache_hit,
                 tokens_saved=250 if cache_hit else 0,
-                cognitive_module=cognitive_module
+                cognitive_module=cognitive_module,
+                cognitive_provenance=json.dumps({"module_origin": cognitive_module, "last_cri": 0.92}) if cache_hit else None,
+                provenance_cri=0.92 if cache_hit else 1.0
             )
             db.add(decision)
             total_decisions += 1

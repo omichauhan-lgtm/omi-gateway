@@ -61,7 +61,23 @@ class CognitiveEfficiencyPlane:
             # Decay similarity over older turns
             relevance = similarity * (decay_factor ** turn_distance)
             
-            if relevance >= relevance_threshold:
+            # Critical memory preservation: some details must NEVER be decayed or compressed
+            # Class terms:
+            # - governance_constraints: budget, compliance, policy, protocol, limit, constraint, forbid
+            # - workflow_objectives: goal, objective, target, deliverable, task
+            # - agent_commitments: commit, guarantee, will perform, pledge
+            # - legal_instructions: legal, contract, liability, clause, terms
+            # - safety_overrides: safety, override, bypass, emergency, safety_protocol
+            critical_keywords = [
+                "budget", "compliance", "policy", "protocol", "limit", "constraint", "forbid",
+                "goal", "objective", "target", "deliverable", "task",
+                "commit", "guarantee", "will perform", "pledge",
+                "legal", "contract", "liability", "clause", "terms",
+                "safety", "override", "bypass", "emergency", "safety_protocol"
+            ]
+            is_critical = any(kw in past_prompt.lower() or kw in past_response.lower() for kw in critical_keywords)
+            
+            if is_critical or relevance >= relevance_threshold:
                 distilled_turns.append(
                     f"User: {past_prompt}\nAssistant: {past_response}"
                 )
@@ -83,7 +99,7 @@ class CognitiveEfficiencyPlane:
         Optimizes the request before routing:
         1. Selects the optimal active Cognitive Module.
         2. Queries the Semantic Cache with safeguards.
-        3. If hit: Returns the cached response, skipping API model invocation.
+        3. If hit: Returns the cached response, skipping API model invocation (unless revalidation is flagged).
         4. If miss: Runs Adaptive Context Distillation + semantic compression.
         
         Returns:
@@ -114,7 +130,10 @@ class CognitiveEfficiencyPlane:
                 "utility_score": cached_hit.utility_score,
                 "model_id": cached_hit.model_id,
                 "tokens_saved": tokens_saved,
-                "cost_usd": cached_hit.cost_usd
+                "cost_usd": cached_hit.cost_usd,
+                "provenance_cri": cached_hit.provenance_cri,
+                "cognitive_provenance": cached_hit.provenance,
+                "must_revalidate": getattr(cached_hit, "must_revalidate", False)
             }
             return cache_result, prompt, selected_module
 

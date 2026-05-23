@@ -75,6 +75,18 @@ def run_schema_validation() -> bool:
             print(f"[FAIL] Table 'model_failures' is missing column '{col}'.")
             return False
             
+    # Validate columns for semantic_cache_entries
+    sc_cols = [c["name"] for c in inspector.get_columns("semantic_cache_entries")]
+    expected_sc = [
+        "id", "timestamp", "prompt_hash", "prompt", "response", "confidence",
+        "utility_score", "is_reliable", "workflow_id", "model_id", "embedding",
+        "hits", "drift_score", "is_quarantined", "provenance", "provenance_cri"
+    ]
+    for col in expected_sc:
+        if col not in sc_cols:
+            print(f"[FAIL] Table 'semantic_cache_entries' is missing column '{col}'.")
+            return False
+            
     print("[PASS] Database telemetry schemas validated and verified against SQLAlchemy models.")
     return True
 
@@ -357,11 +369,18 @@ def run_cognitive_efficiency_check() -> bool:
         hit_utility = cache_metrics["cache_hit_utility"]
         token_savings = cache_metrics["token_savings"]
         reliability_pres = cache_metrics["reliability_preservation"]
+        average_cri = cache_metrics.get("average_cri", 1.0)
+        quarantined = cache_metrics.get("quarantined_count", 0)
+        total_entries = cache_metrics.get("total_entries", 0)
+        
+        quarantine_rate = quarantined / total_entries if total_entries > 0 else 0.0
 
         print(f"  - Total Cache Hits: {total_hits}")
         print(f"  - Cache Hit Utility: {hit_utility:.4f} (Threshold: 0.75)")
         print(f"  - Cumulative Token Savings: {token_savings}")
         print(f"  - Reliability Preservation Rate: {reliability_pres:.2%}")
+        print(f"  - Average Cognitive Reuse Integrity (CRI): {average_cri:.4f} (Threshold: 0.70)")
+        print(f"  - Cache Quarantine Rate: {quarantine_rate:.2%} ({quarantined}/{total_entries}) (Threshold: 15.0%)")
 
         if total_hits > 0:
             if hit_utility < 0.75:
@@ -371,6 +390,14 @@ def run_cognitive_efficiency_check() -> bool:
             if reliability_pres < 0.80:
                 print(f"  [BLOCKER] Cache Reliability Decay: Reliability preservation ({reliability_pres:.2%}) is below threshold of 80.0%!")
                 return False
+                
+            if average_cri < 0.70:
+                print(f"  [BLOCKER] CRI Decay: Average CRI ({average_cri:.4f}) is below safe operational threshold of 0.70!")
+                return False
+
+        if quarantine_rate > 0.15:
+            print(f"  [BLOCKER] Severe Cache Drift: Quarantine rate ({quarantine_rate:.2%}) exceeds maximum limit of 15.0%!")
+            return False
 
         print("[PASS] Cognitive Efficiency Guard checks passed.")
         return True

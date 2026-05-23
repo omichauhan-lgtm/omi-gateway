@@ -81,7 +81,9 @@ class DataMoat:
         task_success: bool = True,
         cache_hit: bool = False,
         tokens_saved: int = 0,
-        cognitive_module: str = None
+        cognitive_module: str = None,
+        cognitive_provenance: str = None,
+        provenance_cri: float = 1.0
     ):
         """Asynchronously log interactions to slowly build the proprietary data moat using SQLAlchemy."""
         db = SessionLocal()
@@ -106,7 +108,9 @@ class DataMoat:
                 task_success=task_success,
                 cache_hit=cache_hit,
                 tokens_saved=tokens_saved,
-                cognitive_module=cognitive_module
+                cognitive_module=cognitive_module,
+                cognitive_provenance=cognitive_provenance,
+                provenance_cri=provenance_cri
             )
             db.add(decision)
             db.commit()

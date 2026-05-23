@@ -288,6 +288,71 @@ async def submit_utility_feedback(payload: UtilityFeedbackRequest):
         db.close()
 
 
+class WorkflowVerifyRequest(BaseModel):
+    status: str  # "success" or "failure"
+    reason: Optional[str] = None
+
+@app.post("/workflows/{workflow_id}/verify")
+async def verify_workflow_outcome(workflow_id: str, payload: WorkflowVerifyRequest):
+    """
+    Outcome-Verified Cognitive Infrastructure:
+    Grounds cached state and model telemetry in actual downstream task completion truth.
+    """
+    db = SessionLocal()
+    try:
+        # Fetch all decisions in this workflow
+        decisions = db.query(RoutingDecision).filter(
+            RoutingDecision.workflow_id == workflow_id
+        ).all()
+        
+        if not decisions:
+            raise HTTPException(status_code=404, detail=f"No routing decisions found for workflow {workflow_id}")
+            
+        success = (payload.status == "success")
+        
+        # 1. Update Routing Decisions
+        for d in decisions:
+            d.task_success = success
+            d.utility_score = 1.0 if success else 0.0
+            d.is_reliable = success
+            
+        # 2. Retrospectively update or quarantine associated cache entries under this workflow
+        cache_entries = db.query(SemanticCacheEntry).filter(
+            SemanticCacheEntry.workflow_id == workflow_id
+        ).all()
+        
+        for c in cache_entries:
+            if success:
+                c.utility_score = 1.0
+                c.is_reliable = True
+                c.provenance_cri = 0.95
+            else:
+                c.utility_score = 0.0
+                c.is_reliable = False
+                c.is_quarantined = True
+                c.provenance_cri = 0.0
+                try:
+                    prov = json.loads(c.provenance) if c.provenance else {}
+                    prov["verification_failure_reason"] = payload.reason or "Explicit workflow verification failure"
+                    c.provenance = json.dumps(prov)
+                except Exception:
+                    pass
+        
+        db.commit()
+        return {
+            "status": "success",
+            "workflow_id": workflow_id,
+            "steps_updated": len(decisions),
+            "outcome": "grounded_success" if success else "grounded_quarantine"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+
 
 @app.post("/generate")
 @limiter.limit("30/minute")
@@ -355,7 +420,7 @@ async def orchestrate_request(
             workflow_id=payload.workflow_id
         )
 
-        if cache_result:
+        if cache_result and not cache_result.get("must_revalidate", False):
             # Cache Hit!
             latency_ms = (time.time() - start_time) * 1000
             
@@ -378,7 +443,9 @@ async def orchestrate_request(
                 task_success=True,
                 cache_hit=True,
                 tokens_saved=cache_result["tokens_saved"],
-                cognitive_module=selected_module.name
+                cognitive_module=selected_module.name,
+                cognitive_provenance=cache_result.get("cognitive_provenance"),
+                provenance_cri=cache_result.get("provenance_cri", 1.0)
             )
 
             # Record utility provenance
@@ -407,7 +474,11 @@ async def orchestrate_request(
                     "risk_level": "low",
                     "failure_reason": None,
                     "escalated_via_judge": False,
-                    "decision_trace": {"cache_hit": True, "cognitive_module": selected_module.name},
+                    "decision_trace": {
+                        "cache_hit": True, 
+                        "cognitive_module": selected_module.name,
+                        "provenance_cri": round(cache_result.get("provenance_cri", 1.0), 4)
+                    },
                     "economic_metrics": {
                         "input_tokens": 0,
                         "output_tokens": 0,
@@ -736,7 +807,8 @@ async def orchestrate_request(
                 input_tokens=total_input_tokens,
                 output_tokens=total_output_tokens,
                 cost_usd=total_cost_usd,
-                is_reliable=not escalated
+                is_reliable=not escalated,
+                module_origin=selected_module.name
             )
         except Exception as e:
             print(f"Error storing successful response in semantic cache: {e}")

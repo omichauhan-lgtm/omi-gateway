@@ -8,7 +8,7 @@ from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from infra.database import engine, SessionLocal, Base
-from infra.models import RoutingDecision, ModelFailure, HumanFeedback, TelemetryLineage, UtilityEstimate
+from infra.models import RoutingDecision, ModelFailure, HumanFeedback, TelemetryLineage, UtilityEstimate, SemanticCacheEntry
 from analytics.calibration_drift import compute_ece
 from analytics.governance_history import calculate_governance_stability_score
 
@@ -28,7 +28,7 @@ def migrate_and_validate():
     print(f"Source SQLite database found: {sqlite_db_path}")
     
     # Destination DB (could be PostgreSQL or temporary SQLite depending on OMI_DATABASE_URL)
-    target_url = os.getenv("OMI_DATABASE_URL", "sqlite:///learning_loop.db")
+    target_url = os.getenv("OMI_DATABASE_URL", "sqlite:///test_learning_loop.db")
     print(f"Target Database URL: {target_url}")
     target_db_name = target_url.split("sqlite:///")[-1] if "sqlite:///" in target_url else "learning_loop.db"
     if "sqlite" in target_url and os.path.abspath(target_db_name) == os.path.abspath(sqlite_db_path):
@@ -76,6 +76,7 @@ def migrate_and_validate():
         db.query(HumanFeedback).delete()
         db.query(TelemetryLineage).delete()
         db.query(UtilityEstimate).delete()
+        db.query(SemanticCacheEntry).delete()
         db.commit()
 
         
@@ -107,7 +108,9 @@ def migrate_and_validate():
                 consensus_trace=d.get("consensus_trace"),
                 cache_hit=bool(d.get("cache_hit")) if d.get("cache_hit") is not None else False,
                 tokens_saved=d.get("tokens_saved") if d.get("tokens_saved") is not None else 0,
-                cognitive_module=d.get("cognitive_module")
+                cognitive_module=d.get("cognitive_module"),
+                cognitive_provenance=d.get("cognitive_provenance"),
+                provenance_cri=d.get("provenance_cri", 1.0)
             )
             db.add(db_decision)
             

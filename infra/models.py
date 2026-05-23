@@ -31,6 +31,8 @@ class RoutingDecision(Base):
     cache_hit = Column(Boolean, default=False)
     tokens_saved = Column(Integer, default=0)
     cognitive_module = Column(String, nullable=True)
+    cognitive_provenance = Column(Text, nullable=True)
+    provenance_cri = Column(Float, default=1.0)
 
 
 class SemanticCacheEntry(Base):
@@ -53,6 +55,10 @@ class SemanticCacheEntry(Base):
     cost_usd = Column(Float, default=0.0)
     embedding = Column(Text)  # JSON-serialized list of floats
     hits = Column(Integer, default=0)
+    drift_score = Column(Float, default=0.0)
+    is_quarantined = Column(Boolean, default=False)
+    provenance = Column(Text, nullable=True)
+    provenance_cri = Column(Float, default=1.0)
 
 
 class ModelFailure(Base):
