@@ -214,4 +214,13 @@ def get_utility_analytics_endpoint(db: Session = Depends(get_db)):
     return UtilityIntelligencePlane.get_utility_analytics(db)
 
 
+@router.get("/cognitive-efficiency")
+def get_cognitive_efficiency_endpoint(db: Session = Depends(get_db)):
+    """
+    Exposes Cognitive Efficiency plane KPIs (caching, workflow compression, utility density).
+    """
+    from core.cognitive_efficiency import CognitiveEfficiencyPlane
+    return CognitiveEfficiencyPlane.get_efficiency_analytics(db)
+
+
 

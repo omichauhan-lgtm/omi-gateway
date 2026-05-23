@@ -78,7 +78,10 @@ class DataMoat:
         workflow_id: str = None,
         utility_score: float = 1.0,
         is_retry: bool = False,
-        task_success: bool = True
+        task_success: bool = True,
+        cache_hit: bool = False,
+        tokens_saved: int = 0,
+        cognitive_module: str = None
     ):
         """Asynchronously log interactions to slowly build the proprietary data moat using SQLAlchemy."""
         db = SessionLocal()
@@ -100,7 +103,10 @@ class DataMoat:
                 workflow_id=workflow_id,
                 utility_score=utility_score,
                 is_retry=is_retry,
-                task_success=task_success
+                task_success=task_success,
+                cache_hit=cache_hit,
+                tokens_saved=tokens_saved,
+                cognitive_module=cognitive_module
             )
             db.add(decision)
             db.commit()

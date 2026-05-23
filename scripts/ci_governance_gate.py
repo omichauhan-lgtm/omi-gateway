@@ -345,6 +345,42 @@ def run_lui_blocker_check() -> bool:
         db.close()
 
 
+def run_cognitive_efficiency_check() -> bool:
+    print("\n--- Check 13: Cognitive Efficiency Guard ---")
+    db = SessionLocal()
+    try:
+        from core.cognitive_efficiency import CognitiveEfficiencyPlane
+        analytics = CognitiveEfficiencyPlane.get_efficiency_analytics(db)
+        cache_metrics = analytics["cache_metrics"]
+        
+        total_hits = cache_metrics["total_cache_hits"]
+        hit_utility = cache_metrics["cache_hit_utility"]
+        token_savings = cache_metrics["token_savings"]
+        reliability_pres = cache_metrics["reliability_preservation"]
+
+        print(f"  - Total Cache Hits: {total_hits}")
+        print(f"  - Cache Hit Utility: {hit_utility:.4f} (Threshold: 0.75)")
+        print(f"  - Cumulative Token Savings: {token_savings}")
+        print(f"  - Reliability Preservation Rate: {reliability_pres:.2%}")
+
+        if total_hits > 0:
+            if hit_utility < 0.75:
+                print(f"  [BLOCKER] Cache Hit Utility Degradation: Hit utility ({hit_utility:.4f}) is below safe threshold of 0.75!")
+                return False
+            
+            if reliability_pres < 0.80:
+                print(f"  [BLOCKER] Cache Reliability Decay: Reliability preservation ({reliability_pres:.2%}) is below threshold of 80.0%!")
+                return False
+
+        print("[PASS] Cognitive Efficiency Guard checks passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking cognitive efficiency guard: {e}")
+        return False
+    finally:
+        db.close()
+
+
 def main():
     print("====================================================")
     print("OMI CI/CD GOVERNANCE INFRASTRUCTURE GATE")
@@ -392,6 +428,10 @@ def main():
 
     # 11. LUI blocker (Check 12) — Economic Longitudinal Utility Integrity
     if not run_lui_blocker_check():
+        sys.exit(1)
+
+    # 12. Cognitive Efficiency blocker (Check 13)
+    if not run_cognitive_efficiency_check():
         sys.exit(1)
         
     print("\n====================================================")

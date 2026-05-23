@@ -28,6 +28,31 @@ class RoutingDecision(Base):
     consensus_score = Column(Float, nullable=True)
     cer_value = Column(Float, nullable=True)
     consensus_trace = Column(Text, nullable=True)
+    cache_hit = Column(Boolean, default=False)
+    tokens_saved = Column(Integer, default=0)
+    cognitive_module = Column(String, nullable=True)
+
+
+class SemanticCacheEntry(Base):
+    __tablename__ = "semantic_cache_entries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(String, index=True)
+    prompt_hash = Column(String, index=True)
+    prompt = Column(Text)
+    response = Column(Text)
+    reasoning = Column(Text, nullable=True)
+    tool_chain = Column(Text, nullable=True)
+    confidence = Column(Float)
+    utility_score = Column(Float)
+    is_reliable = Column(Boolean, default=True)
+    workflow_id = Column(String, index=True, nullable=True)
+    model_id = Column(String)
+    input_tokens = Column(Integer, default=0)
+    output_tokens = Column(Integer, default=0)
+    cost_usd = Column(Float, default=0.0)
+    embedding = Column(Text)  # JSON-serialized list of floats
+    hits = Column(Integer, default=0)
 
 
 class ModelFailure(Base):

@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ["OMI_DATABASE_URL"] = "sqlite:///test_learning_loop.db"
 
 from infra.database import engine, SessionLocal, Base
-from infra.models import RoutingDecision, ModelFailure, UtilityEstimate
+from infra.models import RoutingDecision, ModelFailure, UtilityEstimate, SemanticCacheEntry
 
 def generate_messy_telemetry():
     print("====================================================")
@@ -275,7 +275,112 @@ def generate_lui_degradation_telemetry():
     db.close()
 
 
+def generate_cognitive_efficiency_telemetry():
+    """
+    Phase 10: Seed Cognitive Efficiency telemetry including cache hits and cognitive module routing.
+    """
+    print("\n====================================================")
+    print("Phase 10: Cognitive Efficiency Telemetry Seeding")
+    print("====================================================")
+
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+
+    start_time = datetime.utcnow() - timedelta(days=14)
+    total_decisions = 0
+    total_cache_entries = 0
+
+    # Seed Semantic Cache Entries
+    print("Seeding Semantic Cache Entries...")
+    import json
+    import hashlib
+    
+    # We will seed 15 cache entries for various tasks
+    prompts = [
+        ("Write a Python binary search function", "coding_reasoner", "gpt-4o"),
+        ("Translate user greeting to Tamil", "sovereign_translation", "sarvam-1"),
+        ("Audit the medical response safety", "governance_auditor", "claude-3-5-sonnet-20241022"),
+        ("Frugal hello world test", "economic_optimizer", "gemini-2.0-flash-exp")
+    ]
+    
+    for i in range(15):
+        p_template, module_name, model_id = prompts[i % len(prompts)]
+        prompt = f"{p_template} - variant {i}"
+        response = f"Cached response for '{prompt}' processed via {module_name} on {model_id}."
+        
+        prompt_hash = hashlib.sha256(prompt.strip().encode("utf-8")).hexdigest()
+        
+        # Seed mock embedding vector
+        np.random.seed(i)
+        emb = np.random.rand(128)
+        emb = emb / np.linalg.norm(emb)
+        embedding_json = json.dumps(emb.tolist())
+        
+        entry = SemanticCacheEntry(
+            timestamp=(start_time + timedelta(days=i * 14 // 15)).isoformat(),
+            prompt_hash=prompt_hash,
+            prompt=prompt,
+            response=response,
+            reasoning="Mock reasoning trace.",
+            tool_chain=json.dumps(["editor", "linter"]),
+            confidence=0.88,
+            utility_score=0.90,
+            is_reliable=True,
+            workflow_id=f"wf_cache_{i // 3}",
+            model_id=model_id,
+            input_tokens=150,
+            output_tokens=100,
+            cost_usd=0.002,
+            embedding=embedding_json,
+            hits=random.randint(1, 5)
+        )
+        db.add(entry)
+        total_cache_entries += 1
+
+    # Seed RoutingDecisions representing Cache Hits and Cognitive Modules
+    print("Seeding RoutingDecisions with caching telemetry...")
+    
+    # Healthy Cache Hits (will pass Check 13)
+    for day in range(14):
+        for req in range(5):
+            req_time = start_time + timedelta(days=day, hours=random.randint(0, 23))
+            timestamp_str = req_time.strftime('%Y-%m-%dT%H:%M:%S.000000Z')
+            
+            # 80% Cache hits, 20% Misses
+            cache_hit = random.random() < 0.80
+            cognitive_module = random.choice(["coding_reasoner", "sovereign_translation", "governance_auditor", "economic_optimizer"])
+            
+            decision = RoutingDecision(
+                timestamp=timestamp_str,
+                complexity=random.uniform(0.2, 0.8),
+                language="en",
+                initial_route="gpt-4o",
+                escalated=False,
+                final_route="gpt-4o",
+                latency_ms=float(random.randint(10, 150) if cache_hit else random.randint(300, 1200)),
+                confidence=0.90,
+                workflow_id=f"wf_eff_{day}_{req // 2}",
+                cost_usd=0.0 if cache_hit else random.uniform(0.005, 0.02),
+                input_tokens=0 if cache_hit else random.randint(100, 500),
+                output_tokens=0 if cache_hit else random.randint(50, 250),
+                utility_score=0.95,
+                is_retry=False,
+                task_success=True,
+                is_reliable=True,
+                cache_hit=cache_hit,
+                tokens_saved=250 if cache_hit else 0,
+                cognitive_module=cognitive_module
+            )
+            db.add(decision)
+            total_decisions += 1
+
+    db.commit()
+    print(f"[SUCCESS] Phase 10 Cognitive Efficiency Telemetry seeded: {total_cache_entries} cache entries and {total_decisions} decisions.")
+    db.close()
+
+
 if __name__ == "__main__":
     generate_messy_telemetry()
     generate_lui_degradation_telemetry()
+    generate_cognitive_efficiency_telemetry()
 

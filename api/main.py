@@ -22,6 +22,8 @@ from core.economic_intelligence import EconomicIntelligencePlane, agentic_govern
 from api.analytics import router as analytics_router
 from core.utility_intelligence import UtilityIntelligencePlane
 from core.consensus import SovereignConsensusArbitrator
+from core.cognitive_efficiency import CognitiveEfficiencyPlane
+from core.semantic_cache import SemanticCache
 import re
 import threading
 import uuid
@@ -310,168 +312,194 @@ async def orchestrate_request(
 
     clients = get_clients_payload(x_openai_key, x_anthropic_key, x_deepseek_key)
     
-    # Implicit Retry Detection
-    is_retry_detected = False
-    prev_decision_id = -1
-    retry_reason = ""
-    db_retry = SessionLocal()
+    db = SessionLocal()
     try:
-        with _RECENT_PROMPTS_LOCK:
-            recent_prompts_copy = list(_RECENT_PROMPTS)
-        is_retry_detected, prev_decision_id, retry_reason = UtilityIntelligencePlane.detect_implicit_retry(
-            db_retry, payload.prompt, recent_prompts_copy, time_window_sec=300, workflow_id=payload.workflow_id
-        )
-    except Exception as e:
-        print(f"Error during implicit retry detection check: {e}")
-    finally:
-        db_retry.close()
-        
-    # Step 1: Pre-Flight Analysis
-    analysis = RequestClassifier.analyze(payload.prompt)
-    complexity = analysis["complexity_score"]
-    language = analysis["language"]
-    
-    # Step 2: RAG Context Gathering & Compression
-    final_prompt = payload.prompt
-    raw_prompt_for_comp = payload.prompt
-    
-    if payload.use_rag:
-        # Retrieve context with a strict relativity threshold
-        retrieved_context = rag_engine.retrieve_context(query=payload.prompt, top_k=2, threshold=1.5)
-        if retrieved_context:
-            docs = retrieved_context.split("\n---\n")
-            pruned_docs = EconomicIntelligencePlane.retrieval_pruning(docs, payload.prompt, threshold=0.50)
-            if pruned_docs:
-                retrieved_context = "\n---\n".join(pruned_docs)
-                final_prompt = f"Background Context:\n{retrieved_context}\n\nTask:\n{payload.prompt}"
-                raw_prompt_for_comp = final_prompt
-            else:
-                final_prompt = payload.prompt
-    elif payload.context:
-        final_prompt = f"Background Context:\n{payload.context}\n\nTask:\n{payload.prompt}"
-        raw_prompt_for_comp = final_prompt
-
-    # Apply Context Compression
-    # 1. Semantic Compression
-    compressed_prompt = EconomicIntelligencePlane.semantic_compression(raw_prompt_for_comp, threshold=0.82)
-    # 2. Redundancy Elimination
-    compressed_prompt = EconomicIntelligencePlane.redundancy_elimination(compressed_prompt)
-    # 3. Adaptive Context Windowing
-    compressed_prompt = EconomicIntelligencePlane.adaptive_context_windowing(compressed_prompt, complexity)
-    
-    final_prompt = compressed_prompt
-
-    # Step 3: Routing Matrix Execution
-    route_config = sovereign_router.calculate_route(payload.mode, complexity, language, payload.policy)
-    target_model = route_config.get("target", "unknown")
-    
-    # Agentic Budget Control Check
-    est_input_tokens = EconomicIntelligencePlane.estimate_tokens(final_prompt)
-    est_output_tokens = 250
-    est_cost = EconomicIntelligencePlane.calculate_cost(target_model, est_input_tokens, est_output_tokens)
-    
-    if not agentic_governor.check_budget(est_cost):
-        raise HTTPException(status_code=402, detail="Autonomous Agentic spend budget exceeded. Operation blocked by governor.")
-
-    try:
-        response_text = sovereign_router.execute_route(final_prompt, route_config, clients)
-        escalated = False
-        target_model = route_config.get("target", "unknown")
-        shadow_model = route_config.get("shadow_target")
-        
-        # Calculate tokens and cost for first try
-        input_tokens_1 = EconomicIntelligencePlane.estimate_tokens(final_prompt)
-        output_tokens_1 = EconomicIntelligencePlane.estimate_tokens(response_text)
-        cost_1 = EconomicIntelligencePlane.calculate_cost(target_model, input_tokens_1, output_tokens_1)
-        
-        # PRIORITY 06: Shadow Inference (A/B Calibration)
-        if shadow_model:
-            background_tasks.add_task(
-                shadow_evaluator.execute_shadow_comparison,
-                prompt=final_prompt,
-                complexity=complexity,
-                cheap_model_id=target_model,
-                cheap_response=response_text,
-                shadow_model_id=shadow_model,
-                clients=clients
-            )
-        
-        # Step 4: Quantitative Confidence Engine (Calibrated)
-        evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, target_model)
-        confidence_score = evaluation["confidence"]
-        min_allowed_confidence = payload.policy.min_confidence if payload.policy else 0.8
-        
-        # Check utility constraints on first response
-        failed_constraints = UtilityIntelligencePlane.verify_utility_constraints(
-            payload.prompt, response_text, complexity
-        )
-        # Static utility truth validation
-        db_truth = SessionLocal()
+        # Implicit Retry Detection
+        is_retry_detected = False
+        prev_decision_id = -1
+        retry_reason = ""
         try:
-            truth_res = UtilityIntelligencePlane.verify_utility_truth(
-                payload.prompt, response_text, payload.workflow_id, db_truth
+            with _RECENT_PROMPTS_LOCK:
+                recent_prompts_copy = list(_RECENT_PROMPTS)
+            is_retry_detected, prev_decision_id, retry_reason = UtilityIntelligencePlane.detect_implicit_retry(
+                db, payload.prompt, recent_prompts_copy, time_window_sec=300, workflow_id=payload.workflow_id
             )
-            if not truth_res["is_truth_valid"]:
-                failed_checks = [k for k, v in truth_res["checks"].items() if not v]
-                failed_constraints.append(f"static_truth_failed:{','.join(failed_checks)}")
-        finally:
-            db_truth.close()
+        except Exception as e:
+            print(f"Error during implicit retry detection check: {e}")
             
-        utility_failed = len(failed_constraints) > 0
-        first_model_failed = (evaluation.get("failure_reason") is not None) or utility_failed
+        # Step 1: Pre-Flight Analysis
+        analysis = RequestClassifier.analyze(payload.prompt)
+        complexity = analysis["complexity_score"]
+        language = analysis["language"]
         
-        if confidence_score < min_allowed_confidence or utility_failed:
-            # Escalation Path -> Failed threshold, fallback to smartest model disregarding cost budget
-            escalated = True
-            escalation_reason = f"utility_constraint_violated: {', '.join(failed_constraints)}" if utility_failed else (evaluation.get("failure_reason") or "low_confidence_escalation")
+        # Step 2: Context Gathering & Compression
+        raw_prompt_for_comp = payload.prompt
+        if payload.use_rag:
+            retrieved_context = rag_engine.retrieve_context(query=payload.prompt, top_k=2, threshold=1.5)
+            if retrieved_context:
+                docs = retrieved_context.split("\n---\n")
+                pruned_docs = EconomicIntelligencePlane.retrieval_pruning(docs, payload.prompt, threshold=0.50)
+                if pruned_docs:
+                    retrieved_context = "\n---\n".join(pruned_docs)
+                    raw_prompt_for_comp = f"Background Context:\n{retrieved_context}\n\nTask:\n{payload.prompt}"
+
+        elif payload.context:
+            raw_prompt_for_comp = f"Background Context:\n{payload.context}\n\nTask:\n{payload.prompt}"
+
+        # Cache & Cognitive Efficiency check
+        cache_result, optimized_prompt, selected_module = CognitiveEfficiencyPlane.optimize_request(
+            db=db,
+            prompt=raw_prompt_for_comp,
+            mode=payload.mode,
+            complexity=complexity,
+            workflow_id=payload.workflow_id
+        )
+
+        if cache_result:
+            # Cache Hit!
+            latency_ms = (time.time() - start_time) * 1000
             
-            escalation_config = {
-                "target": "gpt-4o",
-                "target_key": "openai",
-                "instruction": "Role: Senior_Architect. Task: The previous frugal model failed to satisfy the structural logic. Provide a highly robust, verbose, and complete response.",
-                "trace": {"reason": "Judge Engine Escalation", "tradeoff": "Forced override due to failure thresholds"}
-            }
-            
-            # Log failure of the first model
-            background_tasks.add_task(
-                memory_bank.log_failure,
-                model_id=target_model,
+            # Log cache-hit decision
+            decision_id = memory_bank.log_decision(
+                prompt=payload.prompt,
+                selected_model=cache_result["model_id"],
                 complexity=complexity,
-                failure_reason=escalation_reason,
-                raw_confidence=evaluation.get("raw_confidence", 0.0),
-                calibrated_confidence=confidence_score,
-                latency_ms=int((time.time() - start_time) * 1000),
-                input_tokens=input_tokens_1,
-                output_tokens=output_tokens_1,
-                cost_usd=cost_1
+                escalated=False,
+                latency_ms=int(latency_ms),
+                shadow_model=None,
+                input_tokens=0,
+                output_tokens=0,
+                cost_usd=0.0,
+                is_reliable=True,
+                final_route=cache_result["model_id"],
+                workflow_id=payload.workflow_id,
+                utility_score=cache_result["utility_score"],
+                is_retry=False,
+                task_success=True,
+                cache_hit=True,
+                tokens_saved=cache_result["tokens_saved"],
+                cognitive_module=selected_module.name
             )
+
+            # Record utility provenance
+            try:
+                UtilityIntelligencePlane.record_utility_provenance(
+                    db,
+                    decision_id=decision_id,
+                    signals=["response_copy_without_followup"],
+                    reasoning=f"Served cached response from {cache_result['model_id']}. Saved {cache_result['tokens_saved']} tokens.",
+                    session_context={"workflow_id": payload.workflow_id, "mode": payload.mode, "cache_hit": True}
+                )
+            except Exception as ue:
+                print(f"Error logging cache utility provenance: {ue}")
+
+            # Add current decision to recent prompts cache
+            add_to_recent_prompts(decision_id, payload.prompt)
+
+            return {
+                "response": cache_result["response"].strip(),
+                "metadata": {
+                    "orchestrator_latency_ms": round(latency_ms, 2),
+                    "language_detected": language,
+                    "complexity_score": round(complexity, 2),
+                    "routed_model": cache_result["model_id"],
+                    "confidence": cache_result["confidence"],
+                    "risk_level": "low",
+                    "failure_reason": None,
+                    "escalated_via_judge": False,
+                    "decision_trace": {"cache_hit": True, "cognitive_module": selected_module.name},
+                    "economic_metrics": {
+                        "input_tokens": 0,
+                        "output_tokens": 0,
+                        "cost_usd": 0.0,
+                        "cache_hit": True,
+                        "tokens_saved": cache_result["tokens_saved"]
+                    }
+                }
+            }
+
+        # Cache Miss - Continue route calculation
+        final_prompt = optimized_prompt
+
+        # Step 3: Routing Matrix Execution
+        route_config = sovereign_router.calculate_route(payload.mode, complexity, language, payload.policy)
+        target_model = route_config.get("target", "unknown")
+        
+        # Inject the active cognitive module instructions
+        route_config["instruction"] = selected_module.system_instruction
+        
+        # Agentic Budget Control Check
+        est_input_tokens = EconomicIntelligencePlane.estimate_tokens(final_prompt)
+        est_output_tokens = 250
+        est_cost = EconomicIntelligencePlane.calculate_cost(target_model, est_input_tokens, est_output_tokens)
+        
+        if not agentic_governor.check_budget(est_cost):
+            raise HTTPException(status_code=402, detail="Autonomous Agentic spend budget exceeded. Operation blocked by governor.")
+
+        try:
+            response_text = sovereign_router.execute_route(final_prompt, route_config, clients)
+            escalated = False
+            target_model = route_config.get("target", "unknown")
+            shadow_model = route_config.get("shadow_target")
             
-            response_text = sovereign_router.execute_route(final_prompt, escalation_config, clients)
+            # Calculate tokens and cost for first try
+            input_tokens_1 = EconomicIntelligencePlane.estimate_tokens(final_prompt)
+            output_tokens_1 = EconomicIntelligencePlane.estimate_tokens(response_text)
+            cost_1 = EconomicIntelligencePlane.calculate_cost(target_model, input_tokens_1, output_tokens_1)
             
-            input_tokens_2 = EconomicIntelligencePlane.estimate_tokens(final_prompt) + 20
-            output_tokens_2 = EconomicIntelligencePlane.estimate_tokens(response_text)
-            cost_2 = EconomicIntelligencePlane.calculate_cost("gpt-4o", input_tokens_2, output_tokens_2)
+            # Shadow Inference (A/B Calibration)
+            if shadow_model:
+                background_tasks.add_task(
+                    shadow_evaluator.execute_shadow_comparison,
+                    prompt=final_prompt,
+                    complexity=complexity,
+                    cheap_model_id=target_model,
+                    cheap_response=response_text,
+                    shadow_model_id=shadow_model,
+                    clients=clients
+                )
             
-            total_input_tokens = input_tokens_1 + input_tokens_2
-            total_output_tokens = output_tokens_1 + output_tokens_2
-            total_cost_usd = cost_1 + cost_2
+            # Step 4: Quantitative Confidence Engine (Calibrated)
+            evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, target_model)
+            confidence_score = evaluation["confidence"]
+            min_allowed_confidence = payload.policy.min_confidence if payload.policy else 0.8
             
-            # Update target model and evaluation for the final escalated response
-            final_route_model = escalation_config["target"]
-            evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, final_route_model)
-        else:
-            # Not escalated
-            total_input_tokens = input_tokens_1
-            total_output_tokens = output_tokens_1
-            total_cost_usd = cost_1
-            final_route_model = target_model
+            # Check utility constraints on first response
+            failed_constraints = UtilityIntelligencePlane.verify_utility_constraints(
+                payload.prompt, response_text, complexity
+            )
+            # Static utility truth validation
+            try:
+                truth_res = UtilityIntelligencePlane.verify_utility_truth(
+                    payload.prompt, response_text, payload.workflow_id, db
+                )
+                if not truth_res["is_truth_valid"]:
+                    failed_checks = [k for k, v in truth_res["checks"].items() if not v]
+                    failed_constraints.append(f"static_truth_failed:{','.join(failed_checks)}")
+            except Exception as e:
+                print(f"Error during static truth verification: {e}")
+                
+            utility_failed = len(failed_constraints) > 0
+            first_model_failed = (evaluation.get("failure_reason") is not None) or utility_failed
             
-            if first_model_failed:
+            if confidence_score < min_allowed_confidence or utility_failed:
+                # Escalation Path -> Failed threshold, fallback to smartest model disregarding cost budget
+                escalated = True
+                escalation_reason = f"utility_constraint_violated: {', '.join(failed_constraints)}" if utility_failed else (evaluation.get("failure_reason") or "low_confidence_escalation")
+                
+                escalation_config = {
+                    "target": "gpt-4o",
+                    "target_key": "openai",
+                    "instruction": "Role: Senior_Architect. Task: The previous frugal model failed to satisfy the structural logic. Provide a highly robust, verbose, and complete response.",
+                    "trace": {"reason": "Judge Engine Escalation", "tradeoff": "Forced override due to failure thresholds"}
+                }
+                
+                # Log failure of the first model
                 background_tasks.add_task(
                     memory_bank.log_failure,
                     model_id=target_model,
                     complexity=complexity,
-                    failure_reason=evaluation.get("failure_reason"),
+                    failure_reason=escalation_reason,
                     raw_confidence=evaluation.get("raw_confidence", 0.0),
                     calibrated_confidence=confidence_score,
                     latency_ms=int((time.time() - start_time) * 1000),
@@ -480,200 +508,257 @@ async def orchestrate_request(
                     cost_usd=cost_1
                 )
                 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Routing backend failed: {str(e)}")
+                response_text = sovereign_router.execute_route(final_prompt, escalation_config, clients)
+                
+                input_tokens_2 = EconomicIntelligencePlane.estimate_tokens(final_prompt) + 20
+                output_tokens_2 = EconomicIntelligencePlane.estimate_tokens(response_text)
+                cost_2 = EconomicIntelligencePlane.calculate_cost("gpt-4o", input_tokens_2, output_tokens_2)
+                
+                total_input_tokens = input_tokens_1 + input_tokens_2
+                total_output_tokens = output_tokens_1 + output_tokens_2
+                total_cost_usd = cost_1 + cost_2
+                
+                # Update target model and evaluation for the final escalated response
+                final_route_model = escalation_config["target"]
+                evaluation = ConfidenceEngine.evaluate_response(response_text, complexity, final_route_model)
+            else:
+                # Not escalated
+                total_input_tokens = input_tokens_1
+                total_output_tokens = output_tokens_1
+                total_cost_usd = cost_1
+                final_route_model = target_model
+                
+                if first_model_failed:
+                    background_tasks.add_task(
+                        memory_bank.log_failure,
+                        model_id=target_model,
+                        complexity=complexity,
+                        failure_reason=evaluation.get("failure_reason"),
+                        raw_confidence=evaluation.get("raw_confidence", 0.0),
+                        calibrated_confidence=confidence_score,
+                        latency_ms=int((time.time() - start_time) * 1000),
+                        input_tokens=input_tokens_1,
+                        output_tokens=output_tokens_1,
+                        cost_usd=cost_1
+                    )
+                    
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Routing backend failed: {str(e)}")
 
-    # Step 5: Sanitization
-    forbidden_tokens = ["System:", "CRITICAL PROTOCOL", "Role:"]
-    for token in forbidden_tokens:
-        response_text = response_text.replace(token, "")
+        # Step 5: Sanitization
+        forbidden_tokens = ["System:", "CRITICAL PROTOCOL", "Role:"]
+        for token in forbidden_tokens:
+            response_text = response_text.replace(token, "")
 
-    # ── Phase 8: Conditional Consensus Arbitration ─────────────────────────
-    is_consensus = False
-    consensus_score_val = None
-    cer_value_val = None
-    consensus_trace_val = None
-    consensus_provider_reliabilities = {
-        final_route_model: float(evaluation.get("confidence") or 0.5),
-    }
+        # Consensus Arbitration
+        is_consensus = False
+        consensus_score_val = None
+        cer_value_val = None
+        consensus_trace_val = None
+        consensus_provider_reliabilities = {
+            final_route_model: float(evaluation.get("confidence") or 0.5),
+        }
 
-    try:
-        arbitrator = SovereignConsensusArbitrator()
-        hallucination_prob = 1.0 - float(evaluation.get("confidence") or 0.5)
-        gov_stability = 1.0  # Default stable; real value from governance analytics
-        should_run, trigger_reason = arbitrator.should_trigger_consensus(
-            prompt=payload.prompt,
-            complexity=complexity,
-            domain=getattr(payload, "domain", "consumer_chat"),
-            calibration_confidence=float(evaluation.get("confidence") or 0.5),
-            hallucination_probability=hallucination_prob,
-            governance_stability=gov_stability,
-            entropy=complexity,  # Use complexity as entropy proxy
-            escalation_depth=1 if escalated else 0,
-        )
-
-        if should_run:
-            # Select committee from available model pool (excluding primary)
-            available_providers = ["sarvam-1", "claude-3-5-sonnet-20241022", "gemini-2.0-flash-exp", "gpt-4o"]
-            committee = [p for p in available_providers if p != final_route_model][:2]
-            committee = [final_route_model] + committee  # Always include primary
-
-            # Gather reliability scores from telemetry (simplified: use confidence)
-            for p in committee:
-                if p not in consensus_provider_reliabilities:
-                    consensus_provider_reliabilities[p] = 0.6  # Default unknown provider reliability
-
-            consensus_result = arbitrator.execute_consensus(
+        try:
+            arbitrator = SovereignConsensusArbitrator()
+            hallucination_prob = 1.0 - float(evaluation.get("confidence") or 0.5)
+            gov_stability = 1.0  # Default stable; real value from governance analytics
+            should_run, trigger_reason = arbitrator.should_trigger_consensus(
                 prompt=payload.prompt,
-                committee=committee,
-                provider_reliabilities=consensus_provider_reliabilities,
-                db=None,
+                complexity=complexity,
+                domain=getattr(payload, "domain", "consumer_chat"),
+                calibration_confidence=float(evaluation.get("confidence") or 0.5),
+                hallucination_probability=hallucination_prob,
+                governance_stability=gov_stability,
+                entropy=complexity,  # Use complexity as entropy proxy
                 escalation_depth=1 if escalated else 0,
-                escalation_budget_usd=0.50,
-                baseline_cost_usd=total_cost_usd,
-                baseline_reliability=float(evaluation.get("confidence") or 0.5),
             )
 
-            if consensus_result.get("error") is None and consensus_result.get("selected_response"):
-                is_consensus = True
-                response_text = consensus_result["selected_response"]
-                consensus_score_val = consensus_result["consensus_score"]
-                cer_value_val = consensus_result["cost_accounting"]["cer_value"]
-                consensus_trace_val = json.dumps(consensus_result["consensus_trace"])
+            if should_run:
+                available_providers = ["sarvam-1", "claude-3-5-sonnet-20241022", "gemini-2.0-flash-exp", "gpt-4o"]
+                committee = [p for p in available_providers if p != final_route_model][:2]
+                committee = [final_route_model] + committee  # Always include primary
 
-                # Accumulate consensus token cost
-                extra_tokens = consensus_result["cost_accounting"].get("additional_tokens_spent", 0)
-                extra_cost = consensus_result["cost_accounting"].get("additional_cost_usd", 0.0)
-                total_input_tokens += extra_tokens
-                total_cost_usd += extra_cost
-                agentic_governor.record_spend(extra_cost)
-    except Exception as ce:
-        print(f"Consensus arbitration error (non-fatal, continuing with primary response): {ce}")
-    # ── End Consensus ─────────────────────────────────────────────────────
+                for p in committee:
+                    if p not in consensus_provider_reliabilities:
+                        consensus_provider_reliabilities[p] = 0.6  # Default unknown provider reliability
 
-    # Step 6: Learning Loop & Telemetry Recording
-    latency_ms = (time.time() - start_time) * 1000
-    
-    # Record spend
-    agentic_governor.record_spend(total_cost_usd)
-
-    decision_id = memory_bank.log_decision(
-        prompt=payload.prompt,
-        selected_model=target_model,  # Initial route model
-        complexity=complexity,
-        escalated=escalated,
-        latency_ms=int(latency_ms),
-        shadow_model=route_config.get("shadow_target"),
-        input_tokens=total_input_tokens,
-        output_tokens=total_output_tokens,
-        cost_usd=total_cost_usd,
-        is_reliable=not escalated,
-        final_route=final_route_model,
-        workflow_id=payload.workflow_id,
-        utility_score=1.0 if not escalated else 0.0,
-        is_retry=False,
-        task_success=not escalated
-    )
-
-    # Persist consensus telemetry into RoutingDecision record
-    if is_consensus and decision_id:
-        try:
-            db_consensus = SessionLocal()
-            from infra.models import RoutingDecision
-            dec = db_consensus.query(RoutingDecision).filter(RoutingDecision.id == decision_id).first()
-            if dec:
-                dec.is_consensus = True
-                dec.consensus_score = consensus_score_val
-                dec.cer_value = cer_value_val
-                dec.consensus_trace = consensus_trace_val
-                db_consensus.commit()
-            db_consensus.close()
-        except Exception as e:
-            print(f"Error persisting consensus trace: {e}")
-    
-    # Add current decision to recent prompts cache
-    add_to_recent_prompts(decision_id, payload.prompt)
-    
-    # Log initial utility provenance
-    db_current = SessionLocal()
-    try:
-        initial_signals = []
-        reasoning = "Initial assessment: request succeeded with default metrics."
-        if escalated:
-            initial_signals.append("task_failed")
-            reasoning = f"Initial assessment: escalated due to low confidence or utility constraint violation."
-            
-        UtilityIntelligencePlane.record_utility_provenance(
-            db_current,
-            decision_id=decision_id,
-            signals=initial_signals,
-            reasoning=reasoning,
-            session_context={"workflow_id": payload.workflow_id, "mode": payload.mode}
-        )
-    except Exception as e:
-        print(f"Error logging initial utility provenance: {e}")
-    finally:
-        db_current.close()
-
-    # Retrospective update if retry was detected
-    if is_retry_detected and prev_decision_id != -1:
-        db_prev = SessionLocal()
-        try:
-            from infra.models import RoutingDecision
-            prev_dec = db_prev.query(RoutingDecision).filter(RoutingDecision.id == prev_decision_id).first()
-            if prev_dec:
-                prev_dec.is_retry = True
-                db_prev.commit()
-                
-                signals = ["immediate_retry"]
-                # If provider changed
-                if prev_dec.initial_route != target_model:
-                    signals.append("provider_switch")
-                    
-                # Check for prompt rewording
-                with _RECENT_PROMPTS_LOCK:
-                    prev_prompt_text = next((x["prompt"] for x in _RECENT_PROMPTS if x["id"] == prev_decision_id), "")
-                if prev_prompt_text:
-                    def calculate_overlap(s1: str, s2: str) -> float:
-                        words1 = set(re.findall(r'\w+', s1.lower()))
-                        words2 = set(re.findall(r'\w+', s2.lower()))
-                        if not words1 or not words2:
-                            return 0.0
-                        intersection = words1.intersection(words2)
-                        union = words1.union(words2)
-                        return len(intersection) / len(union)
-                    overlap = calculate_overlap(payload.prompt, prev_prompt_text)
-                    if 0.40 <= overlap < 0.85:
-                        signals.append("prompt_rewording")
-                
-                UtilityIntelligencePlane.record_utility_provenance(
-                    db_prev,
-                    decision_id=prev_decision_id,
-                    signals=signals,
-                    reasoning=f"Retrospectively downgraded via implicit retry detection: {retry_reason}",
-                    session_context={"current_workflow_id": payload.workflow_id}
+                consensus_result = arbitrator.execute_consensus(
+                    prompt=payload.prompt,
+                    committee=committee,
+                    provider_reliabilities=consensus_provider_reliabilities,
+                    db=None,
+                    escalation_depth=1 if escalated else 0,
+                    escalation_budget_usd=0.50,
+                    baseline_cost_usd=total_cost_usd,
+                    baseline_reliability=float(evaluation.get("confidence") or 0.5),
                 )
-        except Exception as e:
-            print(f"Error updating previous decision utility: {e}")
-        finally:
-            db_prev.close()
 
-    return {
-        "response": response_text.strip(),
-        "metadata": {
-            "orchestrator_latency_ms": round(latency_ms, 2),
-            "language_detected": language,
-            "complexity_score": round(complexity, 2),
-            "routed_model": final_route_model,
-            "confidence": evaluation["confidence"],
-            "risk_level": evaluation["risk_level"],
-            "failure_reason": evaluation.get("failure_reason"),
-            "escalated_via_judge": escalated,
-            "decision_trace": route_config.get("trace", {}),
-            "economic_metrics": {
-                "input_tokens": total_input_tokens,
-                "output_tokens": total_output_tokens,
-                "cost_usd": total_cost_usd
+                if consensus_result.get("error") is None and consensus_result.get("selected_response"):
+                    is_consensus = True
+                    response_text = consensus_result["selected_response"]
+                    consensus_score_val = consensus_result["consensus_score"]
+                    cer_value_val = consensus_result["cost_accounting"]["cer_value"]
+                    consensus_trace_val = json.dumps(consensus_result["consensus_trace"])
+
+                    # Accumulate consensus token cost
+                    extra_tokens = consensus_result["cost_accounting"].get("additional_tokens_spent", 0)
+                    extra_cost = consensus_result["cost_accounting"].get("additional_cost_usd", 0.0)
+                    total_input_tokens += extra_tokens
+                    total_cost_usd += extra_cost
+                    agentic_governor.record_spend(extra_cost)
+        except Exception as ce:
+            print(f"Consensus arbitration error (non-fatal, continuing with primary response): {ce}")
+
+        # Step 6: Learning Loop & Telemetry Recording
+        latency_ms = (time.time() - start_time) * 1000
+        
+        # Record spend
+        agentic_governor.record_spend(total_cost_usd)
+
+        decision_id = memory_bank.log_decision(
+            prompt=payload.prompt,
+            selected_model=target_model,  # Initial route model
+            complexity=complexity,
+            escalated=escalated,
+            latency_ms=int(latency_ms),
+            shadow_model=route_config.get("shadow_target"),
+            input_tokens=total_input_tokens,
+            output_tokens=total_output_tokens,
+            cost_usd=total_cost_usd,
+            is_reliable=not escalated,
+            final_route=final_route_model,
+            workflow_id=payload.workflow_id,
+            utility_score=1.0 if not escalated else 0.0,
+            is_retry=False,
+            task_success=not escalated,
+            cache_hit=False,
+            tokens_saved=0,
+            cognitive_module=selected_module.name
+        )
+
+        # Persist consensus telemetry into RoutingDecision record
+        if is_consensus and decision_id:
+            try:
+                dec = db.query(RoutingDecision).filter(RoutingDecision.id == decision_id).first()
+                if dec:
+                    dec.is_consensus = True
+                    dec.consensus_score = consensus_score_val
+                    dec.cer_value = cer_value_val
+                    dec.consensus_trace = consensus_trace_val
+                    db.commit()
+            except Exception as e:
+                print(f"Error persisting consensus trace: {e}")
+        
+        # Add current decision to recent prompts cache
+        add_to_recent_prompts(decision_id, payload.prompt)
+        
+        # Log initial utility provenance
+        try:
+            initial_signals = []
+            reasoning = "Initial assessment: request succeeded with default metrics."
+            if escalated:
+                initial_signals.append("task_failed")
+                reasoning = f"Initial assessment: escalated due to low confidence or utility constraint violation."
+                
+            UtilityIntelligencePlane.record_utility_provenance(
+                db,
+                decision_id=decision_id,
+                signals=initial_signals,
+                reasoning=reasoning,
+                session_context={"workflow_id": payload.workflow_id, "mode": payload.mode}
+            )
+        except Exception as e:
+            print(f"Error logging initial utility provenance: {e}")
+
+        # Retrospective update if retry was detected
+        if is_retry_detected and prev_decision_id != -1:
+            try:
+                prev_dec = db.query(RoutingDecision).filter(RoutingDecision.id == prev_decision_id).first()
+                if prev_dec:
+                    prev_dec.is_retry = True
+                    db.commit()
+                    
+                    signals = ["immediate_retry"]
+                    if prev_dec.initial_route != target_model:
+                        signals.append("provider_switch")
+                        
+                    with _RECENT_PROMPTS_LOCK:
+                        prev_prompt_text = next((x["prompt"] for x in _RECENT_PROMPTS if x["id"] == prev_decision_id), "")
+                    if prev_prompt_text:
+                        def calculate_overlap(s1: str, s2: str) -> float:
+                            words1 = set(re.findall(r'\w+', s1.lower()))
+                            words2 = set(re.findall(r'\w+', s2.lower()))
+                            if not words1 or not words2:
+                                return 0.0
+                            intersection = words1.intersection(words2)
+                            union = words1.union(words2)
+                            return len(intersection) / len(union)
+                        overlap = calculate_overlap(payload.prompt, prev_prompt_text)
+                        if 0.40 <= overlap < 0.85:
+                            signals.append("prompt_rewording")
+                    
+                    UtilityIntelligencePlane.record_utility_provenance(
+                        db,
+                        decision_id=prev_decision_id,
+                        signals=signals,
+                        reasoning=f"Retrospectively downgraded via implicit retry detection: {retry_reason}",
+                        session_context={"current_workflow_id": payload.workflow_id}
+                    )
+            except Exception as e:
+                print(f"Error updating previous decision utility: {e}")
+
+            # Safe Cleanup: invalidate cached entries matching failed prompt + workflow to prevent future stale serving
+            try:
+                prev_cache = db.query(SemanticCacheEntry).filter(
+                    SemanticCacheEntry.prompt == payload.prompt,
+                    SemanticCacheEntry.workflow_id == payload.workflow_id
+                ).all()
+                for pc in prev_cache:
+                    pc.is_reliable = False
+                    pc.utility_score = 0.0
+                db.commit()
+            except Exception as e:
+                print(f"Error cleaning up failed cache entries: {e}")
+
+        # Store response in Semantic Cache for future reuse
+        try:
+            SemanticCache.store_entry(
+                db=db,
+                prompt=payload.prompt,
+                response=response_text,
+                reasoning=None,
+                tool_chain=json.dumps(selected_module.tool_preferences),
+                confidence=evaluation["confidence"],
+                utility_score=1.0 if not escalated else 0.0,
+                model_id=final_route_model,
+                workflow_id=payload.workflow_id,
+                input_tokens=total_input_tokens,
+                output_tokens=total_output_tokens,
+                cost_usd=total_cost_usd,
+                is_reliable=not escalated
+            )
+        except Exception as e:
+            print(f"Error storing successful response in semantic cache: {e}")
+
+        return {
+            "response": response_text.strip(),
+            "metadata": {
+                "orchestrator_latency_ms": round(latency_ms, 2),
+                "language_detected": language,
+                "complexity_score": round(complexity, 2),
+                "routed_model": final_route_model,
+                "confidence": evaluation["confidence"],
+                "risk_level": evaluation["risk_level"],
+                "failure_reason": evaluation.get("failure_reason"),
+                "escalated_via_judge": escalated,
+                "decision_trace": route_config.get("trace", {}),
+                "economic_metrics": {
+                    "input_tokens": total_input_tokens,
+                    "output_tokens": total_output_tokens,
+                    "cost_usd": total_cost_usd
+                }
             }
         }
-    }
+    finally:
+        db.close()

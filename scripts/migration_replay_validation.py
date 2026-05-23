@@ -100,7 +100,14 @@ def migrate_and_validate():
                 workflow_id=d.get("workflow_id"),
                 utility_score=d.get("utility_score", 1.0),
                 is_retry=bool(d.get("is_retry")) if d.get("is_retry") is not None else False,
-                task_success=bool(d.get("task_success")) if d.get("task_success") is not None else True
+                task_success=bool(d.get("task_success")) if d.get("task_success") is not None else True,
+                is_consensus=bool(d.get("is_consensus")) if d.get("is_consensus") is not None else False,
+                consensus_score=d.get("consensus_score"),
+                cer_value=d.get("cer_value"),
+                consensus_trace=d.get("consensus_trace"),
+                cache_hit=bool(d.get("cache_hit")) if d.get("cache_hit") is not None else False,
+                tokens_saved=d.get("tokens_saved") if d.get("tokens_saved") is not None else 0,
+                cognitive_module=d.get("cognitive_module")
             )
             db.add(db_decision)
             
