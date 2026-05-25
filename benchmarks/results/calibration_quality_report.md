@@ -1,5 +1,5 @@
 # Calibration Quality Validation Report
-**Timestamp:** 2026-05-25 22:32:53 UTC
+**Timestamp:** 2026-05-25 22:43:58 UTC
 
 This report quantifies the improvement in calibration error and prediction quality introduced by OMI's ECE calibration and semantic entropy dampening layers.
 

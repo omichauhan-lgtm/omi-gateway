@@ -380,6 +380,7 @@ async def orchestrate_request(
     x_omi_memory_chain_length: int = Header(0),
     x_omi_cross_workflow_references: int = Header(0),
     x_omi_telemetry_recursion: int = Header(0),
+    x_omi_self_referential_analysis: int = Header(0),
     x_omi_enforce_diversity: bool = Header(False),
     x_omi_enforce_meta_governance: bool = Header(False)
 ):
@@ -389,6 +390,7 @@ async def orchestrate_request(
     """
     from core.complexity_governor import ComplexityGovernor
     from infra.complexity_budget import ComplexityBudget
+    from infra.recursive_stability_limits import RecursiveStabilityLimits
 
     # Safely unpack header arguments to handle direct unit test method invocation
     reval_depth_val = x_omi_revalidation_depth if isinstance(x_omi_revalidation_depth, (int, float)) else 0
@@ -399,6 +401,7 @@ async def orchestrate_request(
     memory_chain_val = x_omi_memory_chain_length if isinstance(x_omi_memory_chain_length, (int, float)) else 0
     cross_wf_val = x_omi_cross_workflow_references if isinstance(x_omi_cross_workflow_references, (int, float)) else 0
     telemetry_rec_val = x_omi_telemetry_recursion if isinstance(x_omi_telemetry_recursion, (int, float)) else 0
+    self_ref_val = x_omi_self_referential_analysis if isinstance(x_omi_self_referential_analysis, (int, float)) else 0
     enforce_div_val = x_omi_enforce_diversity if isinstance(x_omi_enforce_diversity, bool) else False
     enforce_meta_val = x_omi_enforce_meta_governance if isinstance(x_omi_enforce_meta_governance, bool) else False
 
@@ -420,6 +423,16 @@ async def orchestrate_request(
     if not ComplexityBudget.validate_telemetry_recursion(telemetry_rec_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum telemetry recursion exceeded.")
 
+    # Enforce Phase 32 / Phase 39 limits
+    if not RecursiveStabilityLimits.validate_recursive_depth(telemetry_rec_val):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: recursive stability limits exceeded.")
+    if not RecursiveStabilityLimits.validate_meta_layers(layers_val):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: recursive stability limits exceeded.")
+    if not RecursiveStabilityLimits.validate_dependency_depth(dependency_depth_val):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: recursive stability limits exceeded.")
+    if not RecursiveStabilityLimits.validate_self_referential_analysis(self_ref_val):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: recursive stability limits exceeded.")
+
     # Enforce diversity and meta-governance constraints if requested
     db = SessionLocal()
     try:
@@ -432,21 +445,31 @@ async def orchestrate_request(
         if enforce_meta_val:
             from infra.meta_governance_auditor import MetaGovernanceAuditor
             from analytics.ecosystem_simulator import EcosystemSimulator
+            from analytics.ecosystem_equilibrium import EcosystemEquilibriumEngine
+            from analytics.governance_inertia import GovernanceInertiaEngine
             
             meta = MetaGovernanceAuditor.audit_governance_layers(db)
             eco = EcosystemSimulator.evaluate_ecosystem(db)
+            eq = EcosystemEquilibriumEngine.calculate_equilibrium(db)
+            inertia = GovernanceInertiaEngine.calculate_inertia_metrics(db)
             
-            # Check 19: Governance overhead exceeds value score or threshold
+            # Check 19 / Phase 39: Governance overhead exceeds value score or threshold
             if meta["governance_overhead_score"] > 0.35:
                 raise HTTPException(status_code=422, detail="Complexity budget breached: governance overhead exceeds value.")
             
-            # Check 21: Recursive complexity breach
-            if meta["recursive_complexity_risk"] > 0.85:
+            # Check 21 / Phase 39: Recursive complexity breach
+            if meta["recursive_complexity_risk"] > 0.80:
                 raise HTTPException(status_code=422, detail="Complexity budget breached: recursive complexity risk exceeds limit.")
                 
-            # Check 20: Governance rigidity threshold
-            if eco["governance_rigidity_score"] > 0.70:
+            # Check 20 / Phase 39: Governance rigidity threshold
+            if eco["governance_rigidity_score"] > 0.60:
                 raise HTTPException(status_code=422, detail="Complexity budget breached: governance rigidity threshold exceeded.")
+            if inertia["governance_inertia_score"] > 0.60:
+                raise HTTPException(status_code=422, detail="Complexity budget breached: governance rigidity threshold exceeded.")
+
+            # Phase 39: Ecosystem Instability
+            if eq["ecosystem_equilibrium_score"] < 0.70:
+                raise HTTPException(status_code=422, detail="Complexity budget breached: ecosystem equilibrium score below threshold.")
     finally:
         db.close()
 

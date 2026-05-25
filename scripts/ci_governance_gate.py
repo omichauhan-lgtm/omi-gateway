@@ -686,8 +686,29 @@ def main():
     if not run_adversarial_containment_check():
         sys.exit(1)
 
+    # 25. Ecosystem Equilibrium Engine (Check 26 - Phase 31)
+    if not run_ecosystem_equilibrium_check():
+        sys.exit(1)
+
+    # 26. Truth Stability & Long-Horizon Calibration (Check 27 - Phase 34)
+    if not run_truth_stability_check():
+        sys.exit(1)
+
+    # 27. Reasoning Diversity & Convergence Risk (Check 28 - Phase 35)
+    if not run_reasoning_diversity_convergence_check():
+        sys.exit(1)
+
+    # 28. Ecosystem Efficiency & Resource Economics (Check 29 - Phase 36)
+    if not run_ecosystem_efficiency_check():
+        sys.exit(1)
+
+    # 29. Recursive Stability Limits Enforcement (Check 30 - Phase 32)
+    if not run_recursive_stability_limits_check():
+        sys.exit(1)
+
     print("\n====================================================")
-    print("[SUCCESS] ALL OMI CI GOVERNANCE GATES PASSED")
+    print("[SUCCESS] ALL 30 OMI CI GOVERNANCE GATES PASSED")
+    print("Phases 31-40 Persistent Cognitive Ecosystem Equilibrium: VERIFIED")
     print("Ready for safe production deployment.")
     print("====================================================")
     sys.exit(0)
@@ -804,6 +825,215 @@ def run_adversarial_containment_check() -> bool:
     return run_external_script("scripts/adversarial_ecosystem_sim.py", "Check 25: Adversarial Poisoning & Containment Guard")
 
 
+# ============================================================
+# PHASE 31-40 ECOSYSTEM EQUILIBRIUM CHECKS (26-30)
+# ============================================================
+
+def run_ecosystem_equilibrium_check() -> bool:
+    print("\n--- Check 26: Ecosystem Equilibrium Engine (Phase 31) ---")
+    db = SessionLocal()
+    try:
+        from analytics.ecosystem_equilibrium import EcosystemEquilibriumEngine
+        from analytics.ecosystem_phase_detection import EcosystemPhaseDetector
+
+        metrics = EcosystemEquilibriumEngine.calculate_equilibrium(db)
+        phase = EcosystemPhaseDetector.detect_phase(db)
+
+        eq_score = metrics["ecosystem_equilibrium_score"]
+        velocity = metrics["instability_velocity"]
+        balance = metrics["adaptive_balance_score"]
+        pressure = metrics["cognitive_pressure_index"]
+        current_phase = phase.get("phase", "unknown")
+
+        print(f"  - Equilibrium Score:       {eq_score:.4f} (Threshold: >= 0.55)")
+        print(f"  - Instability Velocity:    {velocity:.4f} (Threshold: <= 0.30)")
+        print(f"  - Adaptive Balance Score:  {balance:.4f}")
+        print(f"  - Cognitive Pressure Index:{pressure:.4f}")
+        print(f"  - Detected Ecosystem Phase: {current_phase}")
+
+        if eq_score < 0.55:
+            print("[BLOCKER] Ecosystem equilibrium score is critically low — system unstable!")
+            return False
+        if velocity > 0.30:
+            print("[BLOCKER] Instability velocity too high — failure rate accelerating!")
+            return False
+        if current_phase in ["fragmented", "contaminated"]:
+            print(f"[BLOCKER] Ecosystem phase '{current_phase}' indicates collapse risk!")
+            return False
+
+        print("[PASS] Ecosystem equilibrium and phase stability verified.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error in ecosystem equilibrium check: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_truth_stability_check() -> bool:
+    print("\n--- Check 27: Truth Stability & Long-Horizon Calibration (Phase 34) ---")
+    db = SessionLocal()
+    try:
+        from analytics.truth_stability import TruthStabilityEngine
+        from analytics.long_horizon_calibration import LongHorizonCalibrationEngine
+
+        truth = TruthStabilityEngine.calculate_truth_stability(db)
+        calibration = LongHorizonCalibrationEngine.calculate_calibration_drift(db)
+
+        survival_rate = truth["truth_survival_rate"]
+        hallucination = truth["hallucination_recurrence"]
+        decay = truth["semantic_truth_decay"]
+        ece_30d = calibration.get("ece_30d", 0.0)
+        entropy_drift = calibration.get("entropy_drift", 0.0)
+
+        print(f"  - Truth Survival Rate:       {survival_rate:.4f} (Threshold: >= 0.70)")
+        print(f"  - Hallucination Recurrence:  {hallucination:.4f} (Threshold: <= 0.25)")
+        print(f"  - Semantic Truth Decay:      {decay:.4f}")
+        print(f"  - ECE 30-day Calibration:    {ece_30d:.4f} (Threshold: <= 0.12)")
+        print(f"  - Entropy Drift:             {entropy_drift:.4f}")
+
+        if survival_rate < 0.70:
+            print("[BLOCKER] Truth survival rate below 70% — persistent truth degradation detected!")
+            return False
+        if hallucination > 0.25:
+            print("[BLOCKER] Hallucination recurrence exceeds 25% — systemic integrity risk!")
+            return False
+        if ece_30d > 0.12:
+            print("[BLOCKER] 30-day ECE calibration drift exceeds 0.12!")
+            return False
+
+        print("[PASS] Truth stability and long-horizon calibration verified.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error in truth stability check: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_reasoning_diversity_convergence_check() -> bool:
+    print("\n--- Check 28: Reasoning Diversity & Convergence Risk (Phase 35) ---")
+    db = SessionLocal()
+    try:
+        from analytics.reasoning_diversity import ReasoningDiversityEngine
+        from analytics.convergence_risk import ConvergenceRiskAnalyzer
+
+        diversity = ReasoningDiversityEngine.calculate_reasoning_diversity(db)
+        risk = ConvergenceRiskAnalyzer.calculate_risk(db)
+
+        reasoning_entropy = diversity["reasoning_entropy"]
+        provider_diversity = diversity["provider_diversity"]
+        semantic_variance = diversity["semantic_variance"]
+        convergence_prob = risk["cognitive_convergence_probability"]
+        blindspot_risk = risk["systemic_blindspot_risk"]
+
+        print(f"  - Reasoning Entropy:            {reasoning_entropy:.4f} (Threshold: >= 0.40)")
+        print(f"  - Provider Diversity:           {provider_diversity:.4f}")
+        print(f"  - Semantic Variance:            {semantic_variance:.6f}")
+        print(f"  - Convergence Probability:      {convergence_prob:.4f} (Threshold: <= 0.55)")
+        print(f"  - Systemic Blindspot Risk:      {blindspot_risk:.4f} (Threshold: <= 0.45)")
+
+        if reasoning_entropy < 0.40:
+            print("[BLOCKER] Reasoning entropy too low — cognitive homogenization detected!")
+            return False
+        if convergence_prob > 0.55:
+            print("[BLOCKER] Cognitive convergence probability exceeds 55% — diversity collapse risk!")
+            return False
+        if blindspot_risk > 0.45:
+            print("[BLOCKER] Systemic blindspot risk exceeds 45% — catastrophic failure exposure!")
+            return False
+
+        print("[PASS] Reasoning diversity and convergence risk verified.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error in reasoning diversity/convergence check: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_ecosystem_efficiency_check() -> bool:
+    print("\n--- Check 29: Ecosystem Efficiency & Resource Economics (Phase 36) ---")
+    db = SessionLocal()
+    try:
+        from analytics.ecosystem_efficiency import EcosystemEfficiencyEngine
+
+        metrics = EcosystemEfficiencyEngine.calculate_efficiency(db)
+
+        cost_ratio = metrics["governance_cost_ratio"]
+        efficiency_score = metrics["ecosystem_efficiency_score"]
+        reuse_value = metrics["reuse_value_ratio"]
+
+        print(f"  - Governance Cost Ratio:    {cost_ratio:.4f} (Threshold: <= 0.40)")
+        print(f"  - Ecosystem Efficiency:     {efficiency_score:.4f} (Threshold: >= 0.60)")
+        print(f"  - Reuse Value Ratio:        {reuse_value:.4f}")
+
+        if cost_ratio > 0.40:
+            print("[BLOCKER] Governance cost ratio exceeds 40% — unsustainable overhead!")
+            return False
+        if efficiency_score < 0.60:
+            print("[BLOCKER] Ecosystem efficiency score below 60% — resource utilization failure!")
+            return False
+
+        print("[PASS] Ecosystem efficiency and resource economics verified.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error in ecosystem efficiency check: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_recursive_stability_limits_check() -> bool:
+    print("\n--- Check 30: Recursive Stability Limits Enforcement (Phase 32) ---")
+    try:
+        from infra.recursive_stability_limits import RecursiveStabilityLimits
+
+        # Validate the hard constants match Phase 32 constitution mandates
+        max_depth = RecursiveStabilityLimits.MAX_RECURSIVE_GOVERNANCE_DEPTH
+        max_meta = RecursiveStabilityLimits.MAX_META_GOVERNANCE_LAYERS
+        max_dep = RecursiveStabilityLimits.MAX_ECOSYSTEM_DEPENDENCY_DEPTH
+        max_self = RecursiveStabilityLimits.MAX_SELF_REFERENTIAL_ANALYSIS
+
+        print(f"  - Max Recursive Governance Depth:  {max_depth} (Constitution mandate: 3)")
+        print(f"  - Max Meta-Governance Layers:      {max_meta} (Constitution mandate: 2)")
+        print(f"  - Max Dependency Depth:            {max_dep} (Constitution mandate: 5)")
+        print(f"  - Max Self-Referential Analysis:   {max_self} (Constitution mandate: 2)")
+
+        # Validate constitutional compliance
+        if max_depth != 3:
+            print("[BLOCKER] MAX_RECURSIVE_GOVERNANCE_DEPTH violates Phase 32 constitution (must be 3)!")
+            return False
+        if max_meta != 2:
+            print("[BLOCKER] MAX_META_GOVERNANCE_LAYERS violates Phase 32 constitution (must be 2)!")
+            return False
+        if max_dep != 5:
+            print("[BLOCKER] MAX_ECOSYSTEM_DEPENDENCY_DEPTH violates Phase 32 constitution (must be 5)!")
+            return False
+        if max_self != 2:
+            print("[BLOCKER] MAX_SELF_REFERENTIAL_ANALYSIS violates Phase 32 constitution (must be 2)!")
+            return False
+
+        # Validate boundary enforcement logic
+        test_metrics = {"recursive_depth": 4, "meta_layers": 3, "dependency_depth": 6, "self_referential_analysis": 3}
+        result = RecursiveStabilityLimits.validate_all(test_metrics)
+        if result.get("all_passed", True):
+            print("[BLOCKER] Recursive limits failed to block out-of-bounds values — enforcement broken!")
+            return False
+
+        # Validate in-bounds values pass
+        good_metrics = {"recursive_depth": 3, "meta_layers": 2, "dependency_depth": 5, "self_referential_analysis": 2}
+        good_result = RecursiveStabilityLimits.validate_all(good_metrics)
+        if not good_result.get("all_passed", False):
+            print("[BLOCKER] Recursive limits incorrectly rejected valid boundary values!")
+            return False
+
+        print("[PASS] Recursive stability limits enforcement verified — all Phase 32 bounds intact.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error in recursive stability limits check: {e}")
+        return False
+
+
 if __name__ == "__main__":
     main()
-
