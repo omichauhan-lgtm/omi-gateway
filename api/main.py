@@ -373,19 +373,41 @@ async def orchestrate_request(
     x_anthropic_key: str = Header(None),
     x_deepseek_key: str = Header(None),
     x_omi_revalidation_depth: int = Header(0),
-    x_omi_governance_layers: int = Header(1)
+    x_omi_governance_layers: int = Header(1),
+    x_omi_mutation_depth: int = Header(0),
+    x_omi_replay_depth: int = Header(0),
+    x_omi_dependency_depth: int = Header(0),
+    x_omi_memory_chain_length: int = Header(0),
+    x_omi_cross_workflow_references: int = Header(0),
+    x_omi_telemetry_recursion: int = Header(0)
 ):
     """
     The Core Control Plane.
     Analyzes complexity, retrieves vector context, routes frugally, judges output, and escalates if needed.
     """
     from core.complexity_governor import ComplexityGovernor
+    from infra.complexity_budget import ComplexityBudget
+
     depth_val = x_omi_revalidation_depth if isinstance(x_omi_revalidation_depth, (int, float)) else 0
     layers_val = x_omi_governance_layers if isinstance(x_omi_governance_layers, (int, float)) else 1
+
+    # Centralized Complexity Budget Checks
+    if not ComplexityBudget.validate_governance_layers(layers_val):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum governance layers exceeded.")
     if not ComplexityGovernor.check_revalidation_depth(depth_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum revalidation depth exceeded.")
-    if not ComplexityGovernor.check_governance_layers(layers_val):
-        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum governance layers exceeded.")
+    if not ComplexityBudget.validate_mutation_depth(x_omi_mutation_depth):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum mutation depth exceeded.")
+    if not ComplexityBudget.validate_replay_depth(x_omi_replay_depth):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum replay depth exceeded.")
+    if not ComplexityBudget.validate_dependency_depth(x_omi_dependency_depth):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum dependency depth exceeded.")
+    if not ComplexityBudget.validate_memory_chain(x_omi_memory_chain_length):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum memory chain length exceeded.")
+    if not ComplexityBudget.validate_cross_workflow_references(x_omi_cross_workflow_references):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum cross-workflow references exceeded.")
+    if not ComplexityBudget.validate_telemetry_recursion(x_omi_telemetry_recursion):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum telemetry recursion exceeded.")
 
     start_time = time.time()
     

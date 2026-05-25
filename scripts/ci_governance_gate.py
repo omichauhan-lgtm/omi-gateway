@@ -408,6 +408,104 @@ def run_cognitive_efficiency_check() -> bool:
         db.close()
 
 
+def run_state_integrity_check() -> bool:
+    print("\n--- Check 14: State & Dependency Integrity Guard ---")
+    db = SessionLocal()
+    try:
+        from infra.state_integrity import StateIntegrityEngine
+        metrics = StateIntegrityEngine.calculate_health_metrics(db)
+        print(f"  - Integrity Score: {metrics['integrity_score']:.4f} (Threshold: >= 0.90)")
+        print(f"  - Dependency Stability: {metrics['dependency_stability']:.4f}")
+        print(f"  - Reuse Validity: {metrics['reuse_validity']:.4f}")
+        print(f"  - Cognitive Health Score: {metrics['cognitive_health_score']:.4f} (Threshold: >= 0.85)")
+        
+        if metrics['integrity_score'] < 0.90:
+            print("[BLOCKER] State integrity score is below critical threshold of 0.90!")
+            return False
+        if metrics['cognitive_health_score'] < 0.85:
+            print("[BLOCKER] Cognitive health score is below threshold of 0.85!")
+            return False
+        print("[PASS] State integrity checks passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking state integrity: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_dependency_chain_check() -> bool:
+    print("\n--- Check 15: Dependency Chain & Linkage Guard ---")
+    db = SessionLocal()
+    try:
+        from analytics.dependency_integrity import DependencyIntegrityChecker
+        metrics = DependencyIntegrityChecker.get_dependency_metrics(db)
+        print(f"  - Maximum Depth: {metrics['maximum_depth']}")
+        print(f"  - Total Cross-Workflow Links: {metrics['total_cross_workflow_links']}")
+        print(f"  - Has Circular Dependencies: {metrics['has_circular_dependencies']}")
+        print(f"  - Dependency Structure Valid: {metrics['is_valid']}")
+        
+        if not metrics['is_valid']:
+            print("[BLOCKER] Dependency constraints breached (depth > 5, links > 10, or cycle detected)!")
+            return False
+        print("[PASS] Dependency chain constraints validated.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking dependency integrity: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_provenance_lineage_check() -> bool:
+    print("\n--- Check 16: Provenance Lineage Guard ---")
+    db = SessionLocal()
+    try:
+        from analytics.provenance_audit import ProvenanceAuditor
+        audit = ProvenanceAuditor.audit_provenance(db)
+        print(f"  - Average Corruption Probability: {audit['corruption_probability']:.4f} (Threshold: < 0.15)")
+        print(f"  - Average Provenance Confidence: {audit['provenance_confidence']:.4f} (Threshold: >= 0.80)")
+        
+        if audit['corruption_probability'] >= 0.15:
+            print("[BLOCKER] Average cache corruption risk is too high!")
+            return False
+        if audit['provenance_confidence'] < 0.80:
+            print("[BLOCKER] Average provenance confidence is below threshold of 0.80!")
+            return False
+        print("[PASS] Provenance lineage checks passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error auditing provenance: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_predictive_governance_check() -> bool:
+    print("\n--- Check 17: Predictive Governance Guard ---")
+    db = SessionLocal()
+    try:
+        from analytics.predictive_governance import PredictiveGovernanceEngine
+        risks = PredictiveGovernanceEngine.predict_governance_risks(db)
+        print(f"  - Future Risk Score: {risks['future_risk_score']:.4f} (Threshold: < 0.50)")
+        print(f"  - Forecasted Instability: {risks['forecasted_instability']:.4f}")
+        print(f"  - Drift Probability: {risks['drift_probability']:.4f} (Threshold: < 0.40)")
+        
+        if risks['future_risk_score'] >= 0.50:
+            print("[BLOCKER] Forecasted future risk is too high (>= 0.50)!")
+            return False
+        if risks['drift_probability'] >= 0.40:
+            print("[BLOCKER] Forecasted drift probability is too high (>= 0.40)!")
+            return False
+        print("[PASS] Predictive governance checks passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error in predictive risk calculation: {e}")
+        return False
+    finally:
+        db.close()
+
+
 def main():
     print("====================================================")
     print("OMI CI/CD GOVERNANCE INFRASTRUCTURE GATE")
@@ -459,6 +557,22 @@ def main():
 
     # 12. Cognitive Efficiency blocker (Check 13)
     if not run_cognitive_efficiency_check():
+        sys.exit(1)
+
+    # 13. State Integrity (Check 14)
+    if not run_state_integrity_check():
+        sys.exit(1)
+
+    # 14. Dependency Chain Constraints (Check 15)
+    if not run_dependency_chain_check():
+        sys.exit(1)
+
+    # 15. Provenance Auditing (Check 16)
+    if not run_provenance_lineage_check():
+        sys.exit(1)
+
+    # 16. Predictive Governance Risks (Check 17)
+    if not run_predictive_governance_check():
         sys.exit(1)
         
     print("\n====================================================")
