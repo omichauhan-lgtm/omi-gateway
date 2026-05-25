@@ -49,7 +49,41 @@ class DataMoat:
                     conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN is_retry BOOLEAN DEFAULT 0"))
                 if "task_success" not in rd_cols:
                     conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN task_success BOOLEAN DEFAULT 1"))
+                if "is_consensus" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN is_consensus BOOLEAN DEFAULT 0"))
+                if "consensus_score" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN consensus_score FLOAT"))
+                if "cer_value" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN cer_value FLOAT"))
+                if "consensus_trace" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN consensus_trace TEXT"))
+                if "cache_hit" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN cache_hit BOOLEAN DEFAULT 0"))
+                if "tokens_saved" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN tokens_saved INTEGER DEFAULT 0"))
+                if "cognitive_module" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN cognitive_module VARCHAR"))
+                if "cognitive_provenance" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN cognitive_provenance TEXT"))
+                if "provenance_cri" not in rd_cols:
+                    conn.execute(text("ALTER TABLE routing_decisions ADD COLUMN provenance_cri FLOAT DEFAULT 1.0"))
 
+        # Check semantic_cache_entries
+        if "semantic_cache_entries" in inspector.get_table_names():
+            sc_cols = [c["name"] for c in inspector.get_columns("semantic_cache_entries")]
+            with engine.begin() as conn:
+                if "embedding" not in sc_cols:
+                    conn.execute(text("ALTER TABLE semantic_cache_entries ADD COLUMN embedding TEXT"))
+                if "hits" not in sc_cols:
+                    conn.execute(text("ALTER TABLE semantic_cache_entries ADD COLUMN hits INTEGER DEFAULT 0"))
+                if "drift_score" not in sc_cols:
+                    conn.execute(text("ALTER TABLE semantic_cache_entries ADD COLUMN drift_score FLOAT DEFAULT 0.0"))
+                if "is_quarantined" not in sc_cols:
+                    conn.execute(text("ALTER TABLE semantic_cache_entries ADD COLUMN is_quarantined BOOLEAN DEFAULT 0"))
+                if "provenance" not in sc_cols:
+                    conn.execute(text("ALTER TABLE semantic_cache_entries ADD COLUMN provenance TEXT"))
+                if "provenance_cri" not in sc_cols:
+                    conn.execute(text("ALTER TABLE semantic_cache_entries ADD COLUMN provenance_cri FLOAT DEFAULT 1.0"))
                     
         # Check model_failures
         if "model_failures" in inspector.get_table_names():
