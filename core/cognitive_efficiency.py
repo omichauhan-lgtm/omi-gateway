@@ -7,6 +7,7 @@ from sqlalchemy import func
 from core.semantic_cache import SemanticCache
 from core.cognitive_modules import CognitiveModuleRegistry, CognitiveModule
 from core.economic_intelligence import EconomicIntelligencePlane
+from core.complexity_governor import ComplexityGovernor
 from infra.models import SemanticCacheEntry, RoutingDecision
 from infra.calibration import AdvancedCalibrationEngine
 
@@ -33,10 +34,11 @@ class CognitiveEfficiencyPlane:
         if not workflow_id:
             return ""
 
-        # Fetch up to 10 past cache entries from this workflow
+        # Fetch up to ComplexityGovernor.MAX_MEMORY_DEPENDENCY_CHAIN past cache entries from this workflow
+        history_limit = ComplexityGovernor.MAX_MEMORY_DEPENDENCY_CHAIN
         history = db.query(SemanticCacheEntry).filter(
             SemanticCacheEntry.workflow_id == workflow_id
-        ).order_by(SemanticCacheEntry.timestamp.desc()).limit(10).all()
+        ).order_by(SemanticCacheEntry.timestamp.desc()).limit(history_limit).all()
 
         if not history:
             return ""

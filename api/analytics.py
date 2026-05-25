@@ -223,4 +223,13 @@ def get_cognitive_efficiency_endpoint(db: Session = Depends(get_db)):
     return CognitiveEfficiencyPlane.get_efficiency_analytics(db)
 
 
+@router.get("/outcome-persistence")
+def get_outcome_persistence_endpoint(db: Session = Depends(get_db)):
+    """
+    Exposes longitudinal Outcome Persistence metrics (reuse success, quarantine recovery, decay rate, must_revalidate frequency, etc.).
+    """
+    from analytics.outcome_persistence import get_outcome_persistence_summary
+    return get_outcome_persistence_summary(db)
+
+
 

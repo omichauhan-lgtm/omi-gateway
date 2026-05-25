@@ -326,6 +326,14 @@ async def verify_workflow_outcome(workflow_id: str, payload: WorkflowVerifyReque
                 c.utility_score = 1.0
                 c.is_reliable = True
                 c.provenance_cri = 0.95
+                if c.is_quarantined:
+                    try:
+                        prov = json.loads(c.provenance) if c.provenance else {}
+                        prov["recovered"] = True
+                        c.provenance = json.dumps(prov)
+                    except Exception:
+                        pass
+                c.is_quarantined = False  # Clear quarantine status on success!
             else:
                 c.utility_score = 0.0
                 c.is_reliable = False
@@ -363,12 +371,22 @@ async def orchestrate_request(
     x_omi_api_key: str = Header(None),
     x_openai_key: str = Header(None),
     x_anthropic_key: str = Header(None),
-    x_deepseek_key: str = Header(None)
+    x_deepseek_key: str = Header(None),
+    x_omi_revalidation_depth: int = Header(0),
+    x_omi_governance_layers: int = Header(1)
 ):
     """
     The Core Control Plane.
     Analyzes complexity, retrieves vector context, routes frugally, judges output, and escalates if needed.
     """
+    from core.complexity_governor import ComplexityGovernor
+    depth_val = x_omi_revalidation_depth if isinstance(x_omi_revalidation_depth, (int, float)) else 0
+    layers_val = x_omi_governance_layers if isinstance(x_omi_governance_layers, (int, float)) else 1
+    if not ComplexityGovernor.check_revalidation_depth(depth_val):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum revalidation depth exceeded.")
+    if not ComplexityGovernor.check_governance_layers(layers_val):
+        raise HTTPException(status_code=422, detail="Complexity budget breached: maximum governance layers exceeded.")
+
     start_time = time.time()
     
     # Optional authorization

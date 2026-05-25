@@ -120,6 +120,7 @@ def test_lui_healthy_provider():
     """LUI for a healthy, stable provider should be ≥ 0.40."""
     print("\n[Test 1] calculate_lui — healthy stable provider")
     init_db()
+    random.seed(42)
     seed_decisions("healthy-provider", n=40, cost_profile="stable", reward_hack_ratio=0.05, success_rate=0.90)
     db = SessionLocal()
     try:
@@ -135,7 +136,9 @@ def test_lui_economic_volatility_degrades():
     """High cost volatility should degrade EconomicConsistency and lower LUI."""
     print("\n[Test 2] calculate_lui — cost volatility degrades EconomicConsistency")
     init_db()
+    random.seed(42)
     seed_decisions("volatile-provider", n=40, cost_profile="volatile", reward_hack_ratio=0.05, success_rate=0.90)
+    random.seed(42)
     seed_decisions("stable-provider", n=40, cost_profile="stable", reward_hack_ratio=0.05, success_rate=0.90)
     db = SessionLocal()
     try:
@@ -154,7 +157,9 @@ def test_lui_reward_hacking_degrades():
     """High reward-hacking ratio should degrade LUI."""
     print("\n[Test 3] calculate_lui — reward hacking degrades LUI")
     init_db()
+    random.seed(42)
     seed_decisions("hacking-provider", n=40, cost_profile="stable", reward_hack_ratio=0.85, success_rate=0.95)
+    random.seed(42)
     seed_decisions("clean-provider", n=40, cost_profile="stable", reward_hack_ratio=0.02, success_rate=0.90)
     db = SessionLocal()
     try:

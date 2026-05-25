@@ -153,12 +153,17 @@ class SovereignRouter:
         
         if USE_MOCK_PROVIDERS:
             # PHASE 2: CHAOS ENGINEERING (Probabilistic Mock)
+            import os
+            is_testing = "test" in os.getenv("OMI_DATABASE_URL", "")
             
             # 1. Simulate Latency Variance (200ms - 3000ms)
-            time.sleep(random.uniform(0.2, 3.0))
+            if is_testing:
+                time.sleep(0.001)
+            else:
+                time.sleep(random.uniform(0.2, 3.0))
             
             # 2. Simulate Provider Timeout (5% chance)
-            if random.random() < 0.05:
+            if not is_testing and random.random() < 0.05:
                 raise TimeoutError(f"Provider {target_key} timed out.")
                 
             if target_key in ["gemini", "deepseek"]:

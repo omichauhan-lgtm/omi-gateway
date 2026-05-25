@@ -43,11 +43,13 @@ class SemanticCache:
             if action == "quarantine":
                 continue
             if SemanticCache._validate_safeguards(entry, workflow_id, min_confidence, now, staleness_window_sec):
-                # Transient property to bubble revalidation requirement to api layer
-                entry.must_revalidate = (action == "revalidate")
-                entry.hits += 1
+                # Enforce duplication safeguard to isolate cross-workflow cascades
+                from core.complexity_governor import ComplexityGovernor
+                final_entry = ComplexityGovernor.enforce_duplication_safeguard(db, entry, workflow_id)
+                final_entry.must_revalidate = (action == "revalidate")
+                final_entry.hits += 1
                 db.commit()
-                return entry
+                return final_entry
 
         # 2. Embedding-based retrieval for semantic similarity
         # Fetch entries from last 24h or same workflow to compute similarity
@@ -92,10 +94,13 @@ class SemanticCache:
         if best_candidate:
             action = SemanticCache._process_drift_and_cri(db, best_candidate, prompt, workflow_id, now)
             if action != "quarantine" and SemanticCache._validate_safeguards(best_candidate, workflow_id, min_confidence, now, staleness_window_sec):
-                best_candidate.must_revalidate = (action == "revalidate")
-                best_candidate.hits += 1
+                # Enforce duplication safeguard to isolate cross-workflow cascades
+                from core.complexity_governor import ComplexityGovernor
+                final_candidate = ComplexityGovernor.enforce_duplication_safeguard(db, best_candidate, workflow_id)
+                final_candidate.must_revalidate = (action == "revalidate")
+                final_candidate.hits += 1
                 db.commit()
-                return best_candidate
+                return final_candidate
 
         return None
 
@@ -157,6 +162,8 @@ class SemanticCache:
             return "keep"
         elif action == "revalidate":
             entry.must_revalidate = True
+            prov_dict["revalidate_count"] = prov_dict.get("revalidate_count", 0) + 1
+            entry.provenance = json.dumps(prov_dict)
             db.commit()
             return "revalidate"
 
@@ -227,7 +234,10 @@ class SemanticCache:
 
         try:
             prompt_hash = hashlib.sha256(prompt.strip().encode("utf-8")).hexdigest()
-            # Deduplicate: delete old entries for this exact prompt to ensure clean state
+            # Deduplicate: check if old entry was quarantined before deleting
+            old_entry = db.query(SemanticCacheEntry).filter(SemanticCacheEntry.prompt_hash == prompt_hash).first()
+            was_quarantined = old_entry.is_quarantined if old_entry else False
+
             db.query(SemanticCacheEntry).filter(SemanticCacheEntry.prompt_hash == prompt_hash).delete()
             db.commit()
 
@@ -249,7 +259,8 @@ class SemanticCache:
                 "calibration_state": {"confidence": confidence},
                 "reuse_confidence": confidence,
                 "utility_preservation": utility_score,
-                "reuse_count": 0
+                "reuse_count": 0,
+                "recovered": was_quarantined
             }
 
             entry = SemanticCacheEntry(

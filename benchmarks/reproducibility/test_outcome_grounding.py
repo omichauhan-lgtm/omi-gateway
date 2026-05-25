@@ -387,12 +387,205 @@ def test_check13_drift_and_cri_blocks():
         db.close()
 
 
+def test_complexity_budgets():
+    """Validates that ComplexityGovernor blocks, clones, and restricts memory dependency chains correctly."""
+    print("\n[Test 6] Complexity Budgets and Sandbox Duplication Check")
+    init_db()
+    db = SessionLocal()
+    try:
+        from core.complexity_governor import ComplexityGovernor
+        
+        # Test basic limit validation
+        assert ComplexityGovernor.check_revalidation_depth(2) is True
+        assert ComplexityGovernor.check_revalidation_depth(4) is False
+        assert ComplexityGovernor.check_governance_layers(3) is True
+        assert ComplexityGovernor.check_governance_layers(5) is False
+        assert ComplexityGovernor.check_memory_dependency_chain(4) is True
+        assert ComplexityGovernor.check_memory_dependency_chain(6) is False
+        
+        # Seed cache entry linked to workflow A
+        entry = SemanticCache.store_entry(
+            db=db,
+            prompt="Compute matrix multiplication",
+            response="Result: A*B",
+            reasoning=None,
+            tool_chain="[]",
+            confidence=0.90,
+            utility_score=0.90,
+            model_id="gpt-4o",
+            workflow_id="wf_A"
+        )
+        
+        # Prospective linkage to workflow B -> Should succeed and link them
+        entry = ComplexityGovernor.enforce_duplication_safeguard(db, entry, "wf_B")
+        prov = json.loads(entry.provenance)
+        assert "wf_B" in prov["linked_workflows"]
+        assert entry.workflow_id == "wf_A" # original remains bound to wf_A
+        
+        # Prospective linkage to workflow C -> Links count becomes 3 (wf_A, wf_B, wf_C) which is > MAX_CROSS_WORKFLOW_LINKAGE (2).
+        # Should duplicate and sandbox it!
+        final_entry = ComplexityGovernor.enforce_duplication_safeguard(db, entry, "wf_C")
+        assert final_entry.id != entry.id
+        assert final_entry.workflow_id == "wf_C"
+        assert final_entry.is_quarantined is False
+        prov_clone = json.loads(final_entry.provenance)
+        assert prov_clone["linked_workflows"] == ["wf_C"]
+        
+        # Test memory dependency cap: seed 7 memory items in wf_history
+        for i in range(7):
+            SemanticCache.store_entry(
+                db=db,
+                prompt=f"Memory Prompt {i}",
+                response=f"Response {i}",
+                reasoning=None,
+                tool_chain="[]",
+                confidence=0.90,
+                utility_score=0.90,
+                model_id="gpt-4o",
+                workflow_id="wf_history_limit"
+            )
+            
+        distilled = CognitiveEfficiencyPlane.distill_workflow_history(
+            db=db,
+            current_prompt="Tell me about that",
+            workflow_id="wf_history_limit",
+            relevance_threshold=0.10, # Force match
+            decay_factor=0.95
+        )
+        # It should limit history query to MAX_MEMORY_DEPENDENCY_CHAIN (5)
+        # So Prompt 0 and Prompt 1 should be omitted
+        assert "Memory Prompt 0" not in distilled
+        assert "Memory Prompt 1" not in distilled
+        assert "Memory Prompt 6" in distilled
+        print("  [PASS]")
+    finally:
+        db.close()
+
+
+def test_outcome_persistence_analytics():
+    """Validates computation of longitudinal outcome persistence metrics."""
+    print("\n[Test 7] Outcome Persistence Analytics Validation")
+    init_db()
+    db = SessionLocal()
+    try:
+        from analytics.outcome_persistence import get_outcome_persistence_summary
+        
+        # 1. Seed Decisions: 4 cache hits. 3 succeeded, 1 failed.
+        # This gives reuse_success_rate = 3/4 = 0.75
+        for i in range(4):
+            db.add(RoutingDecision(
+                timestamp=datetime.utcnow().isoformat(),
+                complexity=0.5,
+                language="en",
+                initial_route="gpt-4o",
+                escalated=False,
+                final_route="gpt-4o",
+                latency_ms=10.0,
+                confidence=0.90,
+                cost_usd=0.0,
+                utility_score=1.0 if i < 3 else 0.0,
+                task_success=True if i < 3 else False,
+                cache_hit=True,
+                workflow_id=f"wf_reuse_{i}"
+            ))
+        db.commit()
+            
+        # 2. Seed Quarantine Recovery status:
+        # Seed 1 quarantined entry and 1 recovered entry.
+        # This will give quarantine_recovery_rate = 1 / (1 + 1) = 0.50.
+        db.add(SemanticCacheEntry(
+            timestamp=datetime.utcnow().isoformat(),
+            prompt_hash="hash_quar",
+            prompt="Prompt Quar",
+            response="Response",
+            confidence=0.90,
+            utility_score=0.90,
+            is_reliable=False,
+            model_id="gpt-4o",
+            embedding="[]",
+            hits=0,
+            is_quarantined=True,
+            provenance=json.dumps({"recovered": False})
+        ))
+        db.add(SemanticCacheEntry(
+            timestamp=datetime.utcnow().isoformat(),
+            prompt_hash="hash_rec",
+            prompt="Prompt Rec",
+            response="Response",
+            confidence=0.90,
+            utility_score=0.90,
+            is_reliable=True,
+            model_id="gpt-4o",
+            embedding="[]",
+            hits=0,
+            is_quarantined=False,
+            provenance=json.dumps({"recovered": True})
+        ))
+        db.commit()
+        
+        # 3. Seed Cognitive Decay Rate:
+        # Seed cache entry with initial confidence 0.95, current 0.85, hits 2
+        # Decay = (0.95 - 0.85) / 2 = 0.05
+        prov_dict = {
+            "calibration_state": {"confidence": 0.95}
+        }
+        db.add(SemanticCacheEntry(
+            timestamp=datetime.utcnow().isoformat(),
+            prompt_hash="hash_decay",
+            prompt="Prompt Decay",
+            response="Response",
+            confidence=0.85,
+            utility_score=0.90,
+            is_reliable=True,
+            model_id="gpt-4o",
+            embedding="[]",
+            hits=2,
+            provenance=json.dumps(prov_dict)
+        ))
+        
+        # 4. Seed Cross-Workflow Contamination:
+        # Serve a cache hit to wf_contam_2 that originated in wf_contam_1.
+        # It subsequently failed (task_success=False)
+        d_contam = RoutingDecision(
+            timestamp=datetime.utcnow().isoformat(),
+            complexity=0.5,
+            language="en",
+            initial_route="gpt-4o",
+            escalated=False,
+            final_route="gpt-4o",
+            latency_ms=10.0,
+            confidence=0.90,
+            cost_usd=0.0,
+            utility_score=0.0,
+            task_success=False,
+            cache_hit=True,
+            workflow_id="wf_contam_2",
+            cognitive_provenance=json.dumps({"workflow_origin": "wf_contam_1"})
+        )
+        db.add(d_contam)
+        db.commit()
+        
+        # Run summary
+        summary = get_outcome_persistence_summary(db)
+        print(f"  Summary output: {summary}")
+        
+        assert summary["reuse_success_rate"] == 0.60  # 3 successes out of 5 cache hits total (4 original + 1 contamination hit)
+        assert summary["quarantine_recovery_rate"] == 0.50 # 2 failed cache hits total (1 original + 1 contamination). 1 recovered.
+        assert summary["cognitive_decay_rate"] == 0.05
+        assert summary["cross_workflow_contamination"] == 1.00 # 1 cross-workflow hit total, which failed.
+        print("  [PASS]")
+    finally:
+        db.close()
+
+
 if __name__ == "__main__":
     test_critical_memory_preservation()
     test_cache_drift_detection()
     test_cri_and_quarantine()
     test_outcome_grounding_via_api()
     test_check13_drift_and_cri_blocks()
+    test_complexity_budgets()
+    test_outcome_persistence_analytics()
 
     print("\n====================================================")
     print("[SUCCESS] All Phase 11 outcome-verified cognitive tests passed.")
