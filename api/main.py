@@ -379,7 +379,9 @@ async def orchestrate_request(
     x_omi_dependency_depth: int = Header(0),
     x_omi_memory_chain_length: int = Header(0),
     x_omi_cross_workflow_references: int = Header(0),
-    x_omi_telemetry_recursion: int = Header(0)
+    x_omi_telemetry_recursion: int = Header(0),
+    x_omi_enforce_diversity: bool = Header(False),
+    x_omi_enforce_meta_governance: bool = Header(False)
 ):
     """
     The Core Control Plane.
@@ -388,26 +390,52 @@ async def orchestrate_request(
     from core.complexity_governor import ComplexityGovernor
     from infra.complexity_budget import ComplexityBudget
 
-    depth_val = x_omi_revalidation_depth if isinstance(x_omi_revalidation_depth, (int, float)) else 0
+    # Safely unpack header arguments to handle direct unit test method invocation
+    reval_depth_val = x_omi_revalidation_depth if isinstance(x_omi_revalidation_depth, (int, float)) else 0
     layers_val = x_omi_governance_layers if isinstance(x_omi_governance_layers, (int, float)) else 1
+    mutation_depth_val = x_omi_mutation_depth if isinstance(x_omi_mutation_depth, (int, float)) else 0
+    replay_depth_val = x_omi_replay_depth if isinstance(x_omi_replay_depth, (int, float)) else 0
+    dependency_depth_val = x_omi_dependency_depth if isinstance(x_omi_dependency_depth, (int, float)) else 0
+    memory_chain_val = x_omi_memory_chain_length if isinstance(x_omi_memory_chain_length, (int, float)) else 0
+    cross_wf_val = x_omi_cross_workflow_references if isinstance(x_omi_cross_workflow_references, (int, float)) else 0
+    telemetry_rec_val = x_omi_telemetry_recursion if isinstance(x_omi_telemetry_recursion, (int, float)) else 0
+    enforce_div_val = x_omi_enforce_diversity if isinstance(x_omi_enforce_diversity, bool) else False
+    enforce_meta_val = x_omi_enforce_meta_governance if isinstance(x_omi_enforce_meta_governance, bool) else False
 
     # Centralized Complexity Budget Checks
     if not ComplexityBudget.validate_governance_layers(layers_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum governance layers exceeded.")
-    if not ComplexityGovernor.check_revalidation_depth(depth_val):
+    if not ComplexityGovernor.check_revalidation_depth(reval_depth_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum revalidation depth exceeded.")
-    if not ComplexityBudget.validate_mutation_depth(x_omi_mutation_depth):
+    if not ComplexityBudget.validate_mutation_depth(mutation_depth_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum mutation depth exceeded.")
-    if not ComplexityBudget.validate_replay_depth(x_omi_replay_depth):
+    if not ComplexityBudget.validate_replay_depth(replay_depth_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum replay depth exceeded.")
-    if not ComplexityBudget.validate_dependency_depth(x_omi_dependency_depth):
+    if not ComplexityBudget.validate_dependency_depth(dependency_depth_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum dependency depth exceeded.")
-    if not ComplexityBudget.validate_memory_chain(x_omi_memory_chain_length):
+    if not ComplexityBudget.validate_memory_chain(memory_chain_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum memory chain length exceeded.")
-    if not ComplexityBudget.validate_cross_workflow_references(x_omi_cross_workflow_references):
+    if not ComplexityBudget.validate_cross_workflow_references(cross_wf_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum cross-workflow references exceeded.")
-    if not ComplexityBudget.validate_telemetry_recursion(x_omi_telemetry_recursion):
+    if not ComplexityBudget.validate_telemetry_recursion(telemetry_rec_val):
         raise HTTPException(status_code=422, detail="Complexity budget breached: maximum telemetry recursion exceeded.")
+
+    # Enforce diversity and meta-governance constraints if requested
+    db = SessionLocal()
+    try:
+        if enforce_div_val:
+            from analytics.cognitive_diversity import CognitiveDiversityPreserver
+            diversity = CognitiveDiversityPreserver.calculate_diversity_metrics(db)
+            if diversity["provider_distribution"] < 0.20:
+                raise HTTPException(status_code=422, detail="Complexity budget breached: homogeneous provider distribution collapse.")
+
+        if enforce_meta_val:
+            from infra.meta_governance import MetaGovernanceAuditor
+            meta = MetaGovernanceAuditor.audit_governance(db)
+            if meta["governance_overhead_ratio"] > 0.35:
+                raise HTTPException(status_code=422, detail="Complexity budget breached: governance overhead ratio exceeds threshold.")
+    finally:
+        db.close()
 
     start_time = time.time()
     

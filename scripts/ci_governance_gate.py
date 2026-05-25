@@ -497,10 +497,89 @@ def run_predictive_governance_check() -> bool:
         if risks['drift_probability'] >= 0.40:
             print("[BLOCKER] Forecasted drift probability is too high (>= 0.40)!")
             return False
-        print("[PASS] Predictive governance checks passed.")
+        print("[PASS_PRED] Predictive governance checks passed.")
         return True
     except Exception as e:
         print(f"[FAIL] Error in predictive risk calculation: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_cognitive_diversity_check() -> bool:
+    print("\n--- Check 18: Cognitive Diversity Guard ---")
+    db = SessionLocal()
+    try:
+        from analytics.cognitive_diversity import CognitiveDiversityPreserver
+        diversity = CognitiveDiversityPreserver.calculate_diversity_metrics(db)
+        print(f"  - Semantic Variance: {diversity['semantic_variance']:.4f}")
+        print(f"  - Workflow Diversity: {diversity['workflow_diversity']:.4f}")
+        print(f"  - Provider Distribution Evenness: {diversity['provider_distribution']:.4f} (Threshold: >= 0.20)")
+        print(f"  - Reasoning Entropy: {diversity['reasoning_entropy']:.4f}")
+        
+        if diversity['provider_distribution'] < 0.20:
+            print("[BLOCKER] Provider routing distribution is too homogeneous (collapse risk)!")
+            return False
+        print("[PASS] Cognitive diversity checks passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking cognitive diversity: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_meta_governance_value_check() -> bool:
+    print("\n--- Check 19: Informational Value & Meta-Governance Guard ---")
+    db = SessionLocal()
+    try:
+        from infra.meta_governance import MetaGovernanceAuditor
+        from analytics.informational_value import InformationalValueAnalyzer
+        
+        meta = MetaGovernanceAuditor.audit_governance(db)
+        val = InformationalValueAnalyzer.analyze_informational_value(db)
+        
+        print(f"  - Governance Value Score: {meta['governance_value_score']:.4f}")
+        print(f"  - Governance Overhead Ratio: {meta['governance_overhead_ratio']:.4f} (Threshold: <= 0.35)")
+        print(f"  - Complexity Risk Score: {meta['complexity_risk_score']:.4f}")
+        print(f"  - Governance Efficiency: {val['governance_efficiency']:.4f} (Threshold: >= 0.65)")
+        print(f"  - Operational Net Value Gain: ${val['operational_value_gain']:.2f}")
+        
+        if meta['governance_overhead_ratio'] > 0.35:
+            print("[BLOCKER] Governance overhead ratio exceeds maximum threshold of 0.35!")
+            return False
+        if val['governance_efficiency'] < 0.65:
+            print("[BLOCKER] Governance efficiency is below threshold of 0.65!")
+            return False
+        print("[PASS] Meta-governance validation checks passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking meta-governance value: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_governance_inertia_check() -> bool:
+    print("\n--- Check 20: Governance Inertia & Rigidity Guard ---")
+    db = SessionLocal()
+    try:
+        from analytics.governance_inertia import GovernanceInertiaEngine
+        metrics = GovernanceInertiaEngine.calculate_inertia_metrics(db)
+        print(f"  - Governance Inertia Score: {metrics['governance_inertia_score']:.4f} (Threshold: <= 0.70)")
+        print(f"  - Adaptation Responsiveness: {metrics['adaptation_responsiveness']:.4f} (Threshold: >= 0.30)")
+        print(f"  - Rollback Recovery Score: {metrics['rollback_recovery_score']:.4f}")
+        
+        if metrics['governance_inertia_score'] > 0.70:
+            print("[BLOCKER] Governance rigidity (inertia score) is too high!")
+            return False
+        if metrics['adaptation_responsiveness'] < 0.30:
+            print("[BLOCKER] Adaptation responsiveness is below critical threshold of 0.30!")
+            return False
+        print("[PASS] Governance inertia checks passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking governance inertia: {e}")
         return False
     finally:
         db.close()
@@ -573,6 +652,18 @@ def main():
 
     # 16. Predictive Governance Risks (Check 17)
     if not run_predictive_governance_check():
+        sys.exit(1)
+
+    # 17. Cognitive Diversity (Check 18)
+    if not run_cognitive_diversity_check():
+        sys.exit(1)
+
+    # 18. Informational Value & Meta-Governance (Check 19)
+    if not run_meta_governance_value_check():
+        sys.exit(1)
+
+    # 19. Governance Inertia & Rigidity (Check 20)
+    if not run_governance_inertia_check():
         sys.exit(1)
         
     print("\n====================================================")
