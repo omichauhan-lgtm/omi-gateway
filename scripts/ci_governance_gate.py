@@ -666,11 +666,143 @@ def main():
     if not run_governance_inertia_check():
         sys.exit(1)
         
+    # 20. Cognitive Ecosystem Stability (Check 21)
+    if not run_ecosystem_stability_check():
+        sys.exit(1)
+        
+    # 21. Cognitive Fragmentation & Diversity (Check 22)
+    if not run_cognitive_fragmentation_check():
+        sys.exit(1)
+        
+    # 22. Long-Horizon & Survival Analysis (Check 23)
+    if not run_long_horizon_survival_check():
+        sys.exit(1)
+        
+    # 23. Meta-Governance Utility & Rigidity (Check 24)
+    if not run_meta_governance_utility_check():
+        sys.exit(1)
+        
+    # 24. Adversarial Containment (Check 25)
+    if not run_adversarial_containment_check():
+        sys.exit(1)
+
     print("\n====================================================")
     print("[SUCCESS] ALL OMI CI GOVERNANCE GATES PASSED")
     print("Ready for safe production deployment.")
     print("====================================================")
     sys.exit(0)
+
+
+def run_ecosystem_stability_check() -> bool:
+    print("\n--- Check 21: Cognitive Ecosystem Stability Guard ---")
+    db = SessionLocal()
+    try:
+        from analytics.ecosystem_simulator import EcosystemSimulator
+        metrics = EcosystemSimulator.evaluate_ecosystem(db)
+        print(f"  - Ecosystem Stability Score: {metrics['ecosystem_stability_score']:.4f} (Threshold: >= 0.80)")
+        print(f"  - Contamination Spread Prob: {metrics['contamination_spread_probability']:.4f} (Threshold: <= 0.15)")
+        print(f"  - Consensus Lock-In Risk: {metrics['consensus_lock_in_risk']:.4f}")
+        print(f"  - Governance Rigidity: {metrics['governance_rigidity_score']:.4f}")
+        
+        if metrics['ecosystem_stability_score'] < 0.80:
+            print("[BLOCKER] Cognitive ecosystem stability score is too low!")
+            return False
+        if metrics['contamination_spread_probability'] > 0.15:
+            print("[BLOCKER] Contamination spread probability is too high!")
+            return False
+        print("[PASS] Ecosystem stability guards verified.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking ecosystem stability: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_cognitive_fragmentation_check() -> bool:
+    print("\n--- Check 22: Cognitive Fragmentation & Diversity Guard ---")
+    db = SessionLocal()
+    try:
+        from analytics.cognitive_fragmentation import CognitiveFragmentationAnalyzer
+        metrics = CognitiveFragmentationAnalyzer.calculate_fragmentation(db)
+        print(f"  - Semantic Variance: {metrics['semantic_variance']:.4f}")
+        print(f"  - Workflow Uniqueness: {metrics['workflow_uniqueness']:.4f}")
+        print(f"  - Provider Distribution Entropy: {metrics['provider_distribution_entropy']:.4f}")
+        print(f"  - Reasoning Diversity Score: {metrics['reasoning_diversity_score']:.4f} (Threshold: >= 0.20)")
+        
+        if metrics['reasoning_diversity_score'] < 0.20:
+            print("[BLOCKER] Reasoning diversity score indicates homogenization/collapse risk!")
+            return False
+        print("[PASS] Cognitive fragmentation and diversity guards passed.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error analyzing cognitive fragmentation: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_long_horizon_survival_check() -> bool:
+    print("\n--- Check 23: Long-Horizon & Survival Analysis Guard ---")
+    db = SessionLocal()
+    try:
+        from analytics.cognitive_survival import CognitiveSurvivalModel
+        from analytics.long_horizon_workflows import LongHorizonWorkflowTracker
+        
+        survival = CognitiveSurvivalModel.calculate_survival(db)
+        workflows = LongHorizonWorkflowTracker.get_summary(db)
+        
+        print(f"  - Cognition Half-Life: {survival['cognition_half_life_hours']:.2f} hours (Threshold: >= 48.0h)")
+        print(f"  - Survival Probability: {survival['survival_probability']:.2%}")
+        print(f"  - 30d Workflow Survival: {workflows['window_30d']['workflow_survival_rate']:.2%}")
+        print(f"  - 90d Workflow Survival: {workflows['window_90d']['workflow_survival_rate']:.2%}")
+        
+        if survival['cognition_half_life_hours'] < 48.0:
+            print("[BLOCKER] Cognition reuse half-life is below critical threshold of 48 hours!")
+            return False
+        print("[PASS] Long-horizon survival metrics are within healthy bounds.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error checking survival analysis: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_meta_governance_utility_check() -> bool:
+    print("\n--- Check 24: Meta-Governance Utility & Rigidity Guard ---")
+    db = SessionLocal()
+    try:
+        from infra.meta_governance_auditor import MetaGovernanceAuditor
+        from analytics.adaptive_rigidity import AdaptiveRigidityMonitor
+        
+        meta = MetaGovernanceAuditor.audit_governance_layers(db)
+        rigidity = AdaptiveRigidityMonitor.calculate_rigidity_metrics(db)
+        
+        print(f"  - Governance Value Ratio: {meta['governance_value_ratio']:.4f}")
+        print(f"  - Governance Overhead Score: {meta['governance_overhead_score']:.4f} (Threshold: <= 0.35)")
+        print(f"  - Recursive Complexity Risk: {meta['recursive_complexity_risk']:.4f} (Threshold: <= 0.85)")
+        print(f"  - Adaptation Latency: {rigidity['adaptation_latency_seconds']:.2f} seconds")
+        print(f"  - Mutation Responsiveness: {rigidity['mutation_responsiveness']:.2%}")
+        
+        if meta['governance_overhead_score'] > 0.35:
+            print("[BLOCKER] Meta-governance overhead score exceeds 0.35!")
+            return False
+        if meta['recursive_complexity_risk'] > 0.85:
+            print("[BLOCKER] Recursive complexity risk exceeds threshold of 0.85!")
+            return False
+        print("[PASS] Meta-governance utility and rigidity guards verified.")
+        return True
+    except Exception as e:
+        print(f"[FAIL] Error running meta-governance checks: {e}")
+        return False
+    finally:
+        db.close()
+
+
+def run_adversarial_containment_check() -> bool:
+    return run_external_script("scripts/adversarial_ecosystem_sim.py", "Check 25: Adversarial Poisoning & Containment Guard")
+
 
 if __name__ == "__main__":
     main()

@@ -430,10 +430,23 @@ async def orchestrate_request(
                 raise HTTPException(status_code=422, detail="Complexity budget breached: homogeneous provider distribution collapse.")
 
         if enforce_meta_val:
-            from infra.meta_governance import MetaGovernanceAuditor
-            meta = MetaGovernanceAuditor.audit_governance(db)
-            if meta["governance_overhead_ratio"] > 0.35:
-                raise HTTPException(status_code=422, detail="Complexity budget breached: governance overhead ratio exceeds threshold.")
+            from infra.meta_governance_auditor import MetaGovernanceAuditor
+            from analytics.ecosystem_simulator import EcosystemSimulator
+            
+            meta = MetaGovernanceAuditor.audit_governance_layers(db)
+            eco = EcosystemSimulator.evaluate_ecosystem(db)
+            
+            # Check 19: Governance overhead exceeds value score or threshold
+            if meta["governance_overhead_score"] > 0.35:
+                raise HTTPException(status_code=422, detail="Complexity budget breached: governance overhead exceeds value.")
+            
+            # Check 21: Recursive complexity breach
+            if meta["recursive_complexity_risk"] > 0.85:
+                raise HTTPException(status_code=422, detail="Complexity budget breached: recursive complexity risk exceeds limit.")
+                
+            # Check 20: Governance rigidity threshold
+            if eco["governance_rigidity_score"] > 0.70:
+                raise HTTPException(status_code=422, detail="Complexity budget breached: governance rigidity threshold exceeded.")
     finally:
         db.close()
 
