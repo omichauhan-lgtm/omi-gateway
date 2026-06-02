@@ -329,5 +329,67 @@ class TestPublicEvidenceEndpoints(unittest.TestCase):
         self.assertIn("request_volume", data)
         self.assertIn("aggregate_reliability_gain", data)
 
+    def test_v14_automation_endpoints(self):
+        dossier_path = "docs/sovereign/funding_readiness_dossier.md"
+        if os.path.exists(dossier_path):
+            try:
+                os.remove(dossier_path)
+            except Exception:
+                pass
+
+        headers_admin = {"x-omi-admin-key": "omi-pro-key-v1", "x-omi-role": "admin"}
+        weekly_report_path = None
+        monthly_report_path = None
+
+        try:
+            # 1. Test POST /admin/trigger-automation for 'daily'
+            resp = requests.post(f"{self.base_url}/admin/trigger-automation?cycle_type=daily", headers=headers_admin)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+            self.assertEqual(data["status"], "success")
+            self.assertIn("Daily Telemetry & Drift check executed successfully", data["message"])
+            self.assertTrue(os.path.exists(dossier_path))
+
+            # 2. Test POST /admin/trigger-automation for 'weekly'
+            resp = requests.post(f"{self.base_url}/admin/trigger-automation?cycle_type=weekly", headers=headers_admin)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+            self.assertEqual(data["status"], "success")
+            self.assertIn("Weekly Benchmark cycle executed", data["message"])
+            weekly_report_path = data["message"].split("generated at: ")[-1].strip()
+            self.assertTrue(os.path.exists(weekly_report_path))
+
+            # 3. Test POST /admin/trigger-automation for 'monthly'
+            resp = requests.post(f"{self.base_url}/admin/trigger-automation?cycle_type=monthly", headers=headers_admin)
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+            self.assertEqual(data["status"], "success")
+            self.assertIn("Monthly Reliability Report cycle executed", data["message"])
+            monthly_report_path = data["message"].split("generated at: ")[-1].strip()
+            self.assertTrue(os.path.exists(monthly_report_path))
+
+            # 4. Test GET /public/reports lists generated files
+            resp = requests.get(f"{self.base_url}/public/reports")
+            self.assertEqual(resp.status_code, 200)
+            data = resp.json()
+            self.assertEqual(data["status"], "success")
+            reports = data["reports"]
+            self.assertGreaterEqual(len(reports), 3)
+
+            paths = [r["path"].replace("\\", "/") for r in reports]
+            self.assertIn(dossier_path.replace("\\", "/"), paths)
+            self.assertIn(weekly_report_path.replace("\\", "/"), paths)
+            self.assertIn(monthly_report_path.replace("\\", "/"), paths)
+
+        finally:
+            # Clean up generated files to keep git repository clean
+            for path in [dossier_path, weekly_report_path, monthly_report_path]:
+                if path and os.path.exists(path):
+                    try:
+                        os.remove(path)
+                    except Exception:
+                        pass
+
 if __name__ == "__main__":
     unittest.main()
+

@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            // 3. Fetch pilot program
+            // 3. Fetch pilot program & scored leads
             const pilotRes = await fetch('/public/pilot-program');
             if (pilotRes.ok) {
                 const program = await pilotRes.json();
@@ -467,9 +467,86 @@ document.addEventListener('DOMContentLoaded', async () => {
                         indList.appendChild(li);
                     });
                 }
+
+                // Render Scored Leads Funnel
+                const leadsList = document.getElementById('pilot-leads-list');
+                if (leadsList && program.leads) {
+                    leadsList.innerHTML = '';
+                    if (program.leads.length === 0) {
+                        leadsList.innerHTML = '<li style="font-size: 0.8rem; color: var(--text-muted); font-style: italic; text-align: center; padding-top: 1rem;">No applications registered.</li>';
+                    } else {
+                        program.leads.forEach(l => {
+                            const li = document.createElement('li');
+                            li.style.background = 'rgba(255, 255, 255, 0.02)';
+                            li.style.border = '1px solid var(--border)';
+                            li.style.borderRadius = '8px';
+                            li.style.padding = '8px 12px';
+                            li.style.fontSize = '0.8rem';
+                            li.style.display = 'flex';
+                            li.style.justifyContent = 'space-between';
+                            li.style.alignItems = 'center';
+                            
+                            let tagColor = 'var(--warning)';
+                            if (l.lead_type === 'HOT_LEAD') tagColor = 'var(--success)';
+                            
+                            li.innerHTML = `
+                                <div>
+                                    <div style="font-weight: 600; color: #fff;">${l.project_name}</div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted);">${l.contact_email}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 600; color: ${tagColor};">${l.lead_type}</div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted);">Score: ${l.qualification_score}</div>
+                                </div>
+                            `;
+                            leadsList.appendChild(li);
+                        });
+                    }
+                }
             }
+
+            // 4. Fetch reports files list
+            await updateReportsList();
         } catch (e) {
             console.error("Failed to populate trust assets: ", e);
+        }
+    };
+
+    // Fetch and populate generated reports list
+    const updateReportsList = async () => {
+        try {
+            const res = await fetch('/public/reports');
+            if (res.ok) {
+                const data = await res.json();
+                const list = document.getElementById('generated-reports-list');
+                if (list) {
+                    list.innerHTML = '';
+                    if (data.reports.length === 0) {
+                        list.innerHTML = '<li style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; padding: 10px 0;">No automated reports generated yet. Trigger execution below.</li>';
+                    } else {
+                        data.reports.forEach(r => {
+                            const li = document.createElement('li');
+                            li.className = 'ranking-item';
+                            li.style.display = 'flex';
+                            li.style.justifyContent = 'space-between';
+                            li.style.alignItems = 'center';
+                            li.innerHTML = `
+                                <div>
+                                    <span style="font-weight: 600; color: #fff;">${r.name}</span>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">${r.type} | Path: ${r.path}</div>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-align: right;">
+                                    Generated: ${new Date(r.created_at).toLocaleTimeString()}<br>
+                                    ${new Date(r.created_at).toLocaleDateString()}
+                                </div>
+                            `;
+                            list.appendChild(li);
+                        });
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Failed to fetch generated reports list: ", e);
         }
     };
 
@@ -669,9 +746,53 @@ print(f"Response: {result['response']}")
         });
     }
 
+    // Wire up override trigger buttons
+    const triggerFeedback = document.getElementById('triggerFeedback');
+    const showFeedback = (msg, isSuccess) => {
+        if (triggerFeedback) {
+            triggerFeedback.innerText = msg;
+            triggerFeedback.className = `form-feedback ${isSuccess ? 'success' : 'error'}`;
+            triggerFeedback.style.display = 'block';
+            setTimeout(() => {
+                triggerFeedback.style.display = 'none';
+            }, 6000);
+        }
+    };
+
+    const triggerAutomation = async (cycle) => {
+        try {
+            const res = await fetch(`/admin/trigger-automation?cycle_type=${cycle}`, {
+                method: 'POST',
+                headers: {
+                    'x-omi-admin-key': 'omi-pro-key-v1',
+                    'x-omi-role': 'admin'
+                }
+            });
+            const data = await res.json();
+            if (res.ok && data.status === 'success') {
+                showFeedback(data.message, true);
+                await updateReportsList();
+                await updateTrustTab();
+            } else {
+                showFeedback(data.detail || data.message || 'Trigger failed.', false);
+            }
+        } catch (err) {
+            showFeedback(`Error triggering automation: ${err.message}`, false);
+        }
+    };
+
+    const dailyBtn = document.getElementById('triggerDailyBtn');
+    const weeklyBtn = document.getElementById('triggerWeeklyBtn');
+    const monthlyBtn = document.getElementById('triggerMonthlyBtn');
+
+    if (dailyBtn) dailyBtn.addEventListener('click', () => triggerAutomation('daily'));
+    if (weeklyBtn) weeklyBtn.addEventListener('click', () => triggerAutomation('weekly'));
+    if (monthlyBtn) monthlyBtn.addEventListener('click', () => triggerAutomation('monthly'));
+
     // Perform initial data fetch
     await updateDashboardData();
     await fetchTraces();
+    await updateReportsList();
 
     // Start live updates loop
     setInterval(updateDashboardData, 5000);

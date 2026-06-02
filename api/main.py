@@ -22,6 +22,7 @@ from core.economic_intelligence import EconomicIntelligencePlane, agentic_govern
 from api.analytics import router as analytics_router
 from api.public import router as public_router, public_v13_router
 from core.utility_intelligence import UtilityIntelligencePlane
+from services.automation_engine import AutomationEngine
 from core.consensus import SovereignConsensusArbitrator
 from core.cognitive_efficiency import CognitiveEfficiencyPlane
 from core.semantic_cache import SemanticCache
@@ -66,6 +67,47 @@ app.include_router(public_v13_router)
 
 # Mount Dashboard for Public Technical Demonstration (Priority 10)
 app.mount("/dashboard", StaticFiles(directory="dashboard", html=True), name="dashboard")
+
+@app.on_event("startup")
+async def startup_event():
+    AutomationEngine.get_instance().start()
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    AutomationEngine.get_instance().stop()
+
+@app.post("/admin/trigger-automation")
+async def trigger_automation(
+    cycle_type: str = "daily",  # daily, weekly, monthly
+    x_omi_admin_key: str = Header(None),
+    x_omi_role: Optional[str] = Header(None)
+):
+    """
+    Manually force execute daily telemetry, weekly benchmarks, or monthly reports.
+    Admin/Auditor access only.
+    """
+    if not ModelRegistry.validate_house_key(x_omi_admin_key):
+        raise HTTPException(status_code=403, detail="Invalid Admin Key")
+    if not x_omi_role or x_omi_role not in ["admin", "auditor"]:
+        raise HTTPException(status_code=403, detail="Unauthorized role access. Allowed: admin, auditor")
+        
+    engine = AutomationEngine.get_instance()
+    try:
+        if cycle_type == "daily":
+            await engine.run_daily_telemetry_check()
+            msg = "Daily Telemetry & Drift check executed successfully."
+        elif cycle_type == "weekly":
+            report_path = await engine.run_weekly_benchmark_cycle()
+            msg = f"Weekly Benchmark cycle executed. Report generated at: {report_path}"
+        elif cycle_type == "monthly":
+            report_path = await engine.run_monthly_report_cycle()
+            msg = f"Monthly Reliability Report cycle executed. Report generated at: {report_path}"
+        else:
+            raise HTTPException(status_code=400, detail="Invalid cycle_type. Choose daily, weekly, or monthly.")
+            
+        return {"status": "success", "message": msg}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Shared Router Instance
 sovereign_router = build_router

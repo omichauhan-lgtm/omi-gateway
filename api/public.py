@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func, case
@@ -564,17 +565,16 @@ def get_funding_readiness(db: Session = Depends(get_db)):
 
 @public_v13_router.get("/pilot-program")
 def get_pilot_program_info(db: Session = Depends(get_db)):
-    apps = db.query(PilotApplication).all()
+    from services.automation_engine import AutomationEngine
+    leads = AutomationEngine.get_scored_leads(db)
     
-    accepted_apps = [a for a in apps if a.estimated_requests >= 50000]
-    pending_apps = [a for a in apps if a.estimated_requests < 50000]
-    
-    accepted_count = len(accepted_apps) + 1
-    pending_count = len(pending_apps) + 2
+    # Dynamic counts based on qualification score
+    accepted_count = sum(1 for l in leads if l["lead_type"] == "HOT_LEAD") + 1
+    pending_count = sum(1 for l in leads if l["lead_type"] == "WARM_LEAD") + 2
     
     industries = ["Agritech", "DPI / Sovereign Governance", "FinTech", "Healthcare Advisory"]
     
-    db_volume = sum(a.estimated_requests for a in apps)
+    db_volume = sum(l["estimated_requests"] for l in leads)
     request_volume = 150000 + db_volume
     
     return {
@@ -584,6 +584,35 @@ def get_pilot_program_info(db: Session = Depends(get_db)):
         },
         "industries": industries,
         "request_volume": request_volume,
-        "aggregate_reliability_gain": "+18.5%"
+        "aggregate_reliability_gain": "+18.5%",
+        "leads": leads
     }
+
+@public_v13_router.get("/reports")
+def list_generated_reports():
+    reports = []
+    # Check docs/reports
+    if os.path.exists("docs/reports"):
+        for f in os.listdir("docs/reports"):
+            if f.endswith(".md"):
+                path = f"docs/reports/{f}"
+                reports.append({
+                    "name": f,
+                    "path": path,
+                    "type": "System Report",
+                    "created_at": datetime.fromtimestamp(os.path.getmtime(path)).isoformat()
+                })
+    # Check docs/sovereign for dossiers
+    if os.path.exists("docs/sovereign"):
+        for f in os.listdir("docs/sovereign"):
+            if f.endswith(".md"):
+                path = f"docs/sovereign/{f}"
+                reports.append({
+                    "name": f,
+                    "path": path,
+                    "type": "Funding Dossier",
+                    "created_at": datetime.fromtimestamp(os.path.getmtime(path)).isoformat()
+                })
+    reports.sort(key=lambda x: x["created_at"], reverse=True)
+    return {"status": "success", "reports": reports}
 
