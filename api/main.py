@@ -107,6 +107,7 @@ def health_check():
 async def trigger_benchmark_suite(
     background_tasks: BackgroundTasks,
     x_omi_api_key: str = Header(None),
+    x_omi_role: Optional[str] = Header(None),
     x_openai_key: str = Header(None),
     x_anthropic_key: str = Header(None),
     x_deepseek_key: str = Header(None)
@@ -115,8 +116,10 @@ async def trigger_benchmark_suite(
     Triggers the background Benchmarking Engine to actively probe models,
     calculate new latency baselines, and enrich the Learning Loop Data Moat.
     """
-    if x_omi_api_key and not ModelRegistry.validate_house_key(x_omi_api_key):
+    if not x_omi_api_key or not ModelRegistry.validate_house_key(x_omi_api_key):
         raise HTTPException(status_code=401, detail="Invalid Sovereign Orchestrator Key.")
+    if not x_omi_role or x_omi_role != "admin":
+        raise HTTPException(status_code=403, detail="Unauthorized role access. Requires admin role.")
         
     clients = get_clients_payload(x_openai_key, x_anthropic_key, x_deepseek_key)
     background_tasks.add_task(benchmark_engine.run_benchmark_cycle, clients)
@@ -126,7 +129,8 @@ async def trigger_benchmark_suite(
 @app.get("/admin/traces")
 async def get_recent_traces(
     limit: int = 50,
-    x_omi_admin_key: str = Header(None)
+    x_omi_admin_key: str = Header(None),
+    x_omi_role: Optional[str] = Header(None)
 ):
     """
     Priority 04: Routing Trace Visualization.
@@ -134,6 +138,8 @@ async def get_recent_traces(
     """
     if not ModelRegistry.validate_house_key(x_omi_admin_key):
         raise HTTPException(status_code=403, detail="Invalid Admin Key")
+    if not x_omi_role or x_omi_role not in ["admin", "auditor"]:
+        raise HTTPException(status_code=403, detail="Unauthorized role access. Allowed: admin, auditor")
         
     from infra.database import SessionLocal
     from infra.models import RoutingDecision
@@ -161,13 +167,18 @@ async def get_recent_traces(
         db.close()
 
 @app.get("/admin/scorecard")
-async def get_reliability_scorecard(x_omi_admin_key: str = Header(None)):
+async def get_reliability_scorecard(
+    x_omi_admin_key: str = Header(None),
+    x_omi_role: Optional[str] = Header(None)
+):
     """
     Priority 3: Reliability Scorecards.
     Calculates the 'Engineering Truth' metrics from historical telemetry.
     """
     if not ModelRegistry.validate_house_key(x_omi_admin_key):
         raise HTTPException(status_code=403, detail="Invalid Admin Key")
+    if not x_omi_role or x_omi_role not in ["admin", "auditor"]:
+        raise HTTPException(status_code=403, detail="Unauthorized role access. Allowed: admin, auditor")
         
     from infra.database import SessionLocal
     from infra.models import RoutingDecision, ModelFailure
@@ -203,6 +214,48 @@ async def get_reliability_scorecard(x_omi_admin_key: str = Header(None)):
                 "total_value_generated_usd": round(value_generated, 2)
             },
             "status": "healthy"
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+    finally:
+        db.close()
+
+
+@app.get("/admin/audit-logs")
+async def get_audit_logs(
+    limit: int = 50,
+    x_omi_admin_key: str = Header(None),
+    x_omi_role: Optional[str] = Header(None)
+):
+    """
+    Returns the system-level audit logs tracking database transactions,
+    policy mutations, and calibration revisions from TelemetryLineage.
+    """
+    if not ModelRegistry.validate_house_key(x_omi_admin_key):
+        raise HTTPException(status_code=403, detail="Invalid Admin Key")
+    if not x_omi_role or x_omi_role not in ["admin", "auditor"]:
+        raise HTTPException(status_code=403, detail="Unauthorized role access. Allowed: admin, auditor")
+        
+    from infra.database import SessionLocal
+    from infra.models import TelemetryLineage
+    db = SessionLocal()
+    try:
+        logs = db.query(TelemetryLineage).order_by(TelemetryLineage.id.desc()).limit(limit).all()
+        audit_traces = []
+        for log in logs:
+            audit_traces.append({
+                "id": log.id,
+                "timestamp": log.timestamp,
+                "action_type": log.action_type,
+                "influenced_entity": log.influenced_entity,
+                "source_evidence_ids": log.source_evidence_ids,
+                "metadata_hash": log.metadata_hash
+            })
+        return {
+            "status": "success",
+            "role_accessed": x_omi_role,
+            "total_audit_logs": len(audit_traces),
+            "audit_logs": audit_traces
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}

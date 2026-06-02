@@ -5,6 +5,7 @@ from typing import Dict, Any, List
 from datetime import datetime, timedelta
 import json
 import numpy as np
+import math
 
 from infra.database import get_db
 from infra.models import RoutingDecision, ModelFailure, SemanticCacheEntry, TelemetryLineage
@@ -69,19 +70,64 @@ def get_evidence_calibration(db: Session = Depends(get_db)):
     ).group_by(func.round(ModelFailure.raw_confidence, 1)).order_by(func.round(ModelFailure.raw_confidence, 1).desc()).all()
     
     curve = []
+    chi_square = 0.0
+    degrees_of_freedom = 0
+    Z_wilson = 1.96  # 95% confidence level
+    
     for row in results:
         total = row.total_requests or 0
         success = row.successful_requests or 0
-        acc = (success / total) * 100 if total > 0 else 0
+        acc = (success / total) * 100 if total > 0 else 0.0
         bucket = float(row.confidence_bucket) if row.confidence_bucket is not None else 0.0
+        
+        # Wilson Score binomial confidence interval
+        if total > 0:
+            p = success / total
+            denom = 1.0 + (Z_wilson ** 2) / total
+            p_center = (p + (Z_wilson ** 2) / (2.0 * total)) / denom
+            w = (Z_wilson / denom) * math.sqrt(p * (1.0 - p) / total + (Z_wilson ** 2) / (4.0 * total ** 2))
+            lower_bound = max(0.0, p_center - w) * 100.0
+            upper_bound = min(1.0, p_center + w) * 100.0
+            
+            # Chi-square contribution for calibration test
+            P_b = max(0.01, min(0.99, bucket))  # clip to avoid division by zero
+            E_b = total * P_b
+            O_b = float(success)
+            chi_square += ((O_b - E_b) ** 2) / (E_b * (1.0 - P_b))
+            degrees_of_freedom += 1
+        else:
+            lower_bound = 0.0
+            upper_bound = 100.0
+            
         curve.append({
             "confidence_bucket": round(bucket, 1),
             "total_samples": total,
-            "actual_accuracy_pct": round(acc, 2)
+            "actual_accuracy_pct": round(acc, 2),
+            "wilson_lower_bound_pct": round(lower_bound, 2),
+            "wilson_upper_bound_pct": round(upper_bound, 2)
         })
         
+    # Calculate calibration p-value using Wilson-Hilferty transformation
+    p_value = 1.0
+    if degrees_of_freedom > 0 and chi_square > 0:
+        d = float(degrees_of_freedom)
+        # Wilson-Hilferty transform
+        term1 = (chi_square / d) ** (1.0 / 3.0)
+        term2 = 1.0 - (2.0 / (9.0 * d))
+        denom_wh = math.sqrt(2.0 / (9.0 * d))
+        Z_wh = (term1 - term2) / denom_wh
+        
+        if Z_wh > 8.0:
+            p_value = 0.0
+        elif Z_wh < -8.0:
+            p_value = 1.0
+        else:
+            p_value = 0.5 * (1.0 - math.erf(Z_wh / math.sqrt(2.0)))
+            
     return {
         "calibration_status": "CALIBRATED" if cal.get("window_30d", {}).get("ece", 0.0) < 0.12 else "DRIFTING",
+        "calibration_p_value": round(p_value, 4),
+        "chi_square_stat": round(chi_square, 4),
         "long_horizon_calibration": cal,
         "calibration_curve": curve
     }
@@ -191,4 +237,41 @@ def get_evidence_contamination(db: Session = Depends(get_db)):
         "total_cache_nodes": total_cache_entries,
         "quarantine_rate_pct": round((quarantine_count / total_cache_entries * 100.0) if total_cache_entries > 0 else 0.0, 2),
         "immune_response_status": "ACTIVE_PROTECTION" if immune.get("immune_response_score", 0.0) > 0.80 else "MONITORING"
+    }
+
+@router.get("/adoption")
+def get_evidence_adoption(db: Session = Depends(get_db)):
+    """
+    Adoption verification analytics tracking user volume, unique projects, and target completion status.
+    """
+    total_requests = db.query(func.count(RoutingDecision.id)).scalar() or 0
+    unique_projects = db.query(func.count(RoutingDecision.workflow_id.distinct())).filter(RoutingDecision.workflow_id != None).scalar() or 0
+    active_users = max(1, unique_projects) if total_requests > 0 else 0
+    
+    g3_target_users = 100
+    g3_target_requests = 10000
+    g3_target_projects = 10
+    
+    user_completion_pct = round((active_users / g3_target_users) * 100.0, 2) if g3_target_users > 0 else 0.0
+    request_completion_pct = round((total_requests / g3_target_requests) * 100.0, 2) if g3_target_requests > 0 else 0.0
+    project_completion_pct = round((unique_projects / g3_target_projects) * 100.0, 2) if g3_target_projects > 0 else 0.0
+    
+    return {
+        "target_stage": "Phase G3 (Product & Adoption)",
+        "adoption_metrics": {
+            "active_users": active_users,
+            "total_requests_routed": total_requests,
+            "active_projects": unique_projects
+        },
+        "target_milestones": {
+            "target_users": g3_target_users,
+            "target_requests": g3_target_requests,
+            "target_projects": g3_target_projects
+        },
+        "milestone_completion_rates": {
+            "users_completion_pct": min(100.0, user_completion_pct),
+            "requests_completion_pct": min(100.0, request_completion_pct),
+            "projects_completion_pct": min(100.0, project_completion_pct)
+        },
+        "overall_adoption_status": "ON_TRACK" if request_completion_pct > 50.0 else "INITIAL_TRACTION"
     }
