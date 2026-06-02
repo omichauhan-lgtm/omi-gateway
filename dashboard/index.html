@@ -34,7 +34,13 @@
                         <span class="nav-icon">💰</span> Economics Engine
                     </li>
                     <li data-tab="pilot">
-                        <span class="nav-icon">🚀</span> Pilot & Onboarding
+                        <span class="nav-icon">🚀</span> Pilot Onboarding
+                    </li>
+                    <li data-tab="trust">
+                        <span class="nav-icon">🤝</span> Trust & Case Studies
+                    </li>
+                    <li data-tab="readiness">
+                        <span class="nav-icon">🏆</span> Funding Readiness
                     </li>
                 </ul>
             </nav>
@@ -297,6 +303,180 @@
                             <button type="submit" id="submitPilotBtn" class="btn btn-primary">Submit Application</button>
                             <div id="formFeedback" class="form-feedback" style="display: none;"></div>
                         </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust & Case Studies Tab View (V13) -->
+            <div id="trust-view" class="tab-content" style="display: none;">
+                <!-- Monthly Reliability Report Section -->
+                <section class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Monthly Report Period</span>
+                            <span class="kpi-icon">📅</span>
+                        </div>
+                        <div class="kpi-value" id="report-month">Loading...</div>
+                        <div class="kpi-desc">Latest reporting cycle</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Calibration (ECE)</span>
+                            <span class="kpi-icon">🎯</span>
+                        </div>
+                        <div class="kpi-value" id="report-calibration">--</div>
+                        <div class="kpi-desc">Expected Calibration Error</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Drift Events</span>
+                            <span class="kpi-icon">📉</span>
+                        </div>
+                        <div class="kpi-value" id="report-drift">--</div>
+                        <div class="kpi-desc">Quarantined cache nodes</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Sovereign Usage</span>
+                            <span class="kpi-icon">🇮🇳</span>
+                        </div>
+                        <div class="kpi-value" id="report-sovereign">--</div>
+                        <div class="kpi-desc">Sarvam-1 routed query volume</div>
+                    </div>
+                </section>
+
+                <!-- Case Studies Section -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-header">
+                        <div class="card-title">Production Case Studies & Telemetry</div>
+                        <div class="card-desc">Verifiable hybrid evidence from real-world OMI client deployments</div>
+                    </div>
+                    <div id="case-studies-container" class="case-studies-grid">
+                        <!-- Filled dynamically by app.js -->
+                    </div>
+                </div>
+
+                <!-- Pilot Program Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Pilot Program Board</div>
+                        <div class="card-desc">Current scale and status of OMI institutional pilots</div>
+                    </div>
+                    <div class="pilot-board-grid">
+                        <div class="pilot-status-column">
+                            <h3 style="margin-bottom: 1rem; color: #fff;">Pilot Registry Summary</h3>
+                            <div class="pilot-status-kpi" style="display: flex; gap: 2rem; margin-bottom: 1.5rem;">
+                                <div>
+                                    <span class="pilot-label" style="display: block; font-size: 0.8rem; color: var(--text-muted);">Accepted Pilots</span>
+                                    <span class="pilot-num" id="pilots-accepted" style="font-size: 1.8rem; font-weight: 700; color: var(--success);">--</span>
+                                </div>
+                                <div>
+                                    <span class="pilot-label" style="display: block; font-size: 0.8rem; color: var(--text-muted);">Pending Reviews</span>
+                                    <span class="pilot-num" id="pilots-pending" style="font-size: 1.8rem; font-weight: 700; color: var(--warning);">--</span>
+                                </div>
+                            </div>
+                            <div class="pilot-volume-bar" style="margin-bottom: 1rem;">
+                                <span class="pilot-label" style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Aggregate Request Volume</span>
+                                <div class="pilot-num" id="pilots-volume" style="font-size: 1.4rem; font-weight: 600; color: #fff;">--</div>
+                            </div>
+                            <div class="pilot-gain-bar">
+                                <span class="pilot-label" style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Aggregate Reliability Gain</span>
+                                <div class="pilot-num success" id="pilots-gain" style="font-size: 1.4rem; font-weight: 600; color: var(--success);">--</div>
+                            </div>
+                        </div>
+                        <div class="pilot-industries-column">
+                            <h3 style="margin-bottom: 1rem; color: #fff;">Target Verticals</h3>
+                            <ul id="pilot-industries-list" class="industries-list" style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Populated dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Funding Readiness Tab View (V13) -->
+            <div id="readiness-view" class="tab-content" style="display: none;">
+                <!-- Funding Readiness Section -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <div class="card-header">
+                        <div class="card-title">Institutional Funding Readiness Engine</div>
+                        <div class="card-desc">Measures compliance against sovereign grants & venture reliability benchmarks</div>
+                    </div>
+                    <div class="readiness-dashboard">
+                        <div class="readiness-gauge-container">
+                            <div class="overall-gauge-value" id="overall-readiness">--%</div>
+                            <div class="overall-gauge-label">Overall Readiness Score</div>
+                        </div>
+                        <div class="readiness-metrics-grid">
+                            <div class="readiness-metric-item">
+                                <span class="metric-label">Adoption Score (User Volume)</span>
+                                <div class="metric-progress-wrapper">
+                                    <div class="metric-progress-bar" id="bar-adoption" style="width: 0%;"></div>
+                                </div>
+                                <span class="metric-value" id="score-adoption">--/10</span>
+                            </div>
+                            <div class="readiness-metric-item">
+                                <span class="metric-label">Reliability Score (Accuracy Proof)</span>
+                                <div class="metric-progress-wrapper">
+                                    <div class="metric-progress-bar" id="bar-reliability" style="width: 0%;"></div>
+                                </div>
+                                <span class="metric-value" id="score-reliability">--/10</span>
+                            </div>
+                            <div class="readiness-metric-item">
+                                <span class="metric-label">Sovereignty Score (Local Inference)</span>
+                                <div class="metric-progress-wrapper">
+                                    <div class="metric-progress-bar" id="bar-sovereign" style="width: 0%;"></div>
+                                </div>
+                                <span class="metric-value" id="score-sovereign">--/10</span>
+                            </div>
+                            <div class="readiness-metric-item">
+                                <span class="metric-label">Benchmark Score (Logic Traps)</span>
+                                <div class="metric-progress-wrapper">
+                                    <div class="metric-progress-bar" id="bar-benchmark" style="width: 0%;"></div>
+                                </div>
+                                <span class="metric-value" id="score-benchmark">--/10</span>
+                            </div>
+                            <div class="readiness-metric-item">
+                                <span class="metric-label">Evidence Score (Audit Logging)</span>
+                                <div class="metric-progress-wrapper">
+                                    <div class="metric-progress-bar" id="bar-evidence" style="width: 0%;"></div>
+                                </div>
+                                <span class="metric-value" id="score-evidence">--/10</span>
+                            </div>
+                            <div class="readiness-metric-item">
+                                <span class="metric-label">Pilot Score (Production Trials)</span>
+                                <div class="metric-progress-wrapper">
+                                    <div class="metric-progress-bar" id="bar-pilot" style="width: 0%;"></div>
+                                </div>
+                                <span class="metric-value" id="score-pilot">--/10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Benchmarks Grid Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Live Provider Reliability Benchmarks</div>
+                        <div class="card-desc">Active scoring comparing models against the composite Sovereign Score metric</div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Provider Model</th>
+                                    <th>Reliability %</th>
+                                    <th>Avg Latency</th>
+                                    <th>Calibration ECE</th>
+                                    <th>Drift Index</th>
+                                    <th>Sovereign Score</th>
+                                    <th>Sovereign Breakdown</th>
+                                </tr>
+                            </thead>
+                            <tbody id="benchmarksBody">
+                                <!-- Populated dynamically by app.js -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

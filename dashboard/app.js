@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initDriftChart({});
     initSovereignChart({});
     // ----------------------------------------------------
-    // V12 Onboarding Wizard & Tab Navigation
+    // V13 Onboarding Wizard, Tab Navigation & Trust Assets
     // ----------------------------------------------------
     // Tab switching routing
     const navItems = document.querySelectorAll('nav li');
@@ -374,15 +374,172 @@ document.addEventListener('DOMContentLoaded', async () => {
             item.classList.add('active');
             
             const tab = item.getAttribute('data-tab');
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('pilot-view').style.display = 'none';
+            if (document.getElementById('trust-view')) document.getElementById('trust-view').style.display = 'none';
+            if (document.getElementById('readiness-view')) document.getElementById('readiness-view').style.display = 'none';
+
             if (tab === 'pilot') {
-                document.getElementById('dashboard-view').style.display = 'none';
                 document.getElementById('pilot-view').style.display = 'block';
+            } else if (tab === 'trust') {
+                if (document.getElementById('trust-view')) {
+                    document.getElementById('trust-view').style.display = 'block';
+                    updateTrustTab();
+                }
+            } else if (tab === 'readiness') {
+                if (document.getElementById('readiness-view')) {
+                    document.getElementById('readiness-view').style.display = 'block';
+                    updateReadinessTab();
+                }
             } else {
                 document.getElementById('dashboard-view').style.display = 'block';
-                document.getElementById('pilot-view').style.display = 'none';
             }
         });
     });
+
+    // Fetch and populate Trust & Case Studies view
+    const updateTrustTab = async () => {
+        try {
+            // 1. Fetch latest reliability report
+            const reportRes = await fetch('/public/reliability-report/latest');
+            if (reportRes.ok) {
+                const report = await reportRes.json();
+                document.getElementById('report-month').innerText = report.report_month;
+                document.getElementById('report-calibration').innerText = report.metrics.calibration_score.toFixed(4);
+                document.getElementById('report-drift').innerText = report.metrics.drift_events;
+                document.getElementById('report-sovereign').innerText = report.metrics.sovereign_usage;
+            }
+
+            // 2. Fetch case studies
+            const casesRes = await fetch('/public/case-studies');
+            if (casesRes.ok) {
+                const caseStudies = await casesRes.json();
+                const container = document.getElementById('case-studies-container');
+                if (container) {
+                    container.innerHTML = '';
+                    caseStudies.forEach(cs => {
+                        const card = document.createElement('div');
+                        card.className = 'case-study-card';
+                        card.innerHTML = `
+                            <div class="case-study-title">${cs.metadata.title}</div>
+                            <div class="case-study-type">${cs.metadata.deployment_type}</div>
+                            <div class="case-study-desc"><strong>Use Case:</strong> ${cs.metadata.use_case}</div>
+                            <div class="case-study-lessons"><strong>Architecture & Lessons:</strong> ${cs.fixed_snapshot.lessons_learned}</div>
+                            <div class="case-study-metrics">
+                                <div class="metric-box">
+                                    <span class="metric-box-label">Requests (Hybrid)</span>
+                                    <span class="metric-box-val">${cs.live_metrics.requests.toLocaleString()}</span>
+                                </div>
+                                <div class="metric-box">
+                                    <span class="metric-box-label">Reliability Gain</span>
+                                    <span class="metric-box-val" style="color: var(--success);">${cs.live_metrics.reliability_gain}</span>
+                                </div>
+                                <div class="metric-box">
+                                    <span class="metric-box-label">Est. Cost Saved</span>
+                                    <span class="metric-box-val" style="color: var(--secondary);">$${cs.live_metrics.estimated_cost_saved.toFixed(2)}</span>
+                                </div>
+                                <div class="metric-box">
+                                    <span class="metric-box-label">Escalation Acc.</span>
+                                    <span class="metric-box-val">${cs.live_metrics.escalation_accuracy}</span>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                }
+            }
+
+            // 3. Fetch pilot program
+            const pilotRes = await fetch('/public/pilot-program');
+            if (pilotRes.ok) {
+                const program = await pilotRes.json();
+                document.getElementById('pilots-accepted').innerText = program.current_pilots.accepted;
+                document.getElementById('pilots-pending').innerText = program.current_pilots.pending;
+                document.getElementById('pilots-volume').innerText = program.request_volume.toLocaleString() + " queries";
+                document.getElementById('pilots-gain').innerText = program.aggregate_reliability_gain;
+
+                const indList = document.getElementById('pilot-industries-list');
+                if (indList) {
+                    indList.innerHTML = '';
+                    program.industries.forEach(ind => {
+                        const li = document.createElement('li');
+                        li.innerText = ind;
+                        indList.appendChild(li);
+                    });
+                }
+            }
+        } catch (e) {
+            console.error("Failed to populate trust assets: ", e);
+        }
+    };
+
+    // Fetch and populate Funding Readiness & Live Benchmarks view
+    const updateReadinessTab = async () => {
+        try {
+            // 1. Fetch funding readiness
+            const readyRes = await fetch('/public/funding-readiness');
+            if (readyRes.ok) {
+                const data = await readyRes.json();
+                const r = data.funding_readiness;
+                document.getElementById('overall-readiness').innerText = `${r.overall_readiness}%`;
+                
+                // Update scores
+                document.getElementById('score-adoption').innerText = `${r.adoption_score}/10`;
+                document.getElementById('score-reliability').innerText = `${r.reliability_score}/10`;
+                document.getElementById('score-sovereign').innerText = `${r.sovereign_score}/10`;
+                document.getElementById('score-benchmark').innerText = `${r.benchmark_score}/10`;
+                document.getElementById('score-evidence').innerText = `${r.evidence_score}/10`;
+                document.getElementById('score-pilot').innerText = `${r.pilot_score}/10`;
+
+                // Update progress bars
+                document.getElementById('bar-adoption').style.width = `${r.adoption_score * 10}%`;
+                document.getElementById('bar-reliability').style.width = `${r.reliability_score * 10}%`;
+                document.getElementById('bar-sovereign').style.width = `${r.sovereign_score * 10}%`;
+                document.getElementById('bar-benchmark').style.width = `${r.benchmark_score * 10}%`;
+                document.getElementById('bar-evidence').style.width = `${r.evidence_score * 10}%`;
+                document.getElementById('bar-pilot').style.width = `${r.pilot_score * 10}%`;
+            }
+
+            // 2. Fetch live benchmarks
+            const benchRes = await fetch('/public/benchmarks/live');
+            if (benchRes.ok) {
+                const data = await benchRes.json();
+                const tbody = document.getElementById('benchmarksBody');
+                if (tbody) {
+                    tbody.innerHTML = '';
+                    Object.keys(data.providers).forEach(p => {
+                        const rowData = data.providers[p];
+                        const tr = document.createElement('tr');
+                        
+                        const bd = rowData.sovereign_breakdown;
+                        const breakdownHTML = `
+                            <ul class="breakdown-list">
+                                <li><span>Hosted in India (25%):</span> <strong>${bd.india_hosted_inference}</strong></li>
+                                <li><span>Indic Lang Acc (25%):</span> <strong>${bd.indic_language_performance}</strong></li>
+                                <li><span>Data Residency (20%):</span> <strong>${bd.data_residency_compliance}</strong></li>
+                                <li><span>Token Efficiency (10%):</span> <strong>${bd.tokenizer_efficiency_indic}</strong></li>
+                                <li><span>Indic Latency (10%):</span> <strong>${bd.latency_for_indic_queries}</strong></li>
+                                <li><span>Auditability (10%):</span> <strong>${bd.auditability_and_transparency}</strong></li>
+                            </ul>
+                        `;
+
+                        tr.innerHTML = `
+                            <td><strong>${p}</strong></td>
+                            <td style="color: var(--success); font-weight: 600;">${rowData.reliability.toFixed(2)}%</td>
+                            <td>${rowData.latency.toFixed(1)}ms</td>
+                            <td>${rowData.calibration.toFixed(4)}</td>
+                            <td>${rowData.drift.toFixed(4)}</td>
+                            <td style="color: var(--secondary); font-weight: 700; font-size: 1.1rem;">${rowData.sovereign_score.toFixed(1)}</td>
+                            <td>${breakdownHTML}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            }
+        } catch (e) {
+            console.error("Failed to populate readiness dashboard: ", e);
+        }
+    };
 
     // Integration Wizard
     const complexitySlider = document.getElementById('complexitySlider');
@@ -520,3 +677,4 @@ print(f"Response: {result['response']}")
     setInterval(updateDashboardData, 5000);
     setInterval(fetchTraces, 5000);
 });
+

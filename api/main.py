@@ -20,7 +20,7 @@ from infra.shadow_evaluator import shadow_evaluator
 from core.learning_loop import memory_bank
 from core.economic_intelligence import EconomicIntelligencePlane, agentic_governor
 from api.analytics import router as analytics_router
-from api.public import router as public_router
+from api.public import router as public_router, public_v13_router
 from core.utility_intelligence import UtilityIntelligencePlane
 from core.consensus import SovereignConsensusArbitrator
 from core.cognitive_efficiency import CognitiveEfficiencyPlane
@@ -62,6 +62,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.include_router(analytics_router)
 app.include_router(public_router)
+app.include_router(public_v13_router)
 
 # Mount Dashboard for Public Technical Demonstration (Priority 10)
 app.mount("/dashboard", StaticFiles(directory="dashboard", html=True), name="dashboard")

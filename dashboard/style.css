@@ -643,3 +643,219 @@ code {
     border: 1px solid var(--error);
     color: var(--error);
 }
+
+/* V13 Trust & Case Studies Styles */
+.case-studies-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.case-study-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.case-study-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.case-study-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.case-study-type {
+    font-size: 0.75rem;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: -8px;
+    font-weight: 500;
+}
+
+.case-study-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.case-study-lessons {
+    font-size: 0.8rem;
+    color: var(--text);
+    background: rgba(124, 77, 255, 0.06);
+    border-left: 3px solid var(--primary);
+    padding: 8px 12px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 4px;
+}
+
+.case-study-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+}
+
+.metric-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.metric-box-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.metric-box-val {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.pilot-board-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.pilot-status-column, .pilot-industries-column {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+}
+
+.industries-list li {
+    font-size: 0.88rem;
+    color: var(--text);
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.industries-list li::before {
+    content: "📁";
+    font-size: 0.9rem;
+}
+
+/* V13 Funding Readiness Dashboard Styles */
+.readiness-dashboard {
+    display: grid;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: 2rem;
+    margin-top: 1rem;
+    align-items: center;
+}
+
+.readiness-gauge-container {
+    background: radial-gradient(circle at center, rgba(0, 229, 255, 0.08) 0%, transparent 70%);
+    border: 1px dashed var(--secondary);
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.05);
+}
+
+.overall-gauge-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--secondary);
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+}
+
+.overall-gauge-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    max-width: 120px;
+}
+
+.readiness-metrics-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.readiness-metric-item {
+    display: grid;
+    grid-template-columns: 1.8fr 2fr 0.5fr;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.metric-progress-wrapper {
+    background: rgba(255, 255, 255, 0.05);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.metric-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 4px;
+    transition: width 0.8s ease-in-out;
+}
+
+.metric-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    text-align: right;
+}
+
+/* Benchmark breakdowns list tooltip style in table cell */
+.breakdown-list {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.breakdown-list li {
+    display: flex;
+    justify-content: space-between;
+}
+

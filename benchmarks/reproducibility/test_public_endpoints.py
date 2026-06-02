@@ -249,5 +249,85 @@ class TestPublicEvidenceEndpoints(unittest.TestCase):
         resp = requests.get(f"{self.base_url}/admin/pilot-applications")
         self.assertEqual(resp.status_code, 403)
 
+    def test_v13_growth_engine_endpoints(self):
+        # 1. Test GET /public/case-studies
+        resp = requests.get(f"{self.base_url}/public/case-studies")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(type(data), list)
+        self.assertGreaterEqual(len(data), 1)
+        cs = data[0]
+        self.assertIn("metadata", cs)
+        self.assertIn("fixed_snapshot", cs)
+        self.assertIn("live_metrics", cs)
+        self.assertIn("title", cs["metadata"])
+        self.assertIn("requests", cs["live_metrics"])
+        self.assertIn("estimated_cost_saved", cs["live_metrics"])
+
+        # 2. Test GET /public/reliability-report/latest
+        resp = requests.get(f"{self.base_url}/public/reliability-report/latest")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIn("report_month", data)
+        self.assertIn("metrics", data)
+        metrics = data["metrics"]
+        self.assertIn("total_requests", metrics)
+        self.assertIn("calibration_score", metrics)
+        self.assertIn("drift_events", metrics)
+        self.assertIn("sovereign_usage", metrics)
+        self.assertIn("cost_savings", metrics)
+
+        # 3. Test GET /public/benchmarks/live
+        resp = requests.get(f"{self.base_url}/public/benchmarks/live")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIn("providers", data)
+        providers = data["providers"]
+        self.assertGreaterEqual(len(providers), 1)
+        p_name = list(providers.keys())[0]
+        p_data = providers[p_name]
+        self.assertIn("reliability", p_data)
+        self.assertIn("latency", p_data)
+        self.assertIn("calibration", p_data)
+        self.assertIn("sovereign_score", p_data)
+        self.assertIn("sovereign_breakdown", p_data)
+        breakdown = p_data["sovereign_breakdown"]
+        self.assertIn("india_hosted_inference", breakdown)
+        self.assertIn("indic_language_performance", breakdown)
+
+        # 4. Test GET /public/metrics
+        resp = requests.get(f"{self.base_url}/public/metrics")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIn("metrics", data)
+        m = data["metrics"]
+        self.assertIn("total_requests", m)
+        self.assertIn("active_projects", m)
+        self.assertIn("active_pilots", m)
+        self.assertIn("reliability_score", m)
+        self.assertIn("contributors", m)
+        self.assertIn("github_stars", m)
+
+        # 5. Test GET /public/funding-readiness
+        resp = requests.get(f"{self.base_url}/public/funding-readiness")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIn("funding_readiness", data)
+        fr = data["funding_readiness"]
+        self.assertIn("adoption_score", fr)
+        self.assertIn("reliability_score", fr)
+        self.assertIn("sovereign_score", fr)
+        self.assertIn("benchmark_score", fr)
+        self.assertIn("overall_readiness", fr)
+
+        # 6. Test GET /public/pilot-program
+        resp = requests.get(f"{self.base_url}/public/pilot-program")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertIn("current_pilots", data)
+        self.assertIn("industries", data)
+        self.assertIn("request_volume", data)
+        self.assertIn("aggregate_reliability_gain", data)
+
 if __name__ == "__main__":
     unittest.main()
