@@ -1,4 +1,5 @@
 import json
+import numpy as np
 from datetime import datetime, timedelta
 from typing import Dict, Any, List
 from sqlalchemy.orm import Session
@@ -80,8 +81,6 @@ class LongHorizonCalibration:
         # Entropy stability: inverse of variance in confidence (high stability means low variance)
         conf_var = float(np.var(confidences)) if len(confidences) > 1 else 0.0
         entropy_stability = float(1.0 / (1.0 + conf_var))
-
-        import numpy as np # import inside method or at top (added import at top too)
 
         return {
             "ece": round(ece, 4),
