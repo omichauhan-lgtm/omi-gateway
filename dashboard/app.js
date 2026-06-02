@@ -363,6 +363,154 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTaxonomyChart({});
     initDriftChart({});
     initSovereignChart({});
+    // ----------------------------------------------------
+    // V12 Onboarding Wizard & Tab Navigation
+    // ----------------------------------------------------
+    // Tab switching routing
+    const navItems = document.querySelectorAll('nav li');
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            navItems.forEach(li => li.classList.remove('active'));
+            item.classList.add('active');
+            
+            const tab = item.getAttribute('data-tab');
+            if (tab === 'pilot') {
+                document.getElementById('dashboard-view').style.display = 'none';
+                document.getElementById('pilot-view').style.display = 'block';
+            } else {
+                document.getElementById('dashboard-view').style.display = 'block';
+                document.getElementById('pilot-view').style.display = 'none';
+            }
+        });
+    });
+
+    // Integration Wizard
+    const complexitySlider = document.getElementById('complexitySlider');
+    const complexityValue = document.getElementById('complexityValue');
+    const routingMode = document.getElementById('routingMode');
+    const generatedCodeBlock = document.getElementById('generatedCodeBlock');
+    
+    const updateGeneratedCode = () => {
+        const threshold = parseFloat(complexitySlider.value).toFixed(2);
+        complexityValue.innerText = threshold;
+        
+        const mode = routingMode.value;
+        const selectedLangs = [];
+        if (document.getElementById('langEN').checked) selectedLangs.push('en');
+        if (document.getElementById('langHI').checked) selectedLangs.push('hi');
+        if (document.getElementById('langTA').checked) selectedLangs.push('ta');
+        if (document.getElementById('langTE').checked) selectedLangs.push('te');
+        
+        const langsStr = selectedLangs.map(l => `"${l}"`).join(', ');
+
+        const code = `import requests
+
+# Set up endpoint & headers
+url = "https://omi-gateway.onrender.com/generate"
+headers = {
+    "x-omi-api-key": "your_omi_subscription_key",
+    "Content-Type": "application/json"
+}
+
+# Payload with customized policy settings from OMI Wizard
+payload = {
+    "prompt": "Explain quantum physics or route query in Indic languages",
+    "mode": "${mode}",
+    "policy": {
+        "min_confidence": 0.85,
+        "max_cost_budget": 0.05,
+        "strict_mode": False
+    },
+    "context": "User locales preferences: [${selectedLangs.join(', ').toUpperCase()}]"
+}
+
+# Execute routing request
+response = requests.post(url, json=payload, headers=headers)
+result = response.json()
+
+print(f"Routed Model: {result['metadata']['routed_model']}")
+print(f"Response: {result['response']}")
+`;
+        generatedCodeBlock.textContent = code;
+    };
+    
+    if (complexitySlider) {
+        complexitySlider.addEventListener('input', updateGeneratedCode);
+        routingMode.addEventListener('change', updateGeneratedCode);
+        ['langEN', 'langHI', 'langTA', 'langTE'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', updateGeneratedCode);
+            }
+        });
+        updateGeneratedCode();
+    }
+
+    // Copy to clipboard
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    if (copyCodeBtn) {
+        copyCodeBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(generatedCodeBlock.textContent).then(() => {
+                copyCodeBtn.innerText = 'Copied!';
+                setTimeout(() => {
+                    copyCodeBtn.innerText = 'Copy';
+                }, 2000);
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        });
+    }
+
+    // Form Submission
+    const pilotForm = document.getElementById('pilotRegistryForm');
+    const formFeedback = document.getElementById('formFeedback');
+    const submitBtn = document.getElementById('submitPilotBtn');
+    
+    if (pilotForm) {
+        pilotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const projectName = document.getElementById('projectNameInput').value;
+            const email = document.getElementById('emailInput').value;
+            const useCase = document.getElementById('useCaseInput').value;
+            const volume = parseInt(document.getElementById('volumeInput').value, 10);
+            
+            submitBtn.disabled = true;
+            formFeedback.style.display = 'none';
+            formFeedback.className = 'form-feedback';
+            
+            try {
+                const response = await fetch('/pilot/apply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        project_name: projectName,
+                        contact_email: email,
+                        use_case: useCase,
+                        estimated_requests: volume
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok && data.status === 'success') {
+                    formFeedback.innerText = data.message;
+                    formFeedback.classList.add('success');
+                    formFeedback.style.display = 'block';
+                    pilotForm.reset();
+                } else {
+                    throw new Error(data.detail || data.message || 'Submission failed.');
+                }
+            } catch (err) {
+                formFeedback.innerText = `Error: ${err.message}`;
+                formFeedback.classList.add('error');
+                formFeedback.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    }
 
     // Perform initial data fetch
     await updateDashboardData();

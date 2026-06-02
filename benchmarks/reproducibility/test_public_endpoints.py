@@ -209,5 +209,45 @@ class TestPublicEvidenceEndpoints(unittest.TestCase):
         resp = requests.post(f"{self.base_url}/admin/benchmark", headers=headers_bench_auditor)
         self.assertEqual(resp.status_code, 403)
 
+    def test_pilot_application_pipeline(self):
+        # 1. Test POST /pilot/apply
+        payload = {
+            "project_name": "Test DPI Initiative",
+            "contact_email": "test-admin@gov.in",
+            "use_case": "Translate and route public grievance queries to state models",
+            "estimated_requests": 50000
+        }
+        resp = requests.post(f"{self.base_url}/pilot/apply", json=payload)
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["status"], "success")
+        self.assertIn("submitted successfully", data["message"])
+
+        # 2. Test GET /admin/pilot-applications with admin
+        headers_admin = {"x-omi-admin-key": "omi-pro-key-v1", "x-omi-role": "admin"}
+        resp = requests.get(f"{self.base_url}/admin/pilot-applications", headers=headers_admin)
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["status"], "success")
+        self.assertEqual(data["role_accessed"], "admin")
+        self.assertGreaterEqual(len(data["applications"]), 1)
+        self.assertEqual(data["applications"][0]["project_name"], "Test DPI Initiative")
+        self.assertEqual(data["applications"][0]["contact_email"], "test-admin@gov.in")
+        self.assertEqual(data["applications"][0]["use_case"], "Translate and route public grievance queries to state models")
+        self.assertEqual(data["applications"][0]["estimated_requests"], 50000)
+
+        # 3. Test GET /admin/pilot-applications with auditor
+        headers_auditor = {"x-omi-admin-key": "omi-pro-key-v1", "x-omi-role": "auditor"}
+        resp = requests.get(f"{self.base_url}/admin/pilot-applications", headers=headers_auditor)
+        self.assertEqual(resp.status_code, 200)
+
+        # 4. Test GET /admin/pilot-applications with public/no credentials
+        headers_public = {"x-omi-admin-key": "omi-pro-key-v1", "x-omi-role": "public"}
+        resp = requests.get(f"{self.base_url}/admin/pilot-applications", headers=headers_public)
+        self.assertEqual(resp.status_code, 403)
+        
+        resp = requests.get(f"{self.base_url}/admin/pilot-applications")
+        self.assertEqual(resp.status_code, 403)
+
 if __name__ == "__main__":
     unittest.main()

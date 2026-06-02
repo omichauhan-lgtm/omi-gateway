@@ -33,6 +33,9 @@
                     <li data-tab="economics">
                         <span class="nav-icon">💰</span> Economics Engine
                     </li>
+                    <li data-tab="pilot">
+                        <span class="nav-icon">🚀</span> Pilot & Onboarding
+                    </li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
@@ -55,8 +58,10 @@
                 </div>
             </header>
 
-            <!-- Real-Time Top Row KPIs -->
-            <section class="kpi-grid">
+            <!-- Dashboard Tab View Container -->
+            <div id="dashboard-view" class="tab-content">
+                <!-- Real-Time Top Row KPIs -->
+                <section class="kpi-grid">
                 <div class="kpi-card" id="kpi-equilibrium">
                     <div class="kpi-header">
                         <span class="kpi-title">Ecosystem Equilibrium</span>
@@ -175,6 +180,126 @@
                     </div>
                 </div>
             </section>
+            </div>
+
+            <!-- Pilot & Onboarding Wizard Tab View (V12) -->
+            <div id="pilot-view" class="tab-content" style="display: none;">
+                <!-- Top Row Pilot Metrics -->
+                <section class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Onboarding Health</span>
+                            <span class="kpi-icon">🟢</span>
+                        </div>
+                        <div class="kpi-value">99.98%</div>
+                        <div class="kpi-desc">API integration success rate</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Average Pilot Latency</span>
+                            <span class="kpi-icon">⚡</span>
+                        </div>
+                        <div class="kpi-value">124ms</div>
+                        <div class="kpi-desc">Sub-threshold response routing</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Frugal Saving SLA</span>
+                            <span class="kpi-icon">💰</span>
+                        </div>
+                        <div class="kpi-value">72.3%</div>
+                        <div class="kpi-desc">Exceeds pilot target of 70%</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Calibration Target</span>
+                            <span class="kpi-icon">🎯</span>
+                        </div>
+                        <div class="kpi-value">94.2%</div>
+                        <div class="kpi-desc">ECE alignment probability</div>
+                    </div>
+                </section>
+
+                <div class="pilot-layout-grid">
+                    <!-- Interactive Integration Wizard -->
+                    <div class="card wizard-card">
+                        <div class="card-header">
+                            <div class="card-title">Interactive Integration Wizard</div>
+                            <div class="card-desc">Configure your routing limits and generate client code dynamically</div>
+                        </div>
+                        <div class="wizard-controls">
+                            <div class="control-group">
+                                <label for="complexitySlider">Routing Complexity Threshold: <span id="complexityValue">0.50</span></label>
+                                <input type="range" id="complexitySlider" min="0.0" max="1.0" step="0.05" value="0.50">
+                                <span class="control-help">Prompts above this rating will automatically use GPT-4o.</span>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label>Target Languages / Locales:</label>
+                                <div class="checkbox-row">
+                                    <label><input type="checkbox" id="langEN" checked> English</label>
+                                    <label><input type="checkbox" id="langHI" checked> Hindi (Sovereign)</label>
+                                    <label><input type="checkbox" id="langTA"> Tamil</label>
+                                    <label><input type="checkbox" id="langTE"> Telugu</label>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="routingMode">Optimization Priority:</label>
+                                <select id="routingMode">
+                                    <option value="balance">Balance (Cost & Quality)</option>
+                                    <option value="frugal">Frugal (Minimize Cost)</option>
+                                    <option value="accuracy">Accuracy (Strict Validation)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="code-output-container">
+                            <div class="code-header">
+                                <span>Generated Integration Snippet</span>
+                                <button id="copyCodeBtn" class="btn btn-secondary">Copy</button>
+                            </div>
+                            <pre><code id="generatedCodeBlock"># Click controls to generate code...</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Pilot Registry Form -->
+                    <div class="card form-card">
+                        <div class="card-header">
+                            <div class="card-title">OMI Pilot Registry</div>
+                            <div class="card-desc">Apply for the official enterprise / state pilot program to obtain custom endpoints</div>
+                        </div>
+                        <form id="pilotRegistryForm" class="pilot-form">
+                            <div class="form-group">
+                                <label for="projectNameInput">Project Name / Organization</label>
+                                <input type="text" id="projectNameInput" required placeholder="e.g. MyState DPI Portal">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="emailInput">Contact Email</label>
+                                <input type="email" id="emailInput" required placeholder="e.g. director@meity.gov.in">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="useCaseInput">Intended Use Case & Description</label>
+                                <textarea id="useCaseInput" required rows="4" placeholder="Describe how your project routes multilingual queries or requires reliability validation..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="volumeInput">Estimated Monthly Requests</label>
+                                <select id="volumeInput">
+                                    <option value="5000">Under 10,000 requests</option>
+                                    <option value="50000">10,000 - 100,000 requests</option>
+                                    <option value="500000">100,000+ requests (Enterprise Scale)</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" id="submitPilotBtn" class="btn btn-primary">Submit Application</button>
+                            <div id="formFeedback" class="form-feedback" style="display: none;"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
     <script src="app.js"></script>

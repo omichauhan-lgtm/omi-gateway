@@ -110,3 +110,14 @@ class UtilityEstimate(Base):
     session_context = Column(Text)
     inference_reasoning = Column(Text)
 
+
+class PilotApplication(Base):
+    __tablename__ = "pilot_applications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    timestamp = Column(String, index=True)
+    project_name = Column(String)
+    contact_email = Column(String)
+    use_case = Column(Text)
+    estimated_requests = Column(Integer)
+

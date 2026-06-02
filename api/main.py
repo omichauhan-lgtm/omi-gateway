@@ -84,6 +84,12 @@ class OrchestratorRequest(BaseModel):
     policy: Optional[PolicyConfig] = None
     workflow_id: Optional[str] = None
 
+class PilotApplyRequest(BaseModel):
+    project_name: str
+    contact_email: str
+    use_case: str
+    estimated_requests: int
+
 def get_clients_payload(x_openai_key, x_anthropic_key, x_deepseek_key):
 
     return {
@@ -256,6 +262,74 @@ async def get_audit_logs(
             "role_accessed": x_omi_role,
             "total_audit_logs": len(audit_traces),
             "audit_logs": audit_traces
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+    finally:
+        db.close()
+
+
+@app.post("/pilot/apply")
+async def apply_for_pilot(payload: PilotApplyRequest):
+    """
+    Accept developer applications for OMI Pilot Program.
+    Writes applications directly to the metadata store.
+    """
+    db = SessionLocal()
+    try:
+        from infra.models import PilotApplication
+        app_entry = PilotApplication(
+            timestamp=datetime.utcnow().isoformat(),
+            project_name=payload.project_name,
+            contact_email=payload.contact_email,
+            use_case=payload.use_case,
+            estimated_requests=payload.estimated_requests
+        )
+        db.add(app_entry)
+        db.commit()
+        return {
+            "status": "success",
+            "message": "Pilot application submitted successfully. OMI engineers will contact you shortly."
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+
+@app.get("/admin/pilot-applications")
+async def get_pilot_applications(
+    limit: int = 50,
+    x_omi_admin_key: str = Header(None),
+    x_omi_role: Optional[str] = Header(None)
+):
+    """
+    Query submitted pilot applications. Admin/Auditor access only.
+    """
+    if not ModelRegistry.validate_house_key(x_omi_admin_key):
+        raise HTTPException(status_code=403, detail="Invalid Admin Key")
+    if not x_omi_role or x_omi_role not in ["admin", "auditor"]:
+        raise HTTPException(status_code=403, detail="Unauthorized role access. Allowed: admin, auditor")
+        
+    db = SessionLocal()
+    try:
+        from infra.models import PilotApplication
+        apps = db.query(PilotApplication).order_by(PilotApplication.id.desc()).limit(limit).all()
+        results = []
+        for a in apps:
+            results.append({
+                "id": a.id,
+                "timestamp": a.timestamp,
+                "project_name": a.project_name,
+                "contact_email": a.contact_email,
+                "use_case": a.use_case,
+                "estimated_requests": a.estimated_requests
+            })
+        return {
+            "status": "success",
+            "role_accessed": x_omi_role,
+            "total_applications": len(results),
+            "applications": results
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}
