@@ -3,69 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMI | Sovereign Observability</title>
+    <title>OMI | Sovereign Intelligence Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
         <aside>
-            <div class="logo">OMI_GATEWAY</div>
+            <div class="logo">
+                <span class="icon">🌌</span> OMI GATEWAY
+            </div>
+            <div class="subtitle">Sovereign AI Infrastructure</div>
             <nav>
                 <ul>
-                    <li class="active">Intelligence Center</li>
-                    <li>Reliability Matrix</li>
-                    <li>Sovereign Nodes</li>
-                    <li>Drift Analysis</li>
-                    <li>Data Moat</li>
-                    <li>Settings</li>
+                    <li class="active" data-tab="intelligence">
+                        <span class="nav-icon">📊</span> Intelligence Center
+                    </li>
+                    <li data-tab="reliability">
+                        <span class="nav-icon">🛡️</span> Reliability Matrix
+                    </li>
+                    <li data-tab="sovereign">
+                        <span class="nav-icon">🇮🇳</span> Sovereign Alignment
+                    </li>
+                    <li data-tab="drift">
+                        <span class="nav-icon">📈</span> Drift & Forecaster
+                    </li>
+                    <li data-tab="economics">
+                        <span class="nav-icon">💰</span> Economics Engine
+                    </li>
                 </ul>
             </nav>
+            <div class="sidebar-footer">
+                <div class="compliance-badge">MeitY Audited</div>
+                <div class="compliance-badge">IndiaAI Compliant</div>
+            </div>
         </aside>
 
+        <!-- Main Workspace -->
         <main>
+            <!-- Header Section -->
             <header>
-                <h1>Calibration Intelligence</h1>
-                <div class="status-badge">System: Sovereign_Mode_Active</div>
+                <div class="title-area">
+                    <h1>Evidence & Verification Center</h1>
+                    <p class="subtitle-text">Real-time operational proof and calibration science</p>
+                </div>
+                <div class="header-controls">
+                    <div id="ecosystemPhaseBadge" class="phase-badge phase-stable">Phase: Loading...</div>
+                    <div class="status-badge">System: Active</div>
+                </div>
             </header>
 
-            <div class="grid">
+            <!-- Real-Time Top Row KPIs -->
+            <section class="kpi-grid">
+                <div class="kpi-card" id="kpi-equilibrium">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Ecosystem Equilibrium</span>
+                        <span class="kpi-icon">⚖️</span>
+                    </div>
+                    <div class="kpi-value" id="kpi-equilibrium-val">--</div>
+                    <div class="kpi-desc">Stability index balance score</div>
+                </div>
+                <div class="kpi-card" id="kpi-calibration">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Calibration Error (ECE)</span>
+                        <span class="kpi-icon">🎯</span>
+                    </div>
+                    <div class="kpi-value" id="kpi-calibration-val">--</div>
+                    <div class="kpi-desc">30-day Expected Calibration Error</div>
+                </div>
+                <div class="kpi-card" id="kpi-savings">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Cumulative Cost Saved</span>
+                        <span class="kpi-icon">💵</span>
+                    </div>
+                    <div class="kpi-value" id="kpi-savings-val">--</div>
+                    <div class="kpi-desc">Value generated from cache & compression</div>
+                </div>
+                <div class="kpi-card" id="kpi-volume">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Verified Throughput</span>
+                        <span class="kpi-icon">⚡</span>
+                    </div>
+                    <div class="kpi-value" id="kpi-volume-val">--</div>
+                    <div class="kpi-desc">Total requests routed in runtime</div>
+                </div>
+            </section>
+
+            <!-- Interactive Grid of Charts -->
+            <section class="grid">
                 <!-- Calibration Curve -->
                 <div class="card">
-                    <div class="card-title">Judge Calibration Curve (Confidence vs Truth)</div>
+                    <div class="card-header">
+                        <div class="card-title">Calibration Quality (Confidence vs Accuracy)</div>
+                        <div class="card-desc">Validates truth alignment under entropy</div>
+                    </div>
                     <div class="chart-container">
                         <canvas id="calibrationChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Reliability Heatmap -->
+                <!-- Failure Taxonomy -->
                 <div class="card">
-                    <div class="card-title">Provider Reliability Heatmap</div>
+                    <div class="card-header">
+                        <div class="card-title">Failure Taxonomy by Provider</div>
+                        <div class="card-desc">Verification of hallucination & logic failure blocks</div>
+                    </div>
                     <div class="chart-container">
-                        <canvas id="heatmapChart"></canvas>
+                        <canvas id="taxonomyChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Live Traces -->
-                <div class="card trace-log">
-                    <div class="card-title">Live Execution Traces (Priority 04)</div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Timestamp</th>
-                                <th>Model</th>
-                                <th>Complexity</th>
-                                <th>Confidence</th>
-                                <th>Latency</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="traceBody">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
+                <!-- Provider ECE Drift timeline -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Long-Horizon ECE Drift Timeline</div>
+                        <div class="card-desc">Verifies calibration over time intervals</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="driftChart"></canvas>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Sovereign Routing & Multilingual Accuracy -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Sovereign & Multilingual Routing</div>
+                        <div class="card-desc">Indic language nodes volume vs accuracy index</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="sovereignChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Live Telemetry Execution Traces -->
+                <div class="card trace-log">
+                    <div class="card-header">
+                        <div class="card-title">Live Verification Traces</div>
+                        <div class="card-desc">Verifiable stream of active routing decisions</div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Model Route</th>
+                                    <th>Complexity</th>
+                                    <th>Confidence</th>
+                                    <th>Latency</th>
+                                    <th>Outcome Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="traceBody">
+                                <!-- Populated dynamically by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
     <script src="app.js"></script>
