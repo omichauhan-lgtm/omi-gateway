@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const labels = curveData.map(c => `Conf: ${c.confidence_bucket}`);
         const actualAcc = curveData.map(c => c.actual_accuracy_pct);
         const targetAcc = curveData.map(c => c.confidence_bucket * 100);
+        const lowerAcc = curveData.map(c => c.wilson_lower_bound_pct);
+        const upperAcc = curveData.map(c => c.wilson_upper_bound_pct);
 
         calibrationChart = new Chart(ctx, {
             type: 'line',
@@ -56,6 +58,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                     borderColor: 'rgba(255, 255, 255, 0.25)',
                     borderDash: [5, 5],
                     fill: false
+                }, {
+                    label: 'Wilson Lower Bound %',
+                    data: lowerAcc.length ? lowerAcc : [90, 70, 50, 25, 5],
+                    borderColor: 'rgba(255, 82, 82, 0.4)',
+                    borderDash: [3, 3],
+                    fill: false,
+                    tension: 0.35
+                }, {
+                    label: 'Wilson Upper Bound %',
+                    data: upperAcc.length ? upperAcc : [100, 95, 75, 55, 35],
+                    borderColor: 'rgba(0, 229, 255, 0.4)',
+                    borderDash: [3, 3],
+                    fill: false,
+                    tension: 0.35
                 }]
             },
             options: chartOptions
@@ -204,10 +220,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const labels = calData.calibration_curve.map(c => `Conf: ${c.confidence_bucket}`);
                     const actualAcc = calData.calibration_curve.map(c => c.actual_accuracy_pct);
                     const targetAcc = calData.calibration_curve.map(c => c.confidence_bucket * 100);
+                    const lowerAcc = calData.calibration_curve.map(c => c.wilson_lower_bound_pct);
+                    const upperAcc = calData.calibration_curve.map(c => c.wilson_upper_bound_pct);
 
                     calibrationChart.data.labels = labels.length ? labels : calibrationChart.data.labels;
                     calibrationChart.data.datasets[0].data = actualAcc.length ? actualAcc : calibrationChart.data.datasets[0].data;
                     calibrationChart.data.datasets[1].data = targetAcc.length ? targetAcc : calibrationChart.data.datasets[1].data;
+                    calibrationChart.data.datasets[2].data = lowerAcc.length ? lowerAcc : calibrationChart.data.datasets[2].data;
+                    calibrationChart.data.datasets[3].data = upperAcc.length ? upperAcc : calibrationChart.data.datasets[3].data;
                     calibrationChart.update();
                 }
             }
@@ -236,6 +256,42 @@ document.addEventListener('DOMContentLoaded', async () => {
                     driftChart.data.datasets[0].data = eceValues;
                     driftChart.data.datasets[1].data = luiValues;
                     driftChart.update();
+                }
+
+                // Update Sovereign Provider Rankings List (V11)
+                const rankingsList = document.getElementById('rankingsList');
+                if (rankingsList) {
+                    rankingsList.innerHTML = '';
+                    const providers = Object.keys(relData.provider_reliability);
+                    
+                    const sortedProviders = providers.map(p => {
+                        return {
+                            name: p,
+                            ece: relData.provider_reliability[p].ece,
+                            lui: relData.provider_reliability[p].longitudinal_utility
+                        };
+                    }).sort((a, b) => {
+                        if (b.lui !== a.lui) return b.lui - a.lui;
+                        return a.ece - b.ece;
+                    });
+                    
+                    if (sortedProviders.length === 0) {
+                        rankingsList.innerHTML = '<li class="ranking-placeholder">No provider metrics recorded.</li>';
+                    } else {
+                        sortedProviders.forEach((prov, index) => {
+                            const li = document.createElement('li');
+                            li.className = 'ranking-item';
+                            li.innerHTML = `
+                                <span class="ranking-rank">#${index + 1}</span>
+                                <span class="ranking-name">${prov.name}</span>
+                                <div class="ranking-metrics">
+                                    <span>ECE: <span class="ranking-ece">${prov.ece.toFixed(4)}</span></span>
+                                    <span>LUI: <span class="ranking-lui">${prov.lui.toFixed(2)}</span></span>
+                                </div>
+                            `;
+                            rankingsList.appendChild(li);
+                        });
+                    }
                 }
             }
 

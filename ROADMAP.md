@@ -1,27 +1,41 @@
-# OMI Roadmap: Probabilistic Orchestration Infrastructure
+# OMI Roadmap: Sovereign Reliability Infrastructure
 
-## Current Phase: Phase 3 - Live Probabilistic Validation
+## 🚀 90-Day Growth & Adoption Targets (V11 Constitution)
+- **Real Users:** 100
+- **Routed Requests:** 10,000
+- **Active Projects:** 25
+- **External Contributors:** 5
+- **GitHub Stars:** 100
+- **Public Reports published:** 3
+- **Pilot Programs secured:** 1
+
+---
+
+## 🛠️ Phase G3: Product Validation & Adoption (Current)
 *Status: Active*
-- [x] Public Sandbox Deployment (Rate-limited, Telemetry-first)
-- [x] Human Reliability Feedback Loop (`/feedback` API)
-- [x] Reliability-Aware Economic Routing (Expected Utility calculation)
-- [x] Reliability Economics Dashboard (Value Generated = Cost Avoided + Failures Prevented - Escalation Overhead)
+- [x] Public Evidence Layer (`/public/evidence` endpoints)
+- [x] Scientific Credibility Improvements (Binomial confidence intervals & Hosmer-Lemeshow calibration p-values)
+- [x] Real-time Observability Dashboard (revamped UI at `/dashboard`)
+- [x] Administrative RBAC (`x-omi-role` verification for `admin` vs `auditor`)
+- [x] Onboarding Guide ([onboarding.md](docs/onboarding.md) 3-minute quickstart)
+- [x] Administrative Audit Logging (`/admin/audit-logs`)
+- [ ] Visual Evidence Updates (Plotting Wilson confidence intervals & sorting provider rankings in dashboard)
+- [ ] Government Pitch Deck ([government_pitch_deck.md](docs/sovereign/government_pitch_deck.md))
+- [ ] GitHub Community Templates (Bug Reports, Feature Requests)
 
-## Next Phase: Phase 4 - Statistical Publication & Benchmarking
-*Status: Pending (Next 7 Days)*
-- [ ] Expand Reliability Datasets (Multilingual, Adversarial, Long-context)
-- [ ] Implement formal Benchmark Dashboard `/benchmarks`
-- [ ] Publish live routing economics vs static model selection
-- [ ] Open-source initial telemetry calibration curves
+---
 
-## Future Phase: Phase 5 - Advanced Calibration Science
-*Status: Research*
-- [ ] Semantic Confidence Scoring (Beyond simple thresholding)
-- [ ] Uncertainty Estimation Models
-- [ ] Automated Provider Weight Decay (Drift auto-healing)
+## 📊 Phase G4: Community & Self-Hosting
+*Status: Pending*
+- [ ] Docker container support and simple setup guides
+- [ ] Deployment configurations for AWS, GCP, and self-hosted environments
+- [ ] Publishing initial monthly calibration and reliability reports
+- [ ] Community discussions and open-source validation datasets
 
-## Future Phase: Phase 6 - Enterprise Survivability
-*Status: Planning*
-- [ ] PostgreSQL migration for the Data Moat
-- [ ] Kubernetes-native scaling configurations
-- [ ] Cross-region Sovereign Node synchronization
+---
+
+## 🏛️ Phase G5: Sovereign Scale & Pilots
+*Status: Future*
+- [ ] IndiaAI and MeitY pilot program execution
+- [ ] Active local/regional node replication for privacy compliance
+- [ ] Multilingual benchmark datasets for Indian languages (Indic logic traps)
