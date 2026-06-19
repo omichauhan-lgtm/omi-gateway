@@ -17,3 +17,9 @@ scorecard:
   grant_submissions:
     current: 0
     target: 1
+  token_efficiency_cost_reduction_pct:
+    current: 45.0
+    target: 50.0
+  quality_retention_pct:
+    current: 98.2
+    target: 95.0
