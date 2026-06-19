@@ -229,27 +229,53 @@ class AutomationEngine:
         results = []
         for a in apps:
             score = 0
-            
-            # 1. Volume scoring (40 points)
-            if a.estimated_requests >= 100000:
-                score += 40
-            elif a.estimated_requests >= 50000:
-                score += 25
-            else:
-                score += 10
-                
-            # 2. Domain alignment scoring (30 points)
             use_case_lower = a.use_case.lower()
-            if any(term in use_case_lower for term in ["dpi", "gov", "state", "public", "ministry", "fintech", "loan", "bank", "agri", "farm"]):
-                score += 30
-            else:
+            email_lower = a.contact_email.lower()
+            
+            # 1. Request Volume scoring (Max 25)
+            if a.estimated_requests >= 100000:
+                score += 25
+            elif a.estimated_requests >= 50000:
                 score += 15
+            else:
+                score += 5
                 
-            # 3. Locale complexity scoring (30 points)
-            if any(term in use_case_lower for term in ["hindi", "telugu", "tamil", "bengali", "marathi", "kannada", "regional", "dialect", "multilingual"]):
-                score += 30
+            # 2. Domain Fit scoring (Max 20)
+            # Targets: government, education, public digital infrastructure, citizen services, multilingual, agritech, fintech
+            domain_terms = ["dpi", "gov", "state", "public", "ministry", "citizen", "service", 
+                            "education", "university", "agri", "farm", "crop", "fintech", "loan", "bank", "compliance"]
+            if any(term in use_case_lower for term in domain_terms):
+                score += 20
             else:
                 score += 10
+                
+            # 3. Multilingual Complexity scoring (Max 15)
+            indic_terms = ["hindi", "telugu", "tamil", "bengali", "marathi", "kannada", "regional", 
+                           "dialect", "multilingual", "translation", "indic"]
+            if any(term in use_case_lower for term in indic_terms):
+                score += 15
+            else:
+                score += 5
+                
+            # 4. Deployment Readiness scoring (Max 25)
+            readiness_terms = ["production", "ready", "immediately", "active", "deployed", "live", "existing", "integration"]
+            testing_terms = ["test", "pilot", "development", "staging", "evaluation"]
+            if any(term in use_case_lower for term in readiness_terms):
+                score += 25
+            elif any(term in use_case_lower for term in testing_terms):
+                score += 15
+            else:
+                score += 5
+                
+            # 5. Strategic Value scoring (Max 15)
+            is_gov_or_edu_domain = any(email_lower.endswith(suffix) for suffix in [".gov.in", ".nic.in", ".edu.in"])
+            strategic_terms = ["ministry", "sovereign", "national", "state", "dpi", "census", "citizen", "public infrastructure"]
+            if is_gov_or_edu_domain or any(term in use_case_lower for term in strategic_terms):
+                score += 15
+            elif any(email_lower.endswith(suffix) for suffix in [".edu", ".org"]) or any(term in use_case_lower for term in ["agri", "fintech"]):
+                score += 10
+            else:
+                score += 5
                 
             lead_type = "HOT_LEAD" if score >= 70 else "WARM_LEAD"
             
@@ -264,3 +290,4 @@ class AutomationEngine:
                 "lead_type": lead_type
             })
         return results
+
