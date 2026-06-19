@@ -1,0 +1,19 @@
+scorecard:
+  users:
+    current: 1
+    target: 100
+  requests:
+    current: 1
+    target: 10000
+  pilots:
+    current: 0
+    target: 1
+  contributors:
+    current: 1
+    target: 5
+  benchmark_reports:
+    current: 0
+    target: 3
+  grant_submissions:
+    current: 0
+    target: 1

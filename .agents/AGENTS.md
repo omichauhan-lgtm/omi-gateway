@@ -1,33 +1,54 @@
 # OMI Gateway Agent Customizations & Guidelines
 ## Constitution V15 Alignment
 
-All coding assistants and agents operating in this workspace **MUST** adhere to the following rules and principles before modifying the codebase or committing changes.
-
-### 🚦 The Supreme Rule
-
-Before building or refactoring any feature:
-1.  **Ask yourself**: Does this change directly increase or improve any of the following:
-    *   **Users**: Active systems integrations?
-    *   **Pilots**: Real-world trial deployments?
-    *   **Contributors**: Developer ecosystem and OSS engagement?
-    *   **Benchmark Credibility**: Verifiable performance measurements?
-    *   **Grant Readiness**: Scientific compliance credentials for IndiaAI/MeitY?
-    *   **Public Evidence**: Open validation reports?
-2.  **Strict Enforcement**: If the answer is **no**, do not build the feature. Reject work on experimental layers, new meta-governance mechanisms, or complex recursive reasoning blocks unless there is a clear, measurable adoption benefit.
+All coding assistants and agents operating in this workspace **MUST** adhere to the following execution loop and design constraints before modifying the codebase or committing changes.
 
 ---
 
-### 🛡️ Pre-Commit Mandatory Self-Review Checklist
+### 🔄 Execution Loop System
 
-Every agent must run this check before committing code to version control:
-*   Does this help real users?
-*   Does this generate measurable evidence?
-*   Does this improve adoption rates?
-*   Does this directly help pilots or trial onboarding?
-*   Does this help secure public funding (e.g. MeitY, IndiaAI)?
-*   Does this reduce developer/founder manual operations?
+Every task executed in this repository must undergo pre-task and post-task evaluation.
 
-*If the answer to all of the above is **no**, the commit should not be created.*
+#### Before Starting a Task (Pre-Evaluation)
+Evaluate if the planned task increases or supports any of:
+*   **User Growth**: Acquiring more developers.
+*   **Pilot Growth**: Onboarding real trial setups.
+*   **Contributor Growth**: Reducing friction for external developers.
+*   **Evidence Growth**: Compiling benchmarks and public statistics.
+*   **Funding Growth**: Securing grants or innovation missions.
+
+#### After Completing a Task (Post-Evaluation)
+Quantify the impact of the changes:
+*   **Measurable Impact**: What metrics were modified? (Update `docs/SCORECARD.yaml` if applicable).
+*   **Adoption Impact**: Does this directly make the tool easier to adopt/use?
+*   **Maintenance Cost**: Does this increase the testing or operational surface?
+*   **Complexity Added**: Does this introduce unnecessary abstractions?
+
+> [!IMPORTANT]
+> **REJECT TASK** if `adoption_impact` is `none`. Maintain a bias for action toward real usage.
+
+---
+
+### ❄️ Architecture Freeze Rule
+
+To prevent codebase bloat and focus resources on adoption rather than code volume:
+
+```yaml
+architecture_freeze:
+  condition:
+    if:
+      users < 100
+  then:
+    no_new_subsystems: true
+    no_new_frameworks: true
+    no_new_governance_layers: true
+    unless:
+      directly_required_for:
+        - pilots
+        - adoption
+        - funding
+        - contributors
+```
 
 ---
 
