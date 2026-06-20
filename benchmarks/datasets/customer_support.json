@@ -1,0 +1,502 @@
+[
+  {
+    "id": "support_1",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-1@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_2",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-2@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_3",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-3@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_4",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-4@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_5",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-5@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_6",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-6@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_7",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-7@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_8",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-8@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_9",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-9@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_10",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-10@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_11",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-11@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_12",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-12@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_13",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-13@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_14",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-14@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_15",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-15@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_16",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-16@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_17",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-17@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_18",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-18@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_19",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-19@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_20",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-20@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_21",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-21@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_22",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-22@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_23",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-23@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_24",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-24@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_25",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-25@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_26",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-26@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_27",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-27@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_28",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-28@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_29",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-29@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_30",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-30@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_31",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-31@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_32",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-32@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_33",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-33@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_34",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-34@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_35",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-35@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_36",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-36@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_37",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-37@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_38",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-38@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_39",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-39@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_40",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-40@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_41",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-41@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_42",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-42@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_43",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-43@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_44",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-44@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_45",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-45@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_46",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-46@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_47",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-47@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_48",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-48@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_49",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-49@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_50",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-50@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_51",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-51@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_52",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-52@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_53",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-53@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_54",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-54@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_55",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-55@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_56",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-56@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_57",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-57@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_58",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-58@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_59",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-59@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_60",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-60@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_61",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-61@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_62",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-62@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_63",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-63@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_64",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-64@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_65",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-65@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_66",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-66@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_67",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-67@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_68",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-68@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_69",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-69@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_70",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-70@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_71",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-71@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_72",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-72@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_73",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-73@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_74",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-74@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_75",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-75@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_76",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-76@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_77",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-77@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_78",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-78@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_79",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-79@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_80",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-80@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_81",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-81@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_82",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-82@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_83",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-83@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_84",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-84@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_85",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-85@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_86",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-86@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_87",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-87@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_88",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-88@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_89",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-89@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_90",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-90@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_91",
+    "prompt": "Customer Issue: My payment failure for subscription renewal. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-91@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_92",
+    "prompt": "Customer Issue: My refund policy for international orders. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-92@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_93",
+    "prompt": "Customer Issue: My update billing details and email address. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-93@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_94",
+    "prompt": "Customer Issue: My account lockouts due to multiple failed passwords. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-94@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_95",
+    "prompt": "Customer Issue: My missing shipment containing medical goods. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-95@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "support_96",
+    "prompt": "Customer Issue: My invoice mismatch on regional tax/GST percentage. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-96@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.35
+  },
+  {
+    "id": "support_97",
+    "prompt": "Customer Issue: My cancellation request for business enterprise plan. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-97@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.44999999999999996
+  },
+  {
+    "id": "support_98",
+    "prompt": "Customer Issue: My API rate limit adjustments for sandbox keys. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-98@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.55
+  },
+  {
+    "id": "support_99",
+    "prompt": "Customer Issue: My mismatched promo code applied during checkout. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-99@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "support_100",
+    "prompt": "Customer Issue: My device sync failures across Android and iOS apps. Please resolve this immediately as it is affecting our workflow. Account Email: support-user-100@enterprise.com. Details: User is frustrated, query requires step-by-step diagnostic resolution guidelines.",
+    "complexity_score": 0.75
+  }
+]

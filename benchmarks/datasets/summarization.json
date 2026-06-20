@@ -1,0 +1,402 @@
+[
+  {
+    "id": "summarize_1",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_2",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_3",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_4",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_5",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_6",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_7",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_8",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_9",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_10",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_11",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_12",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_13",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_14",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_15",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_16",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_17",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_18",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_19",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_20",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_21",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_22",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_23",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_24",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_25",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_26",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_27",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_28",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_29",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_30",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_31",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_32",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_33",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_34",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_35",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_36",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_37",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_38",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_39",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_40",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_41",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_42",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_43",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_44",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_45",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_46",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_47",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_48",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_49",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_50",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_51",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_52",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_53",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_54",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_55",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_56",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_57",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_58",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_59",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_60",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_61",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_62",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_63",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_64",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_65",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_66",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_67",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_68",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_69",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_70",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_71",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_72",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_73",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_74",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_75",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_76",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_77",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "summarize_78",
+    "prompt": "Text to Summarize: Financial technology loan underwriting models rely heavily on data integrity and calibration. Traditional credit scores are augmented with real-time transaction telemetry, cash-flow indicators, and tax filing verification. To prevent uncalibrated decisions or biased outcomes, compliance engines enforce expected calibration boundaries, quarantining skewed data loops. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.75
+  },
+  {
+    "id": "summarize_79",
+    "prompt": "Text to Summarize: The recent amendment to Article 21 of the Constitution reinforces fundamental rights. In a landmark judgment, the Supreme Court declared that digital privacy is a core constituent of individual liberty, stating that state surveillance must be governed by proportionality. The legislative implications require public sector departments to revise their data processing protocols, align API accesses with MeitY draft compliance rules, and set strict security boundaries. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.45
+  },
+  {
+    "id": "summarize_80",
+    "prompt": "Text to Summarize: Sovereign cloud compute expansion in developing regions has accelerated local LLM research. By hosting local inference centers, agencies reduce dependency on international service providers, decrease foreign transit latency, and preserve data boundary guidelines. This structure mitigates risk of silent policy mutations or model drift and ensures Indic-language tokens are parsed efficiently without overhead. Context: Focus on extracting legal and structural compliance mandates. Generate a 2-sentence executive summary with bullet points of key outcomes.",
+    "complexity_score": 0.6
+  }
+]

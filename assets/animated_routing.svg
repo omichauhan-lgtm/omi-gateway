@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Animated OMI request routing flow</title>
+  <desc id="desc">A request moves from user prompt through router, reliability layer, provider selection, and verified response.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="darkBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+    <style>
+      svg { color-scheme: light dark; }
+      .canvas { fill: url(#bg); }
+      .panel { fill: #ffffff; stroke: #cbd5e1; }
+      .title { font: 800 22px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+      .body { font: 600 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; }
+      .tiny { font: 700 11px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #64748b; letter-spacing: .8px; }
+      .route { stroke: #94a3b8; }
+      @media (prefers-color-scheme: dark) {
+        .canvas { fill: url(#darkBg); }
+        .panel { fill: #0f172a; stroke: #334155; }
+        .title { fill: #f8fafc; }
+        .body { fill: #cbd5e1; }
+        .tiny { fill: #94a3b8; }
+        .route { stroke: #475569; }
+      }
+      @media (prefers-reduced-motion: reduce) { animate, animateMotion { display: none; } }
+    </style>
+  </defs>
+
+  <rect class="canvas" width="1200" height="520" rx="24"/>
+  <path id="requestPath" d="M130 250 H318 C360 250 360 152 402 152 H548 C590 152 590 250 632 250 H778 C820 250 820 152 862 152 H1012" fill="none" class="route" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 12"/>
+  <path id="responsePath" d="M1012 348 H862 C820 348 820 250 778 250 H632 C590 250 590 348 548 348 H402 C360 348 360 250 318 250 H130" fill="none" stroke="#14b8a6" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 12" opacity=".65"/>
+
+  <circle r="10" fill="#38bdf8">
+    <animateMotion dur="5.2s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#requestPath"/>
+    </animateMotion>
+  </circle>
+  <circle r="8" fill="#f59e0b">
+    <animateMotion dur="5.2s" begin="1.75s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#requestPath"/>
+    </animateMotion>
+  </circle>
+  <circle r="8" fill="#14b8a6">
+    <animateMotion dur="5.2s" begin="3.5s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#responsePath"/>
+    </animateMotion>
+  </circle>
+
+  <g filter="url(#shadow)">
+    <rect class="panel" x="52" y="190" width="160" height="120" rx="20"/>
+    <text x="132" y="232" text-anchor="middle" class="title">User prompt</text>
+    <text x="132" y="260" text-anchor="middle" class="body">task + policy</text>
+    <text x="132" y="286" text-anchor="middle" class="tiny">INPUT</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect class="panel" x="328" y="92" width="188" height="120" rx="20"/>
+    <text x="422" y="134" text-anchor="middle" class="title">Router</text>
+    <text x="422" y="162" text-anchor="middle" class="body">classify complexity</text>
+    <text x="422" y="188" text-anchor="middle" class="tiny">FASTAPI</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect class="panel" x="604" y="190" width="188" height="120" rx="20"/>
+    <text x="698" y="232" text-anchor="middle" class="title">Reliability</text>
+    <text x="698" y="260" text-anchor="middle" class="body">cache + calibration</text>
+    <text x="698" y="286" text-anchor="middle" class="tiny">ECE / WILSON</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect class="panel" x="880" y="92" width="210" height="120" rx="20"/>
+    <text x="985" y="134" text-anchor="middle" class="title">Provider route</text>
+    <text x="985" y="162" text-anchor="middle" class="body">Sarvam / GPT / Claude</text>
+    <text x="985" y="188" text-anchor="middle" class="tiny">UTILITY ROUTING</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect class="panel" x="880" y="288" width="210" height="120" rx="20"/>
+    <text x="985" y="330" text-anchor="middle" class="title">Verified response</text>
+    <text x="985" y="358" text-anchor="middle" class="body">judge + evidence log</text>
+    <text x="985" y="384" text-anchor="middle" class="tiny">PUBLIC EVIDENCE</text>
+  </g>
+
+  <g transform="translate(330 344)">
+    <rect width="455" height="86" rx="18" fill="#0f766e" opacity=".10" stroke="#0f766e" stroke-opacity=".35"/>
+    <text x="28" y="34" class="title">What changes after OMI?</text>
+    <text x="28" y="62" class="body">Every route leaves calibration, economics, and reliability evidence behind.</text>
+  </g>
+</svg>

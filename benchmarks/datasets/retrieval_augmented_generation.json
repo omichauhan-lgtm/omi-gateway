@@ -1,0 +1,402 @@
+[
+  {
+    "id": "rag_1",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_2",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_3",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_4",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_5",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_6",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_7",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_8",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_9",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_10",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_11",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_12",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_13",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_14",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_15",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_16",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_17",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_18",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_19",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_20",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_21",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_22",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_23",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_24",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_25",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_26",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_27",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_28",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_29",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_30",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_31",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_32",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_33",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_34",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_35",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_36",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_37",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_38",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_39",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_40",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_41",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_42",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_43",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_44",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_45",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_46",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_47",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_48",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_49",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_50",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_51",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_52",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_53",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_54",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_55",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_56",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_57",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_58",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_59",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_60",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_61",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_62",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_63",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_64",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_65",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_66",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_67",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_68",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_69",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_70",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_71",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_72",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_73",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_74",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_75",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_76",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_77",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  },
+  {
+    "id": "rag_78",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "rag_79",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.5
+  },
+  {
+    "id": "rag_80",
+    "prompt": "RAG Query: Summarize the policy recommendations for Indic language model training. Document Context 1: MeitY proposes subsidies for Indic dataset curation, focusing on regional dialects. Document Context 2: Tokenizer inefficiency on Devanagari text increases query cost by 3.1x, requiring custom local vocabulary optimizations. Task: Extract recommendations based strictly on these document contexts.",
+    "complexity_score": 0.65
+  }
+]

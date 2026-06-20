@@ -1,0 +1,402 @@
+[
+  {
+    "id": "indic_1",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_2",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_3",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_4",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_5",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_6",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_7",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_8",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_9",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_10",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_11",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_12",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_13",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_14",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_15",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_16",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_17",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_18",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_19",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_20",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_21",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_22",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_23",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_24",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_25",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_26",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_27",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_28",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_29",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_30",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_31",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_32",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_33",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_34",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_35",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_36",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_37",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_38",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_39",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_40",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_41",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_42",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_43",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_44",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_45",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_46",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_47",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_48",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_49",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_50",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_51",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_52",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_53",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_54",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_55",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_56",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_57",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_58",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_59",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_60",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_61",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_62",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_63",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_64",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_65",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_66",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_67",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_68",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_69",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_70",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_71",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_72",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_73",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_74",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_75",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_76",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  },
+  {
+    "id": "indic_77",
+    "prompt": "Indic translation: Please Translate agricultural crop health advisory regarding rice blast disease to Telugu and Marathi.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.4
+  },
+  {
+    "id": "indic_78",
+    "prompt": "Indic translation: Please Translate the citizen query about water supply connection renewal to Hindi and Kannada.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.52
+  },
+  {
+    "id": "indic_79",
+    "prompt": "Indic translation: Please Translate educational primary school math learning syllabus guidelines to Tamil and Bengali.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.64
+  },
+  {
+    "id": "indic_80",
+    "prompt": "Indic translation: Please Translate the local trade licensing permit application rules to Marathi and Gujarati.. Ensure that the translated terminology remains culturally context-aware, preserves original technical instructions, and avoids literal translation errors.",
+    "complexity_score": 0.76
+  }
+]

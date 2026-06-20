@@ -1,0 +1,502 @@
+[
+  {
+    "id": "coding_1",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_2",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_3",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_4",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_5",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_6",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_7",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_8",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_9",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_10",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_11",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_12",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_13",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_14",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_15",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_16",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_17",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_18",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_19",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_20",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_21",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_22",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_23",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_24",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_25",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_26",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_27",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_28",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_29",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_30",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_31",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_32",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_33",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_34",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_35",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_36",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_37",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_38",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_39",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_40",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_41",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_42",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_43",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_44",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_45",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_46",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_47",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_48",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_49",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_50",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_51",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_52",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_53",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_54",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_55",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_56",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_57",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_58",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_59",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_60",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_61",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_62",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_63",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_64",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_65",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_66",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_67",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_68",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_69",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_70",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_71",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_72",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_73",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_74",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_75",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_76",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_77",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_78",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_79",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_80",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_81",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_82",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_83",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_84",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_85",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_86",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_87",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_88",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_89",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_90",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_91",
+    "prompt": "Coding Challenge: Please implement a thread-safe Singleton pattern in C++. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_92",
+    "prompt": "Coding Challenge: Please optimize a SQL query with multiple JOINs and index scans. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_93",
+    "prompt": "Coding Challenge: Please write a python binary search tree traversal function. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_94",
+    "prompt": "Coding Challenge: Please refactor a Javascript React component to use hooks. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_95",
+    "prompt": "Coding Challenge: Please handle connection pool timeouts in a Go web server. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_96",
+    "prompt": "Coding Challenge: Please generate unit tests for a Python FastAPI endpoint. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  },
+  {
+    "id": "coding_97",
+    "prompt": "Coding Challenge: Please validate JWT signatures using RS256 algorithms in Rust. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.6
+  },
+  {
+    "id": "coding_98",
+    "prompt": "Coding Challenge: Please design a custom database schema for an e-commerce cart. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.7
+  },
+  {
+    "id": "coding_99",
+    "prompt": "Coding Challenge: Please optimize memory footprint of a large Pandas dataframe. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.8
+  },
+  {
+    "id": "coding_100",
+    "prompt": "Coding Challenge: Please implement clean exponential backoff retry logic in bash. Follow PEP 8 guidelines or equivalent standard conventions. Provide full docstrings, write clean, robust code with error handling, and explain the time complexity.",
+    "complexity_score": 0.9
+  }
+]

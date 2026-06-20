@@ -419,6 +419,93 @@
                 </div>
             </div>
 
+            <!-- Economics Engine Tab View (V17) -->
+            <div id="economics-view" class="tab-content" style="display: none;">
+                <!-- Top Row Economics Metrics -->
+                <section class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Average Token Savings</span>
+                            <span class="kpi-icon">⚡</span>
+                        </div>
+                        <div class="kpi-value" id="econ-token-savings">--%</div>
+                        <div class="kpi-desc">Prompt compression reduction</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Quality Retention Rate</span>
+                            <span class="kpi-icon">🛡️</span>
+                        </div>
+                        <div class="kpi-value" id="econ-quality-retention">--%</div>
+                        <div class="kpi-desc">Semantic similarity floor preserved</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Hallucination Reduction</span>
+                            <span class="kpi-icon">🎯</span>
+                        </div>
+                        <div class="kpi-value" id="econ-hallucination-delta">--%</div>
+                        <div class="kpi-desc">Lower error rate vs direct routes</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Total Funds Avoided</span>
+                            <span class="kpi-icon">💰</span>
+                        </div>
+                        <div class="kpi-value" id="econ-total-saved">$--</div>
+                        <div class="kpi-desc">Verification ledger cost saved</div>
+                    </div>
+                </section>
+
+                <div class="pilot-layout-grid">
+                    <!-- Cost Savings Chart -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Token Optimization & Cost Avoidance</div>
+                            <div class="card-desc">Comparison of OMI Gateway vs standard Direct LLM routes</div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="economicsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Quality floor settings and metrics -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Quality Guard Floor Compliance</div>
+                            <div class="card-desc">Fidelity preservation metrics under active compression policies</div>
+                        </div>
+                        <div class="rankings-wrapper" style="padding: 1rem; color: #fff;">
+                            <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                                <span>Quality Threshold Preserved:</span>
+                                <span class="tag pass" style="font-size: 0.9rem;">&ge; 95%</span>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+                                    <span>Escalation Bypass Trigger Rate:</span>
+                                    <span id="econ-bypass-rate">--%</span>
+                                </div>
+                                <div class="metric-progress-wrapper">
+                                    <div class="metric-progress-bar" id="bar-bypass" style="width: 0%; background: var(--secondary);"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
+                                    <span>Semantic Cache Hit Efficiency:</span>
+                                    <span id="econ-cache-hit-rate">--%</span>
+                                </div>
+                                <div class="metric-progress-wrapper">
+                                    <div class="metric-progress-bar" id="bar-cache-hit" style="width: 0%; background: var(--success);"></div>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 1.5rem;">
+                                <strong>System Note</strong>: The Quality Guard dynamically monitors semantic distance between original prompts and context-optimized variations. Any pruned context failing the 95% cosine boundary is automatically rejected, executing the original query safely.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Funding Readiness Tab View (V13) -->
             <div id="readiness-view" class="tab-content" style="display: none;">
                 <!-- Funding Readiness Section -->

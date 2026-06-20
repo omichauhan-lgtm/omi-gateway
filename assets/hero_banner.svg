@@ -1,86 +1,105 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">OMI Gateway hero banner</title>
+  <desc id="desc">Animated reliability infrastructure banner showing prompts routed through OMI to verified responses.</desc>
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0b0c10" />
-      <stop offset="50%" stop-color="#050608" />
-      <stop offset="100%" stop-color="#020304" />
+    <linearGradient id="heroBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#061316"/>
+      <stop offset="0.45" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#111827"/>
     </linearGradient>
-    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#4f46e5" />
-      <stop offset="50%" stop-color="#06b6d4" />
-      <stop offset="100%" stop-color="#10b981" />
+    <linearGradient id="omiAccent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#14b8a6"/>
+      <stop offset="0.48" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#f59e0b"/>
     </linearGradient>
-    <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1f2937" stop-opacity="0.8"/>
-      <stop offset="100%" stop-color="#111827" stop-opacity="0.9"/>
-    </linearGradient>
-    <filter id="blur" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="1.5" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000000" flood-opacity="0.35"/>
     </filter>
-    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="25" result="blur" />
-    </filter>
+    <style>
+      .label { font: 700 18px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #f8fafc; }
+      .small { font: 600 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #a7b6c9; }
+      .tiny { font: 700 11px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #cbd5e1; letter-spacing: 1px; }
+      .packet { filter: drop-shadow(0 0 10px #38bdf8); }
+      @media (prefers-reduced-motion: reduce) { animate, animateMotion { display: none; } }
+    </style>
   </defs>
 
-  <!-- Background -->
-  <rect width="800" height="300" fill="url(#bg)" />
+  <rect width="1200" height="420" rx="26" fill="url(#heroBg)"/>
+  <path d="M0 330 C180 270 300 360 460 300 C650 228 725 132 910 180 C1040 214 1115 138 1200 88 L1200 420 L0 420 Z" fill="#0f766e" opacity="0.14"/>
+  <path d="M0 86 C160 142 260 38 440 90 C620 144 760 92 910 58 C1030 32 1120 48 1200 76" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.22"/>
+  <path d="M70 340 H1130" stroke="#334155" stroke-width="1" opacity="0.45"/>
 
-  <!-- Background Grid Lines -->
-  <path d="M 0,50 L 800,50 M 0,100 L 800,100 M 0,150 L 800,150 M 0,200 L 800,200 M 0,250 L 800,250" stroke="#1f2937" stroke-width="0.5" stroke-opacity="0.3" />
-  <path d="M 100,0 L 100,300 M 200,0 L 200,300 M 300,0 L 300,300 M 400,0 L 400,300 M 500,0 L 500,300 M 600,0 L 600,300 M 700,0 L 700,300" stroke="#1f2937" stroke-width="0.5" stroke-opacity="0.3" />
-
-  <!-- Soft Ambient Glow behind Text -->
-  <circle cx="400" cy="150" r="100" fill="#06b6d4" fill-opacity="0.08" filter="url(#softGlow)" />
-  <circle cx="400" cy="150" r="80" fill="#4f46e5" fill-opacity="0.05" filter="url(#softGlow)" />
-
-  <!-- Abstract Network Nodes & Edges (AI Routing concept) -->
-  <g opacity="0.35">
-    <!-- Lines -->
-    <line x1="80" y1="80" x2="220" y2="150" stroke="#4f46e5" stroke-width="1" />
-    <line x1="220" y1="150" x2="160" y2="240" stroke="#06b6d4" stroke-width="1.5" />
-    <line x1="160" y1="240" x2="80" y2="80" stroke="#374151" stroke-width="1" />
-    <line x1="220" y1="150" x2="350" y2="80" stroke="#374151" stroke-width="1" />
-    
-    <line x1="720" y1="80" x2="580" y2="150" stroke="#10b981" stroke-width="1.5" />
-    <line x1="580" y1="150" x2="640" y2="240" stroke="#06b6d4" stroke-width="1" />
-    <line x1="640" y1="240" x2="720" y2="80" stroke="#374151" stroke-width="1" />
-    <line x1="580" y1="150" x2="450" y2="80" stroke="#374151" stroke-width="1" />
-
-    <!-- Left Group Nodes -->
-    <circle cx="80" cy="80" r="5" fill="#4f46e5" />
-    <circle cx="220" cy="150" r="8" fill="#06b6d4" />
-    <circle cx="160" cy="240" r="6" fill="#374151" />
-    <circle cx="350" cy="80" r="4" fill="#374151" />
-
-    <!-- Right Group Nodes -->
-    <circle cx="720" cy="80" r="6" fill="#10b981" />
-    <circle cx="580" cy="150" r="8" fill="#06b6d4" />
-    <circle cx="640" cy="240" r="5" fill="#374151" />
-    <circle cx="450" cy="80" r="4" fill="#374151" />
+  <g transform="translate(82 82)">
+    <g filter="url(#softShadow)">
+      <rect x="0" y="0" width="82" height="82" rx="22" fill="#0f172a" stroke="#334155"/>
+      <path d="M20 53 C30 33 52 30 63 18" fill="none" stroke="url(#omiAccent)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M20 63 C36 44 53 46 66 31" fill="none" stroke="#14b8a6" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+      <circle cx="24" cy="24" r="7" fill="#f59e0b"/>
+    </g>
+    <text x="0" y="138" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="56" font-weight="850" fill="#ffffff">OMI Gateway</text>
+    <text x="0" y="178" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="25" font-weight="700" fill="#dbeafe">AI Reliability Infrastructure for Multi-Model Systems</text>
+    <text x="0" y="216" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="560" fill="#a7b6c9">Route. Verify. Govern. Observe. Publish evidence.</text>
+    <g transform="translate(0 252)">
+      <rect width="180" height="34" rx="17" fill="#0f172a" stroke="#2dd4bf"/>
+      <circle cx="19" cy="17" r="5" fill="#22c55e">
+        <animate attributeName="opacity" values="0.35;1;0.35" dur="2.4s" repeatCount="indefinite"/>
+      </circle>
+      <text x="34" y="22" class="tiny">PUBLIC EVIDENCE API</text>
+    </g>
   </g>
 
-  <!-- Central Brand Icon & Text -->
-  <g transform="translate(400, 110)" text-anchor="middle">
-    <!-- Brand Icon -->
-    <g transform="translate(0, -35)">
-      <!-- Outer Hexagon -->
-      <polygon points="-24,-14 -24,14 0,28 24,14 24,-14 0,-28" fill="url(#nodeGrad)" stroke="url(#glow)" stroke-width="2" filter="url(#blur)" />
-      <!-- Inner Core -->
-      <circle cx="0" cy="0" r="10" fill="url(#glow)" />
-      <!-- Orbiting Particle -->
-      <circle cx="15" cy="-8" r="3" fill="#ffffff" />
-    </g>
-    
-    <!-- Title -->
-    <text x="0" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="800" fill="#ffffff" letter-spacing="4">OMI GATEWAY</text>
-    
-    <!-- Tagline / Subtitle -->
-    <text x="0" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#9ca3af" letter-spacing="2">TRUST LAYER FOR SOVEREIGN AI SYSTEMS</text>
+  <g transform="translate(642 82)">
+    <path id="heroRoute" d="M38 92 C154 20 230 170 330 92 S516 42 610 92" fill="none" stroke="#475569" stroke-width="3" stroke-dasharray="8 12"/>
+    <circle r="8" fill="#38bdf8" class="packet">
+      <animateMotion dur="5s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#heroRoute"/>
+      </animateMotion>
+    </circle>
+    <circle r="6" fill="#f59e0b" class="packet">
+      <animateMotion dur="5s" begin="1.65s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#heroRoute"/>
+      </animateMotion>
+    </circle>
+    <circle r="6" fill="#14b8a6" class="packet">
+      <animateMotion dur="5s" begin="3.3s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#heroRoute"/>
+      </animateMotion>
+    </circle>
 
-    <!-- Small decorative pill badge -->
-    <rect x="-65" y="70" width="130" height="20" rx="10" fill="#111827" stroke="#1f2937" stroke-width="1" />
-    <circle cx="-48" cy="80" r="3.5" fill="#10b981" />
-    <text x="8" y="84" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="600" fill="#10b981" letter-spacing="1">OPERATIONALLY VERIFIED</text>
+    <g filter="url(#softShadow)">
+      <rect x="0" y="56" width="126" height="72" rx="18" fill="#0f172a" stroke="#334155"/>
+      <text x="63" y="88" text-anchor="middle" class="label">Prompt</text>
+      <text x="63" y="108" text-anchor="middle" class="small">policy + task</text>
+    </g>
+    <g filter="url(#softShadow)">
+      <rect x="242" y="56" width="150" height="72" rx="18" fill="#102235" stroke="#38bdf8"/>
+      <text x="317" y="88" text-anchor="middle" class="label">OMI</text>
+      <text x="317" y="108" text-anchor="middle" class="small">calibrate + route</text>
+    </g>
+    <g filter="url(#softShadow)">
+      <rect x="522" y="56" width="150" height="72" rx="18" fill="#12231c" stroke="#14b8a6"/>
+      <text x="597" y="88" text-anchor="middle" class="label">Evidence</text>
+      <text x="597" y="108" text-anchor="middle" class="small">verified response</text>
+    </g>
+
+    <g transform="translate(42 202)">
+      <rect width="590" height="96" rx="20" fill="#0f172a" stroke="#334155"/>
+      <g transform="translate(26 27)">
+        <rect width="116" height="42" rx="12" fill="#1f2937"/>
+        <text x="58" y="27" text-anchor="middle" class="tiny">FASTAPI</text>
+      </g>
+      <g transform="translate(166 27)">
+        <rect width="116" height="42" rx="12" fill="#14342f"/>
+        <text x="58" y="27" text-anchor="middle" class="tiny">CALIBRATION</text>
+      </g>
+      <g transform="translate(306 27)">
+        <rect width="116" height="42" rx="12" fill="#352811"/>
+        <text x="58" y="27" text-anchor="middle" class="tiny">SOVEREIGN</text>
+      </g>
+      <g transform="translate(446 27)">
+        <rect width="116" height="42" rx="12" fill="#1e1b4b"/>
+        <text x="58" y="27" text-anchor="middle" class="tiny">OBSERVABLE</text>
+      </g>
+    </g>
   </g>
 </svg>

@@ -23,3 +23,7 @@ scorecard:
   quality_retention_pct:
     current: 98.2
     target: 95.0
+  economic_validation_status:
+    current: preliminary
+    target: validated
+

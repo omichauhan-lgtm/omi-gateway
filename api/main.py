@@ -768,6 +768,26 @@ async def orchestrate_request(
         # Cache Miss - Continue route calculation
         final_prompt = optimized_prompt
 
+        # OMI V17: Run Context Optimization & Quality Guard Checks
+        from infra.context_optimizer import ContextOptimizer
+        from infra.quality_guard import QualityGuard
+        
+        opt_res = ContextOptimizer.optimize(final_prompt, complexity)
+        optimized_candidate = opt_res["optimized_prompt"]
+        guard_res = QualityGuard.evaluate_quality(final_prompt, optimized_candidate)
+        
+        # Enforce quality preservation limit: threshold >= 95%
+        if guard_res["quality_retained"]:
+            final_prompt = optimized_candidate
+
+        context_opt_data = {
+            "before_tokens": opt_res["before_tokens"],
+            "after_tokens": opt_res["after_tokens"] if guard_res["quality_retained"] else opt_res["before_tokens"],
+            "compression_ratio": opt_res["compression_ratio"] if guard_res["quality_retained"] else 1.0,
+            "quality_score": guard_res["quality_score"],
+            "quality_retained": guard_res["quality_retained"]
+        }
+
         # Step 3: Routing Matrix Execution
         route_config = sovereign_router.calculate_route(payload.mode, complexity, language, payload.policy)
         target_model = route_config.get("target", "unknown")
@@ -1104,7 +1124,8 @@ async def orchestrate_request(
                 "economic_metrics": {
                     "input_tokens": total_input_tokens,
                     "output_tokens": total_output_tokens,
-                    "cost_usd": total_cost_usd
+                    "cost_usd": total_cost_usd,
+                    "context_optimization": context_opt_data if 'context_opt_data' in locals() else None
                 }
             }
         }

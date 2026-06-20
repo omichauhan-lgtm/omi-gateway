@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ----------------------------------------------------
     // Chart Globals
     // ----------------------------------------------------
-    let calibrationChart, taxonomyChart, driftChart, sovereignChart;
+    let calibrationChart, taxonomyChart, driftChart, sovereignChart, economicsChart;
 
     // Chart Configuration Helpers
     const chartOptions = {
@@ -176,6 +176,34 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
             }
+        });
+    };
+
+    // ----------------------------------------------------
+    // Chart 5: Economics Cost Comparison
+    // ----------------------------------------------------
+    const initEconomicsChart = (econData) => {
+        const ctx = document.getElementById('economicsChart').getContext('2d');
+        const costData = econData.cost_comparison || [2.50, 3.00, 0.075, 0.95];
+        
+        economicsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Direct GPT-4o', 'Direct Claude 3.5', 'Direct Gemini Flash', 'OMI Gateway'],
+                datasets: [{
+                    label: 'Avg Cost per 1M Tokens ($)',
+                    data: costData,
+                    backgroundColor: [
+                        'rgba(255, 23, 68, 0.55)',
+                        'rgba(255, 179, 0, 0.55)',
+                        'rgba(124, 77, 255, 0.55)',
+                        'rgba(0, 230, 118, 0.65)'
+                    ],
+                    borderColor: 'rgba(255,255,255,0.05)',
+                    borderWidth: 1
+                }]
+            },
+            options: chartOptions
         });
     };
 
@@ -363,6 +391,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTaxonomyChart({});
     initDriftChart({});
     initSovereignChart({});
+    initEconomicsChart({});
     // ----------------------------------------------------
     // V13 Onboarding Wizard, Tab Navigation & Trust Assets
     // ----------------------------------------------------
@@ -378,6 +407,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('pilot-view').style.display = 'none';
             if (document.getElementById('trust-view')) document.getElementById('trust-view').style.display = 'none';
             if (document.getElementById('readiness-view')) document.getElementById('readiness-view').style.display = 'none';
+            if (document.getElementById('economics-view')) document.getElementById('economics-view').style.display = 'none';
 
             if (tab === 'pilot') {
                 document.getElementById('pilot-view').style.display = 'block';
@@ -390,6 +420,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (document.getElementById('readiness-view')) {
                     document.getElementById('readiness-view').style.display = 'block';
                     updateReadinessTab();
+                }
+            } else if (tab === 'economics') {
+                if (document.getElementById('economics-view')) {
+                    document.getElementById('economics-view').style.display = 'block';
+                    updateEconomicsTab();
                 }
             } else {
                 document.getElementById('dashboard-view').style.display = 'block';
@@ -615,6 +650,42 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (e) {
             console.error("Failed to populate readiness dashboard: ", e);
+        }
+    };
+
+    // Fetch and populate Economics Engine metrics
+    const updateEconomicsTab = async () => {
+        try {
+            const res = await fetch('/public/economic-proof');
+            if (res.ok) {
+                const data = await res.json();
+                const s = data.summary;
+                
+                document.getElementById('econ-token-savings').innerText = `${s.average_token_savings_pct.toFixed(1)}%`;
+                document.getElementById('econ-quality-retention').innerText = `${s.quality_retention_rate_pct.toFixed(1)}%`;
+                document.getElementById('econ-hallucination-delta').innerText = `${s.hallucination_delta_reduction_pct.toFixed(1)}%`;
+                document.getElementById('econ-total-saved').innerText = `$${s.total_usd_saved.toFixed(2)}`;
+                
+                document.getElementById('econ-bypass-rate').innerText = `${s.escalation_rate_pct.toFixed(1)}%`;
+                document.getElementById('bar-bypass').style.width = `${s.escalation_rate_pct}%`;
+                
+                document.getElementById('econ-cache-hit-rate').innerText = `${s.cache_hit_rate_pct.toFixed(1)}%`;
+                document.getElementById('bar-cache-hit').style.width = `${s.cache_hit_rate_pct}%`;
+                
+                // Update economicsChart with latest comparisons
+                if (economicsChart) {
+                    const gpt4oCost = 2.50;
+                    const claudeCost = 3.00;
+                    const geminiCost = 0.075;
+                    const omiRatio = 1 - (s.average_token_savings_pct / 100);
+                    const omiCost = (0.15 * omiRatio) + (gpt4oCost * (s.escalation_rate_pct / 100));
+                    
+                    economicsChart.data.datasets[0].data = [gpt4oCost, claudeCost, geminiCost, omiCost];
+                    economicsChart.update();
+                }
+            }
+        } catch (e) {
+            console.error("Failed to populate economics dashboard: ", e);
         }
     };
 

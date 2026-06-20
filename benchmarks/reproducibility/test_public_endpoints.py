@@ -329,13 +329,31 @@ class TestPublicEvidenceEndpoints(unittest.TestCase):
         self.assertIn("request_volume", data)
         self.assertIn("aggregate_reliability_gain", data)
 
+    def test_economic_proof_endpoint(self):
+        resp = requests.get(f"{self.base_url}/public/economic-proof")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["status"], "success")
+        self.assertIn("summary", data)
+        s = data["summary"]
+        self.assertIn("total_requests_evaluated", s)
+        self.assertIn("average_token_savings_pct", s)
+        self.assertIn("quality_retention_rate_pct", s)
+        self.assertIn("hallucination_delta_reduction_pct", s)
+        self.assertIn("total_usd_saved", s)
+
     def test_v14_automation_endpoints(self):
         dossier_path = "docs/sovereign/funding_readiness_dossier.md"
-        if os.path.exists(dossier_path):
-            try:
-                os.remove(dossier_path)
-            except Exception:
-                pass
+        india_ai_pack = "docs/grants/IndiaAI_Submission_Pack.md"
+        meity_pack = "docs/grants/MeitY_Submission_Pack.md"
+        dpi_pack = "docs/grants/Public_Digital_Infrastructure_Pack.md"
+
+        for p in [dossier_path, india_ai_pack, meity_pack, dpi_pack]:
+            if os.path.exists(p):
+                try:
+                    os.remove(p)
+                except Exception:
+                    pass
 
         headers_admin = {"x-omi-admin-key": "omi-pro-key-v1", "x-omi-role": "admin"}
         weekly_report_path = None
@@ -349,6 +367,9 @@ class TestPublicEvidenceEndpoints(unittest.TestCase):
             self.assertEqual(data["status"], "success")
             self.assertIn("Daily Telemetry & Drift check executed successfully", data["message"])
             self.assertTrue(os.path.exists(dossier_path))
+            self.assertTrue(os.path.exists(india_ai_pack))
+            self.assertTrue(os.path.exists(meity_pack))
+            self.assertTrue(os.path.exists(dpi_pack))
 
             # 2. Test POST /admin/trigger-automation for 'weekly'
             resp = requests.post(f"{self.base_url}/admin/trigger-automation?cycle_type=weekly", headers=headers_admin)
@@ -383,7 +404,7 @@ class TestPublicEvidenceEndpoints(unittest.TestCase):
 
         finally:
             # Clean up generated files to keep git repository clean
-            for path in [dossier_path, weekly_report_path, monthly_report_path]:
+            for path in [dossier_path, weekly_report_path, monthly_report_path, india_ai_pack, meity_pack, dpi_pack]:
                 if path and os.path.exists(path):
                     try:
                         os.remove(path)
