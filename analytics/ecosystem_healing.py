@@ -1,5 +1,6 @@
 import json
 import time
+from typing import Dict
 from sqlalchemy.orm import Session
 from infra.models import SemanticCacheEntry, TelemetryLineage
 

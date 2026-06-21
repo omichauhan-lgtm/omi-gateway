@@ -10,7 +10,7 @@ import uvicorn
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 # Force test database isolation
-os.environ["OMI_DATABASE_URL"] = "sqlite:///test_learning_loop.db"
+os.environ["OMI_DATABASE_URL"] = "sqlite:///test_learning_loop_public.db"
 
 from api.main import app
 from infra.database import Base, engine, SessionLocal
@@ -19,6 +19,7 @@ from infra.models import RoutingDecision, ModelFailure, SemanticCacheEntry, Tele
 class TestPublicEvidenceEndpoints(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        Base.metadata.drop_all(bind=engine)
         Base.metadata.create_all(bind=engine)
         
         # Seed minimal data to make sure database has entries

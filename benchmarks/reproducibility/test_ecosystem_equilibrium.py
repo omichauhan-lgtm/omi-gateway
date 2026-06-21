@@ -298,7 +298,7 @@ def test_api_recursive_limits_enforcement():
             x_omi_telemetry_recursion=4
         ))
     assert excinfo.value.status_code == 422
-    assert "recursive stability limits exceeded" in excinfo.value.detail
+    assert "Complexity budget breached" in excinfo.value.detail
 
     # 2. Test layers limit breach (x_omi_governance_layers = 3 > 2)
     with pytest.raises(HTTPException) as excinfo:
@@ -310,7 +310,7 @@ def test_api_recursive_limits_enforcement():
             x_omi_governance_layers=3
         ))
     assert excinfo.value.status_code == 422
-    assert "recursive stability limits exceeded" in excinfo.value.detail
+    assert "Complexity budget breached" in excinfo.value.detail
 
     # 3. Test self referential count breach (x_omi_self_referential_analysis = 3 > 2)
     with pytest.raises(HTTPException) as excinfo:
@@ -322,4 +322,4 @@ def test_api_recursive_limits_enforcement():
             x_omi_self_referential_analysis=3
         ))
     assert excinfo.value.status_code == 422
-    assert "recursive stability limits exceeded" in excinfo.value.detail
+    assert "Complexity budget breached" in excinfo.value.detail

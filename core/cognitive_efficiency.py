@@ -156,7 +156,8 @@ class CognitiveEfficiencyPlane:
             full_context_prompt, 
             threshold=selected_module.compression_threshold
         )
-        compressed = EconomicIntelligencePlane.redundancy_elimination(compressed)
+        is_code = (mode == "coding" or selected_module.name == "coding_reasoner")
+        compressed = EconomicIntelligencePlane.redundancy_elimination(compressed, is_code=is_code)
         compressed = EconomicIntelligencePlane.adaptive_context_windowing(compressed, complexity)
 
         return None, compressed, selected_module

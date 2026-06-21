@@ -18,8 +18,10 @@ class SovereignRouter:
             {"target": "gemini-2.0-flash-exp", "key": "gemini", "cost_weight": 0.05, "max_complexity": 0.6, "tags": ["global", "edge"]},
             {"target": "sarvam-1", "key": "sarvam", "cost_weight": 0.15, "max_complexity": 0.7, "tags": ["sovereign", "indic"]},
             {"target": "claude-3-5-sonnet-20241022", "key": "anthropic", "cost_weight": 0.30, "max_complexity": 1.0, "tags": ["global", "premium"]},
+            {"target": "claude-3-5-haiku-20241022", "key": "anthropic", "cost_weight": 0.10, "max_complexity": 0.7, "tags": ["global", "frugal", "coding"]},
             {"target": "gpt-4o", "key": "openai", "cost_weight": 0.80, "max_complexity": 1.0, "tags": ["global", "premium"]},
-            {"target": "deepseek-chat", "key": "deepseek", "cost_weight": 0.10, "max_complexity": 0.8, "tags": ["global", "frugal"]}
+            {"target": "gpt-4o-mini", "key": "openai", "cost_weight": 0.05, "max_complexity": 0.7, "tags": ["global", "frugal", "coding"]},
+            {"target": "deepseek-chat", "key": "deepseek", "cost_weight": 0.10, "max_complexity": 0.8, "tags": ["global", "frugal", "coding"]}
         ]
         
         # Internal cache for active learning weights
@@ -111,11 +113,23 @@ class SovereignRouter:
                 continue
                 
             # Base correctness estimation (distance between task complexity and model capability)
-            correctness_estimate = 1.0 if node["max_complexity"] >= complexity else (node["max_complexity"] / complexity)
+            if node["max_complexity"] >= complexity:
+                correctness_estimate = 1.0
+            else:
+                correctness_estimate = (node["max_complexity"] / complexity) ** 5
             
             # Simple economics for the utility function
-            cost_penalty = node["cost_weight"] * 2.0
+            cost_penalty_weight = 4.0 if mode == "saving" else 2.0
+            cost_penalty = node["cost_weight"] * cost_penalty_weight
             risk_penalty = failure_prob * 3.0
+            
+            if mode == "coding":
+                # For coding, prefer frugal nodes for low complexity,
+                # but heavily penalize failure risk for high complexity.
+                if complexity < 0.5:
+                    cost_penalty = node["cost_weight"] * 4.0
+                else:
+                    risk_penalty = failure_prob * 5.0
             
             # Expected Utility Calculation (Phase 5: Factoring Reputation)
             expected_utility = (correctness_estimate * reputation) - cost_penalty - risk_penalty
@@ -211,9 +225,20 @@ class SovereignRouter:
             
         elif target_key == "anthropic":
             client = registry_clients["anthropic"]
+            
+            system_param = full_system_prompt
+            if len(full_system_prompt) > 2000:
+                system_param = [
+                    {
+                        "type": "text",
+                        "text": full_system_prompt,
+                        "cache_control": {"type": "ephemeral"}
+                    }
+                ]
+                
             resp = client.messages.create(
                 model=target,
-                system=full_system_prompt,
+                system=system_param,
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=4096
             )

@@ -9,7 +9,9 @@ from infra.models import RoutingDecision, ModelFailure
 # Standard Pricing Matrix per 1M Tokens (USD)
 PROVIDER_PRICING = {
     "gpt-4o": {"input": 5.00, "output": 15.00},
+    "gpt-4o-mini": {"input": 0.15, "output": 0.60},
     "claude-3-5-sonnet-20241022": {"input": 3.00, "output": 15.00},
+    "claude-3-5-haiku-20241022": {"input": 0.80, "output": 4.00},
     "gemini-2.0-flash-exp": {"input": 0.075, "output": 0.30},
     "deepseek-chat": {"input": 0.14, "output": 0.28},
     "sarvam-1": {"input": 0.10, "output": 0.20},
@@ -181,7 +183,7 @@ class EconomicIntelligencePlane:
         return pruned_docs
 
     @staticmethod
-    def redundancy_elimination(text: str) -> str:
+    def redundancy_elimination(text: str, is_code: bool = False) -> str:
         """Removes stop words, generic boilerplate, and systemic redundancy."""
         # Clean boilerplate phrases
         boilerplate = [
@@ -193,6 +195,9 @@ class EconomicIntelligencePlane:
         cleaned = text
         for pattern in boilerplate:
             cleaned = re.sub(pattern, "", cleaned)
+            
+        if is_code:
+            return cleaned.strip()
             
         # Clean common stopwords (only if it doesn't break syntax, we keep it simple for prompts)
         words = cleaned.split()
