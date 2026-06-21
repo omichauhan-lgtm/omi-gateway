@@ -1,5 +1,5 @@
 # Provider Reliability & Dimensional Analysis
-**Timestamp:** 2026-06-02 09:52:33 UTC
+**Timestamp:** 2026-06-21 14:20:58 UTC
 
 This analysis breaks down model calibration variance and semantic entropy behavior across providers, languages, and task types.
 

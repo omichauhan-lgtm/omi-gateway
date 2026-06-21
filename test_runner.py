@@ -21,7 +21,10 @@ print("\n--- Testing Traces Endpoint ---")
 try:
     import os
     admin_key = os.getenv("OMI_ADMIN_KEY", "omi-pro-key-v1")
-    headers = {"x-omi-admin-key": admin_key}
+    headers = {
+        "x-omi-admin-key": admin_key,
+        "x-omi-role": "admin"
+    }
     resp = requests.get("http://127.0.0.1:8000/admin/traces", headers=headers)
     if resp.status_code == 200:
         data = resp.json()

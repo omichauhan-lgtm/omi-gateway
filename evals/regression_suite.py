@@ -22,7 +22,10 @@ def run_regression_check():
     try:
         # 1. Fetch Scorecard
         admin_key = os.getenv("OMI_ADMIN_KEY", "")
-        headers = {"X-OMI-Admin-Key": admin_key}
+        headers = {
+            "X-OMI-Admin-Key": admin_key,
+            "X-OMI-Role": "admin"
+        }
         
         resp = requests.get(f"{BASE_URL}/admin/scorecard", headers=headers)
         if resp.status_code != 200:
