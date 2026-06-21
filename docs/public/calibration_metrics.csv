@@ -1,0 +1,5 @@
+model_id,ece,hallucination_rate_pct
+deepseek-chat,0.05,5.0
+sarvam-1,0.12,8.0
+gpt-4o,0.04,3.0
+claude-3-5-sonnet,0.03,2.0

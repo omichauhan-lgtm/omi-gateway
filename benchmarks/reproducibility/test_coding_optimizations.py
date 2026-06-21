@@ -2,13 +2,21 @@ import os
 import sys
 import unittest
 
+# Set test DB before any OMI imports
+os.environ["OMI_DATABASE_URL"] = "sqlite:///test_learning_loop.db"
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+from infra.database import Base, engine
 from core.economic_intelligence import EconomicIntelligencePlane
 from core.router import SovereignRouter
 from core.cognitive_modules import CognitiveModuleRegistry
 
 class TestCodingOptimizations(unittest.TestCase):
+    def setUp(self):
+        Base.metadata.drop_all(bind=engine)
+        Base.metadata.create_all(bind=engine)
+
     def test_redundancy_elimination_preserves_code_keywords(self):
         code = "for item in items:\n    if item or other:\n        print(item)"
         # With is_code=True, it should NOT strip stopwords like for, in, if, or

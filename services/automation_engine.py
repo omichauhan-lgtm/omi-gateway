@@ -7,6 +7,25 @@ from infra.database import SessionLocal
 from infra.models import RoutingDecision, SemanticCacheEntry, ModelFailure, PilotApplication
 from infra.benchmark import benchmark_engine
 
+# Import Model Intelligence System Agents
+from services.model_intelligence_agent import ModelIntelligenceAgent
+from services.pricing_agent import PricingAgent
+from services.benchmark_agent import BenchmarkAgent
+from services.router_evolution_agent import RouterEvolutionAgent
+from services.competitive_intelligence_agent import CompetitiveIntelligenceAgent
+from services.grant_agent import GrantAgent
+from services.chief_of_staff_agent import ChiefOfStaffAgent
+from services.readme_evolution_agent import ReadmeEvolutionAgent
+from services.deployment_agent import DeploymentAgent
+from services.github_growth_agent import GithubGrowthAgent
+from services.agent_audit_agent import AgentAuditAgent
+from services.self_improvement_engine import SelfImprovementEngine
+from services.learning_intelligence_agent import LearningIntelligenceAgent
+from services.proof_to_growth_agent import ProofToGrowthAgent
+from services.ecosystem_intelligence_agent import EcosystemIntelligenceAgent
+from services.conversion_intelligence_agent import ConversionIntelligenceAgent
+from services.transparency_intelligence_agent import TransparencyIntelligenceAgent
+
 class AutomationEngine:
     _instance = None
     _task = None
@@ -72,7 +91,7 @@ class AutomationEngine:
     # ----------------------------------------------------
 
     async def run_daily_telemetry_check(self):
-        """Run drift detection & log checks."""
+        """Run drift detection, log checks, and daily agents."""
         db = SessionLocal()
         try:
             # Audit cache entries for anomalies/drifts
@@ -86,14 +105,98 @@ class AutomationEngine:
             # Always auto-update the funding readiness dossier on-demand to keep it fresh
             await self.compile_funding_readiness_dossier()
             await self.compile_grant_dossiers()
+
+            # Run Daily Model Intelligence and Pricing Agents
+            print("Running Daily Model Intelligence Agent...")
+            mi_agent = ModelIntelligenceAgent()
+            mi_agent.run(db)
+            
+            print("Running Daily Pricing Agent...")
+            p_agent = PricingAgent()
+            p_agent.run(db)
+
+            # Run Daily GitHub Growth Agent
+            print("Running Daily GitHub Growth Agent...")
+            growth_agent = GithubGrowthAgent()
+            growth_agent.run(db)
+
+            # Run Daily Deployment Intelligence Agent
+            print("Running Daily Deployment Agent...")
+            deploy_agent = DeploymentAgent()
+            deploy_agent.run(db)
+            
+            # Run Chief of Staff Agent last daily so it incorporates all latest reports
+            print("Running Daily Chief of Staff Agent...")
+            cos_agent = ChiefOfStaffAgent()
+            cos_agent.run(db)
         finally:
             db.close()
 
     async def run_weekly_benchmark_cycle(self):
-        """Active benchmark cycle & Markdown export."""
+        """Active benchmark cycle, weekly agents, and Markdown export."""
         db = SessionLocal()
         try:
             print("Initiating Automated Weekly Benchmark Cycle...")
+            
+            # Run Weekly Benchmark Scientist Agent
+            print("Running Weekly Benchmark Scientist Agent...")
+            b_agent = BenchmarkAgent()
+            b_agent.run(db)
+            
+            # Run Weekly Router Evolution Agent
+            print("Running Weekly Router Evolution Agent...")
+            re_agent = RouterEvolutionAgent()
+            re_agent.run(db)
+            
+            # Run Weekly Competitive Intelligence Agent
+            print("Running Weekly Competitive Intelligence Agent...")
+            ci_agent = CompetitiveIntelligenceAgent()
+            ci_agent.run(db)
+            
+            # Run Weekly Grant Agent
+            print("Running Weekly Grant Agent...")
+            g_agent = GrantAgent()
+            g_agent.run(db)
+            
+            # Run Weekly README Evolution Agent
+            print("Running Weekly README Evolution Agent...")
+            readme_agent = ReadmeEvolutionAgent()
+            readme_agent.run(db)
+
+            # Run Weekly Learning Intelligence Agent
+            print("Running Weekly Learning Intelligence Agent...")
+            learning_agent = LearningIntelligenceAgent()
+            learning_agent.run(db)
+
+            # Run Weekly Proof To Growth Agent
+            print("Running Weekly Proof To Growth Agent...")
+            growth_agent = ProofToGrowthAgent()
+            growth_agent.run(db)
+
+            # Run Weekly Ecosystem Intelligence Agent
+            print("Running Weekly Ecosystem Intelligence Agent...")
+            ecosystem_agent = EcosystemIntelligenceAgent()
+            ecosystem_agent.run(db)
+
+            # Run Weekly Conversion Intelligence Agent
+            print("Running Weekly Conversion Intelligence Agent...")
+            conversion_agent = ConversionIntelligenceAgent()
+            conversion_agent.run(db)
+
+            # Run Weekly Transparency Intelligence Agent
+            print("Running Weekly Transparency Intelligence Agent...")
+            transparency_agent = TransparencyIntelligenceAgent()
+            transparency_agent.run(db)
+
+            # Run Weekly Agent Audit Agent
+            print("Running Weekly Agent Audit Agent...")
+            audit_agent = AgentAuditAgent()
+            audit_agent.run(db)
+
+            # Run Weekly Self-Improvement Engine
+            print("Running Weekly Self-Improvement Engine...")
+            self_imp_engine = SelfImprovementEngine()
+            self_imp_engine.run(db)
             
             # Check if keys are locally configured
             openai_key = os.getenv("OPENAI_API_KEY")

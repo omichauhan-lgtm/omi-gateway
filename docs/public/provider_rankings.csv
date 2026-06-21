@@ -1,0 +1,5 @@
+rank,model_id,mri_score,sovereign_score
+1,deepseek-chat,87.9,54.5
+2,sarvam-1,87.05,95.2
+3,gpt-4o,85.85,66.5
+4,claude-3-5-sonnet,85.65,61.0

@@ -1,0 +1,5 @@
+model_id,reliability_pct,ece,latency_ms,hallucination_rate_pct,mri_score
+deepseek-chat,96.0,0.05,550.0,5.0,87.9
+sarvam-1,95.0,0.12,410.0,8.0,87.05
+gpt-4o,98.0,0.04,780.0,3.0,85.85
+claude-3-5-sonnet,99.0,0.03,850.0,2.0,85.65

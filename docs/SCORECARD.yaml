@@ -1,29 +1,28 @@
 scorecard:
-  users:
-    current: 1
-    target: 100
-  requests:
-    current: 1
-    target: 10000
-  pilots:
-    current: 0
-    target: 1
-  contributors:
-    current: 1
-    target: 5
   benchmark_reports:
     current: 0
     target: 3
-  grant_submissions:
-    current: 0
-    target: 1
-  token_efficiency_cost_reduction_pct:
-    current: 45.0
-    target: 50.0
-  quality_retention_pct:
-    current: 98.2
-    target: 95.0
+  contributors:
+    current: 1
+    target: 5
   economic_validation_status:
     current: preliminary
     target: validated
-
+  grant_submissions:
+    current: 0
+    target: 1
+  pilots:
+    current: 1
+    target: 1
+  quality_retention_pct:
+    current: 98.2
+    target: 95.0
+  requests:
+    current: 1
+    target: 10000
+  token_efficiency_cost_reduction_pct:
+    current: 0.0
+    target: 50.0
+  users:
+    current: 1
+    target: 100
